@@ -1,3 +1,4 @@
 from django.shortcuts import render
 
-# Create your views here.
+def disp_info(request):
+    return render(request, 'listapp/disp_info.html')
