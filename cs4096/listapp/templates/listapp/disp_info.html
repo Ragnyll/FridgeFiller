@@ -1,3 +1,7 @@
 <h3>This is just a basic view to demonstrate that the models have been implemented correctly </h3>
 
-
+{% for user in users %}
+  <div>
+    <p>user: {{ user.name }}</p>
+  </div>
+{% endfor %}
