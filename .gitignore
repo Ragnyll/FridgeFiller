@@ -13,3 +13,5 @@ auto-save-list
 # migrations
 cs4096/*/migrations/
 
+# SQLite DB
+cs4096/*.sqlite3
