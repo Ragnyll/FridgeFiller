@@ -11,4 +11,5 @@ auto-save-list
 *.DS_Store
 
 # migrations
-*/migrations
+cs4096/**/migrations/*
+
