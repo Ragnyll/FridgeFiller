@@ -9,3 +9,6 @@ auto-save-list
 
 # Mac files
 *.DS_Store
+
+# migrations
+*/migrations
