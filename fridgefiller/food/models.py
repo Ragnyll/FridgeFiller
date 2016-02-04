@@ -1,10 +1,11 @@
 from __future__ import unicode_literals
 
 from django.db import models
+from lists.models import Item
 
 # Create your models here.
 class Ingredient(models.Model):
-    name = models.ForeignKey('Item')
+    name = models.ForeignKey(Item)
     recipe = models.ForeignKey('Recipe')
     unit = models.CharField(max_length=10, null=True)
     amount = models.FloatField(default=0)
