@@ -1,0 +1,30 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>{% block title %}{% endblock %}</title>
+    
+    {% include "_head.html" %}
+    
+    {% block meta %}{% endblock %}
+    
+    {% block link %}{% endblock %}
+  </head>
+  <body>
+    {% include "_navbar.html" %}
+
+    <div class="container">
+      <div class="col-md-12">
+	{% block content %}{% endblock %}
+      </div>
+    </div>
+
+    {% block modal %}{% endblock %}
+    
+    <!-- Scripts -->
+    {% include "_scripts.html" %}
+    
+    <!-- Extra scripts -->
+    {% block script %}{% endblock %}
+    
+  </body>
+</html>
