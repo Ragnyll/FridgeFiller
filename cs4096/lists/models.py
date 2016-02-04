@@ -1,7 +1,7 @@
 from django.db import models
 from django.utils.encoding import python_2_unicode_compatible
 
-@python_2_unicode_compatible
+
 class User(models.Model):
     name = models.CharField(max_length=32)
     description = models.TextField()
@@ -9,7 +9,7 @@ class User(models.Model):
     def __str__(self):
         return str(self.name)
 
-@python_2_unicode_compatible
+
 class Group(models.Model):
     name = models.CharField(max_length=32)
     owner = models.ForeignKey('User')
@@ -18,7 +18,7 @@ class Group(models.Model):
     def __str__(self):
         return str(self.name)
 
-@python_2_unicode_compatible
+
 class List(models.Model):
     name = models.CharField(max_length=32)
     primary_owner = models.ForeignKey('User')
@@ -29,7 +29,7 @@ class List(models.Model):
        return str(self.name)
 
 
-@python_2_unicode_compatible
+
 class Item(models.Model):
     name = models.CharField(max_length=64)
     in_list = models.ForeignKey('List')
@@ -43,7 +43,7 @@ class Item(models.Model):
     def __str__(self):
        return str(self.name)
 
-@python_2_unicode_compatible
+
 class Ingredient(models.Model):
     name = models.ForeignKey('Item')
     recipe = models.ForeignKey('Recipe')
@@ -54,11 +54,10 @@ class Ingredient(models.Model):
     def __str__(self):
        return str(self.name)
 
-@python_2_unicode_compatible
 class Recipe(models.Model):
     recipe_name = models.CharField(max_length=250)
     serving_size = models.IntegerField(default=0)
-    bigoven_id = models.IntegerField(unique=True)
+    bigoven_id = models.IntegerField(unique=True) # For BigOven Recipe API
     nutrition_info = models.OneToOneField('Nutrition', null=True)
 
     def __str__(self):
