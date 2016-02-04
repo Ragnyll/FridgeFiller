@@ -6,8 +6,10 @@ First, make sure you're using a UNIX environment.  Windows works, but our projec
 
 2.  Install project dependencies via `$ pip install -r requirements.txt` from the project root.
 
-3.  Migrate the database with `$ python cs4096/manage.py migrate`
+3.  Create migrations for the lists app `$ python fridgefiller/manage.py makemigrations lists`
 
-4.  Run the Django server via `$ python manage.py runserver`.  This will start the Django debug server, running at `localhost:8000` on your machine.  If you want to access the app from your public ip (aka from another computer on the network), instead run the Django server with `$ python manage.py runserver 0.0.0.0:<port number>`
+4.  Migrate the database with `$ python fridgefiller/manage.py migrate`
 
-5.  Have fun!
+5.  Run the Django server via `$ python manage.py runserver`.  This will start the Django debug server, running at `localhost:8000` on your machine.  If you want to access the app from your public ip (aka from another computer on the network), instead run the Django server with `$ python manage.py runserver 0.0.0.0:<port number>`
+
+6.  Have fun!

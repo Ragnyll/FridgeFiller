@@ -30,7 +30,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
-    'cs4096',
+    'fridgefiller',
 
     'lists',
 
@@ -57,7 +57,7 @@ MIDDLEWARE_CLASSES = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-ROOT_URLCONF = 'cs4096.urls'
+ROOT_URLCONF = 'fridgefiller.urls'
 
 TEMPLATES = [
     {
@@ -77,7 +77,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'cs4096.wsgi.application'
+WSGI_APPLICATION = 'fridgefiller.wsgi.application'
 
 
 # Database
