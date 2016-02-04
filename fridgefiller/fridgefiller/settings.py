@@ -33,6 +33,7 @@ INSTALLED_APPS = [
     'fridgefiller',
 
     'lists',
+    'food',
 
     'allauth',
     'allauth.account',
