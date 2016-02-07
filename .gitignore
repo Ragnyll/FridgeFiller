@@ -13,5 +13,7 @@ auto-save-list
 # Migrations
 fridgefiller/*/migrations/
 
+fridgefiller/*/fixtures/*.d
+
 # SQLite DB
 fridgefiller/*.sqlite3
