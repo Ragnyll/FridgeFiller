@@ -6,10 +6,13 @@ urlpatterns = [
     url(r'^admin/', admin.site.urls),
 
     # List App
-    url(r'^lists/$', include('lists.urls')),
+    url(r'^lists/', include('lists.urls')),
 
+    # Food app
+    url(r'^food/', include('food.urls')),
+    
     # Home App
-    url(r'^$', include('home.urls')),
+    url(r'^', include('home.urls')),
     
     # Django AllAuth
     url(r'^accounts/', include('allauth.urls')),
