@@ -1,0 +1,40 @@
+[
+    {
+        "model" : "lists.List",
+        "pk": 1,
+        "fields": {
+            "name" : "rList",
+            "primary_owner" : 1,
+            "description" : "iunno"
+        }
+    },
+    {
+        "model" : "lists.Item",
+        "pk": 1,
+        "fields": {
+            "name": "flour",
+            "in_list": 1,
+            "cost" : 10.0,
+            "barcode" : 123213
+        }
+    },
+    { 
+        "model" : "food.Recipe",
+        "pk": 1,
+        "fields": {
+            "recipe_name" : "Bread",
+            "serving_size": "3",
+            "bigoven_id" : "2"
+        }
+    },
+    {
+        "model" : "food.Ingredient",
+        "pk" : 1,
+        "fields": {
+            "name": 1,
+            "recipe": 1,
+            "unit": "one",
+            "amount": "10"
+        }
+    }
+]
