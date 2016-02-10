@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block title %}
+  FridgeFiller Home
+{% endblock %}
+
+{% block content %}
+  <h1 class="text-center">Welcome to FridgeFiller!</h1>
+  <br><br>
+  {% if user.is_authenticated %}
+    <h1 class="text-center">Hey.  Looks like you are authenticated.</h1>
+  {% else %}
+    <h1 class="text-center">Hey.  You're not authenticated.</h1>
+  {% endif %}
+{% endblock %}

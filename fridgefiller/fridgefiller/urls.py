@@ -4,8 +4,16 @@ from django.contrib.auth.views import logout_then_login
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
-    url(r'^', include('lists.urls')),
 
+    # List App
+    url(r'^lists/', include('lists.urls')),
+
+    # Food app
+    url(r'^food/', include('food.urls')),
+    
+    # Home App
+    url(r'^', include('home.urls')),
+    
     # Django AllAuth
     url(r'^accounts/', include('allauth.urls')),
     url(r'^accounts/logout/$', logout_then_login),

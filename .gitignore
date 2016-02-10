@@ -10,8 +10,10 @@ auto-save-list
 # Mac files
 *.DS_Store
 
-# migrations
-cs4096/*/migrations/
+# Migrations
+fridgefiller/*/migrations/
+
+fridgefiller/*/fixtures/*.d
 
 # SQLite DB
-cs4096/*.sqlite3
+fridgefiller/*.sqlite3

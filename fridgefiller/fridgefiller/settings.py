@@ -19,6 +19,11 @@ STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
 )
 
+LOGIN_REDIRECT_URL = "/"
+LOGOUT_REDIRECT_URL = "/"
+
+
+
 # Application definition
 
 INSTALLED_APPS = [
@@ -30,9 +35,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
 
+    # Project apps
     'fridgefiller',
-
     'lists',
+    'home',
+    'food',
 
     'allauth',
     'allauth.account',
