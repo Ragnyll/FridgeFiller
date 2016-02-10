@@ -1,0 +1,10 @@
+[
+    {
+        "model": "lists.User",
+        "pk": 1,
+        "fields": {
+            "name": "john",
+            "description": "Very tall"
+        }
+    }
+]
