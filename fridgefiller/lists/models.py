@@ -33,7 +33,7 @@ class List(models.Model):
 class Item(models.Model):
     name = models.CharField(max_length=64)
     in_list = models.ForeignKey('List')
-    cost = models.FloatField(default=0)
+    cost = models.DecimalField(default=0, max_digits= 8, decimal_places=2)
     location_purchased = models.CharField(max_length=64)
     description = models.TextField()
     # barcode should be moved to its own entity once we gather what we need from it
