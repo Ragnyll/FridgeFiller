@@ -1,6 +1,10 @@
+{% extends "base.html" %}
 {% load staticfiles %}
 
 {% block content %}
+<div id="interactive" class="viewport">
+    <video autoplay="true" preload="auto"></video>
+</div>
 <div class="controls">
   <fieldset class="input-group">
     <input type="file" capture/>

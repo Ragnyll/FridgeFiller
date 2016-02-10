@@ -58,7 +58,7 @@ $(function() {
     state: {
       inputStream: {
         size: 640,
-        singleChannel: false
+        singleChannel: false,
       },
       locator: {
         patchSize: "large",
