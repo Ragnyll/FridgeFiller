@@ -8,8 +8,9 @@
   <h1 class="text-center">Welcome to FridgeFiller!</h1>
   <br><br>
   {% if user.is_authenticated %}
-    <h1 class="text-center">Hey.  Looks like you are authenticated.</h1>
+    <div class="col-md-4 sidebar" style="background-color:green;">
+    </div>
   {% else %}
-    <h1 class="text-center">Hey.  You're not authenticated.</h1>
+    {% include "account/login_form.html" %}
   {% endif %}
 {% endblock %}
