@@ -13,11 +13,19 @@ class UserProfile(models.Model):
     def __str__(self):
         return str(self.name)
 
-
+def create_user_profile(sender, instance, created, **kwargs):
+    """
+    Creates a UserProfile object for new users who sign up with allauth
+    """
+    if created:
+        userprofile, created = UserProfile.objects.get_or_create(user=instance, name=instance.username)
+        
+post_save.connect(create_user_profile, sender=User)
+        
 class Group(models.Model):
     name = models.CharField(max_length=32)
-    owner = models.ForeignKey('User', related_name="owner")
-    users = models.ManyToManyField('User')
+    owner = models.ForeignKey('UserProfile', related_name="owner")
+    users = models.ManyToManyField('UserProfile')
 
     def __str__(self):
         return str(self.name)
@@ -31,8 +39,8 @@ def add_owner_to_users(sender, instance, **kwargs):
 
 class List(models.Model):
     name = models.CharField(max_length=32)
-    primary_owner = models.ForeignKey('User', related_name="primary_owner")
-    secondary_owners = models.ManyToManyField('User', related_name="secondary_owners")
+    primary_owner = models.ForeignKey('UserProfile', related_name="primary_owner")
+    secondary_owners = models.ManyToManyField('UserProfile', related_name="secondary_owners")
     description = models.TextField()
     items = models.ManyToManyField('Item')
     
