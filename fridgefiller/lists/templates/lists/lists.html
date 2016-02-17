@@ -1,9 +1,60 @@
-{% extends "base.html" %}
+{% extends "base_sidebar.html" %}
 
 {% block title %}
   Your Shopping Lists
 {% endblock %}
 
 {% block content %}
-  <h1 class="text-center">You are viewing your Shopping Lists</h1>
+  <h1 class="col-md-offset-2 text-center">Your Shopping Lists</h1>
+
+  {% if not user_lists %}
+    <div class="col-md-offset-2 text-center">
+      <br>
+      <h3>
+        Looks like you don't have any lists created.
+      </h3>
+    </div>
+  {% else %}
+    {% for list in user_lists %}
+      <div class="shopping-list col-md-offset-2 well">
+        <h1 >
+          <a href="/lists/{{ list.id }}/">
+            {{ list }}&nbsp;&nbsp;&nbsp;
+          </a>
+        </h1>
+        <h4>{{ list.description }}</h4>
+        <h4 class="pull-right">
+          <a href="/lists/edit/{{ list.id }}/">
+            Edit This List
+          </a>
+        </h4>
+
+        <br><br>
+        <div class="table-responsive">
+          <table class="table table-bordered">
+            <thead>
+              <tr>
+                <th><h6 class="text-center">Item Name</h6></th>
+                <th><h6 class="text-center">Price</h6></th>
+                <th><h6 class="text-center">MORE STUFFS (NYI)</h6></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in list.items.all %}
+                <tr>
+                  <td>{{ item.name }}</td>
+                  <td>{{ item.cost }}</td>
+                  <td></td>
+                </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+      
+  <a href="{% url 'new-list' %}" class="btn btn-lg btn-primary col-md-offset-6 text-center">
+    Create a New List
+  </a>
 {% endblock %}

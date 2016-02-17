@@ -1,11 +1,11 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
 
-from .models import User, Group, List
+from .models import UserProfile, Group, List
 
 
 def disp_info(request):
-    users = User.objects.all()
+    users = UserProfile.objects.all()
     groups = Group.objects.all()
     lists = List.objects.all()
     return render(request, 'lists/disp_info.html',{'users': users})
@@ -18,6 +18,16 @@ class ListsView(TemplateView):
     template_name = "lists/lists.html"
 
 
+    def get_context_data(self, **kwargs):
+        context = super(ListsView, self).get_context_data(**kwargs)
+
+        user = UserProfile.objects.get(user=self.request.user)
+        
+        context['user_lists'] = List.objects.filter(primary_owner=user)
+        
+        return context
+    
+    
 class ListView(TemplateView):
     """
     This view displays a singular list with id <list_id> and the items in that list
