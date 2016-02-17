@@ -2,3 +2,12 @@
     border-radius: 0 !important;
     margin-bottom: 0;
 }
+
+.table-bordered, .table-bordered thead tr th, .table-bordered tbody tr td {
+    border: 3px solid #34495E;
+    
+}
+
+.shopping-list h1, .shopping-list h4 {
+    display: inline;
+}
