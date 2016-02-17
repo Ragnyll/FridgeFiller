@@ -12,7 +12,7 @@ urlpatterns = [
     url(r'^food/', include('food.urls')),
     
     # Home App
-    url(r'^', include('home.urls')),
+    url(r'^$', include('home.urls')),
     
     # Django AllAuth
     url(r'^accounts/', include('allauth.urls')),
