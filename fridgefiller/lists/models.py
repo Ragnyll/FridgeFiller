@@ -1,6 +1,7 @@
 from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_save
+from django.contrib.auth.models import User
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name="profile")
@@ -44,7 +45,7 @@ class Item(models.Model):
     cost = models.FloatField(default=0)
     location_purchased = models.CharField(max_length=64)
     description = models.TextField()
-    # barcode should be moved to its own entity once we gather what we need from it
+# barcode should be moved to its own entity once we gather what we need from it
     barcode = models.IntegerField()
     
 
