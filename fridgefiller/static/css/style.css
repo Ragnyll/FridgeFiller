@@ -11,3 +11,7 @@
 .shopping-list h1, .shopping-list h4 {
     display: inline;
 }
+
+.alert-danger {
+  background-color: #F2DEDE;
+}
