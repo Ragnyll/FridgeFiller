@@ -2,7 +2,9 @@ from django.db import models
 from django.dispatch import receiver
 from django.db.models.signals import post_save
 
-class User(models.Model):
+class UserProfile(models.Model):
+    user = models.OneToOneField(User, related_name="profile")
+
     name = models.CharField(max_length=32)
     description = models.TextField()
     lists = models.ManyToManyField('List')
