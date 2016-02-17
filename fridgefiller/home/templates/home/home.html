@@ -1,16 +1,19 @@
-{% extends "base.html" %}
+{% extends user.is_authenticated|yesno:"base_sidebar.html,base.html" %}
 
 {% block title %}
   FridgeFiller Home
 {% endblock %}
 
 {% block content %}
-  <h1 class="text-center">Welcome to FridgeFiller!</h1>
-  <br><br>
+  
   {% if user.is_authenticated %}
-    <div class="col-md-4 sidebar" style="background-color:green;">
-    </div>
+    <h1 class="text-center col-md-offset-2">Welcome to FridgeFiller!</h1>
+    <h4 class="text-center col-md-offset-2">Rest of home page NYI</h4>
+    
+    <br><br>
   {% else %}
+    <h1 class="text-center">Welcome to FridgeFiller!</h1>
+    <br><br>
     {% include "account/login_form.html" %}
   {% endif %}
 {% endblock %}
