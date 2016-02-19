@@ -5,7 +5,6 @@ from django.contrib.auth.models import User
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name="profile")
-
     name = models.CharField(max_length=32)
     description = models.TextField()
     lists = models.ManyToManyField('ShoppingList')
@@ -26,6 +25,7 @@ class Party(models.Model):
     name = models.CharField(max_length=32)
     owner = models.ForeignKey('UserProfile', related_name="owner")
     users = models.ManyToManyField('UserProfile')
+    shoppinglists = models.ManyToManyField('ShoppingList')
 
     def __str__(self):
         return str(self.name)
@@ -46,6 +46,11 @@ class ShoppingList(models.Model):
     def __str__(self):
        return str(self.name)
 
+class Pantry(models.Model):
+    items = models.ManyToManyField('ItemDetail', related_name='items')
+    description = models.CharField(max_length=64)
+    party = models.ForeignKey('Party', related_name='party')
+
 class Item(models.Model):
     name = models.CharField(max_length=64)
     description = models.TextField()
@@ -58,15 +63,12 @@ class Item(models.Model):
 
 class ItemDetail(Item):
     cost = models.FloatField(default=0)
-    last_purchased = models.DateTimeField()
+    last_purchased = models.DateTimeField(null=True)
     location_purchased = models.CharField(max_length=64)
 # barcode should be moved to its own entity once we gather what we need from it
-    barcode = models.IntegerField(default=0)
+    barcode = models.IntegerField(default=0, blank=True)
     unit = models.CharField(default=0, max_length=64)
     amount = models.FloatField(default=0)
-    expiration_date = models.DateTimeField()
+    expiration_date = models.DateTimeField(null=True)
 
-class Pantry(models.Model):
-    items = models.ManyToManyField('ItemDetail', related_name='items')
-    description = models.CharField(max_length=64)
     
