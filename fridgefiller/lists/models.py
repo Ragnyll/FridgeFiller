@@ -49,8 +49,6 @@ class ShoppingList(models.Model):
 class Item(models.Model):
     name = models.CharField(max_length=64)
     description = models.TextField()
-# barcode should be moved to its own entity once we gather what we need from it
-    barcode = models.IntegerField()
 
     def __str__(self):
        return str(self.name)
@@ -62,3 +60,13 @@ class ItemDetail(Item):
     cost = models.FloatField(default=0)
     last_purchased = models.DateTimeField()
     location_purchased = models.CharField(max_length=64)
+# barcode should be moved to its own entity once we gather what we need from it
+    barcode = models.IntegerField(default=0)
+    unit = models.CharField(default=0, max_length=64)
+    amount = models.FloatField(default=0)
+    expiration_date = models.DateTimeField()
+
+class Pantry(models.Model):
+    items = models.ManyToManyField('ItemDetail', related_name='items')
+    description = models.CharField(max_length=64)
+    
