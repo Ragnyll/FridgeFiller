@@ -61,7 +61,35 @@ def generate_db():
         p.users.add(i)
 
     shoplist = ShoppingList.objects.create(name="Raid Potions", owner=codex_up)
-    
+
+    shoplist.description = "potion list for molten core"
+
+    pots = [Item.objects.create(name="Elixir of Mighty Agility", description="Increases agility by 25 for 1 hour"),
+            Item.objects.create(name="Elixir of Mighty Defenese", description="Increases armor by 180 for 1 hour"),
+            Item.objects.create(name="Fel Strength", description="Increases attack power by 90 for 1 hour")]
+
+    for i in pots:
+        i.save()
+        shoplist.items.add(i)
+
+    shoplist.save()
+
+
+    pot_details = [ItemDetail.objects.create(name=pots[0].name, description=pots[0].description,
+                                             cost="100", barcode="1032231", unit="oz", amount=20),
+                   ItemDetail.objects.create(name=pots[1].name, description=pots[1].description,
+                                             cost="100", barcode="3242312", unit="oz", amount=30),
+                   ItemDetail.objects.create(name=pots[2].name, description=pots[2].description,
+                                             cost="30", barcode="2332413", unit="oz", amount=1)]
+
+    guild_bank = Pantry.objects.create(party=p, description="guild bank")
+    for i in pot_details:
+        guild_bank.items.add(i)
+        i.save()
+
+    guild_bank.save()
+
+
 
 if __name__ == "__main__":
     print "Generating the database!"
