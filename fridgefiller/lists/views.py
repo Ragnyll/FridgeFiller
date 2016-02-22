@@ -1,6 +1,5 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
-
 from .models import User, Group, List
 
 
@@ -39,3 +38,4 @@ class EditListView(TemplateView):
     Similar to NewListView, but it will show the items already in the list, and allow for more items to be added, whereas NewListView is blank
     """
     template_name = "lists/edit_list.html"
+
