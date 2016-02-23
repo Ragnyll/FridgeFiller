@@ -8,12 +8,14 @@
     
 }
 
-.shopping-list h1, .shopping-list h4 {
+.shopping-list h1, .shopping-list h4, .shopping-list-h6{
     display: inline;
+    vertical-align: middle;
+    margin-bottom: 0;
 }
 
 .alert-danger {
-  background-color: #F2DEDE;
+    background-color: #F2DEDE;
 }
 
 .container-fluid {
@@ -77,3 +79,26 @@
     color: #fff;
     background: none;
 }
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #169E83;
+    margin: 1em 0;
+    padding: 0; 
+}
+
+.shopping-list-row {
+    border: 3px solid;
+}
+
+.shopping-list-row span {
+    margin: 10px 5px 5px 5px;
+}
+
+.popover-content {
+    background-color: #34495E;
+    color: white;
+}
+

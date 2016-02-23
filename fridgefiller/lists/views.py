@@ -1,6 +1,10 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
-from .models import User, Party, ShoppingList
+from django.shortcuts import redirect
+from django.contrib.auth.decorators import login_required, user_passes_test
+from django.utils.decorators import method_decorator
+
+from .models import UserProfile, Party, ShoppingList
 
 
 def disp_info(request):
@@ -16,13 +20,20 @@ class ListsView(TemplateView):
     """
     template_name = "lists/lists.html"
 
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        """
+        Ensures that only authenticated users can access the view.
+        """
+        return super(ListsView, self).dispatch(request, *args, **kwargs)
+    
 
     def get_context_data(self, **kwargs):
         context = super(ListsView, self).get_context_data(**kwargs)
 
         user = UserProfile.objects.get(user=self.request.user)
         
-        context['user_lists'] = List.objects.filter(primary_owner=user)
+        context['user_shopping_lists'] = ShoppingList.objects.filter(owners__in=[user])
         
         return context
     
