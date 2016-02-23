@@ -7,9 +7,6 @@ urlpatterns = [
 
     # List App
     url(r'^lists/', include('lists.urls')),
-
-    # Food app
-    url(r'^food/', include('food.urls')),
     
     # Home App
     url(r'^$', include('home.urls')),

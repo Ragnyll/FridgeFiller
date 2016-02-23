@@ -1,13 +1,12 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
-
-from .models import UserProfile, Group, List
+from .models import User, Party, ShoppingList
 
 
 def disp_info(request):
-    users = UserProfile.objects.all()
-    groups = Group.objects.all()
-    lists = List.objects.all()
+    users = User.objects.all()
+    parties = Party.objects.all()
+    shoppinglists = ShoppingList.objects.all()
     return render(request, 'lists/disp_info.html',{'users': users})
 
 
@@ -49,3 +48,4 @@ class EditListView(TemplateView):
     Similar to NewListView, but it will show the items already in the list, and allow for more items to be added, whereas NewListView is blank
     """
     template_name = "lists/edit_list.html"
+

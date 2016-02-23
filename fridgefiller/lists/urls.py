@@ -1,6 +1,7 @@
 # urls for the list application
 
 from django.conf.urls import url
+from . import views
 from views import ListsView, ListView, NewListView, EditListView
 
 urlpatterns = [
