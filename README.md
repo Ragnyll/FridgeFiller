@@ -10,6 +10,9 @@ First, make sure you're using a UNIX environment.  Windows works, but our projec
 
 4.  Migrate the database with `$ python fridgefiller/manage.py migrate`
 
-5.  Run the Django server via `$ python manage.py runserver`.  This will start the Django debug server, running at `localhost:8000` on your machine.  If you want to access the app from your public ip (aka from another computer on the network), instead run the Django server with `$ python manage.py runserver 0.0.0.0:<port number>`
+5. Add data to the database. Run `$ python lists/generate.py` to generate a database with some models n' what not.
+   Do note that running this command expects an empty database, if the database is not empty there might be problems
 
-6.  Have fun!
+6.  Run the Django server via `$ python manage.py runserver`.  This will start the Django debug server, running at `localhost:8000` on your machine.  If you want to access the app from your public ip (aka from another computer on the network), instead run the Django server with `$ python manage.py runserver 0.0.0.0:<port number>`
+
+7.  Have fun!
