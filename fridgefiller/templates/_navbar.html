@@ -1,4 +1,4 @@
-<div class="navbar navbar-inverse">
+<div class="navbar navbar-inverse navbar-fixed-top">
   <div class="navbar-header">
     <a href="/" class="navbar-brand" rel="home">
       FridgeFiller
@@ -18,6 +18,16 @@
     <ul class="nav pull-right navbar-nav">
       {% if user.is_authenticated %}
         <li>
+          <a href="{{ user.profile.get_absolute_url }}">
+            <strong>{{ user.username }}</strong>
+          </a>
+        </li>
+        {% if user.is_staff %}
+          <li>
+            <a href="/admin/">Admin</a>
+          </li>
+        {% endif %}
+        <li>
 	  <a href="{% url 'account_logout' %}">Logout</a>
 	</li>
       {% else %}
@@ -28,3 +38,4 @@
     </ul>
   </div>
 </div>
+x
