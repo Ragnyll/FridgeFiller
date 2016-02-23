@@ -13,32 +13,34 @@
   </head>
   <body>
     {% include "_navbar.html" %}
-
-    <!-- Sidebar -->
-    {% if user.is_authenticated %}
-      <div id="sidebar-wrapper">
-        <ul class="sidebar-nav">
-          <li>
-            <a href="{% url 'lists' %}">My Lists <span class="fa fa-arrow-right"></span></a>
-          </li>
-          <li>
-            <a href="#">My Groups <span class="fa fa-arrow-right"></span></a>
-          </li>
-          <li>
-            <a href="#">Suggested Lists</a>
-          </li>
-          {% block sidebar %}{% endblock %}
-        </ul>
-      </div>
-    {% endif %}
     
     <!-- Page Content -->
-    <div id="page-content-wrapper">
-      <div class="container-fluid">
-        <div class="row">
-          <div class="col-lg-12">
-            {% block content %}{% endblock %}
-          </div>
+    <div class="container-fluid">
+      <div class="row">
+        {% block messages-nav %}{% endblock %}
+        <div id="sidebar" class="col-md-2 col-xs-2 hidden-xs sidebar">
+          <ul class="sidebar-nav">
+            <li>
+              <a href="{% url 'lists' %}">
+                My Lists <span class="fa fa-arrow-right"></span>
+              </a>
+            </li>
+            <li>
+              <a href="">
+                My Groups <span class="fa fa-arrow-right"></span>
+              </a>
+            </li>
+            <li>
+              <a href="">
+                Suggested Lists
+              </a>
+            </li>
+          </ul>
+
+          {% block sidebar %}{% endblock %}
+        </div>
+        <div id="content" class="col-lg-10 col-xs-12 content">
+          {% block content %}{% endblock %}
         </div>
       </div>
     </div>
