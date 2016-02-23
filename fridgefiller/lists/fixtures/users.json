@@ -1,10 +1,26 @@
 [
     {
-        "model": "lists.User",
+        "model": "lists.UserProfile",
         "pk": 1,
         "fields": {
             "name": "john",
             "description": "Very tall"
+        }
+    },
+    {
+        "model": "lists.UserProfile",
+        "pk": 2,
+        "fields": {
+            "name": "silent bob",
+            "description": "very quiet"
+        }
+    },
+    {
+        "model": "lists.UserProfile",
+        "pk": 3,
+        "fields": {
+            "name": "jay",
+            "description": "tall, but not as tall as john"
         }
     }
 ]
