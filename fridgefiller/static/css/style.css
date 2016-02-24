@@ -1,3 +1,104 @@
 .navbar {
     border-radius: 0 !important;
+    margin-bottom: 0;
 }
+
+.table-bordered, .table-bordered thead tr th, .table-bordered tbody tr td {
+    border: 3px solid #34495E;
+    
+}
+
+.shopping-list h1, .shopping-list h4, .shopping-list-h6{
+    display: inline;
+    vertical-align: middle;
+    margin-bottom: 0;
+}
+
+.alert-danger {
+    background-color: #F2DEDE;
+}
+
+.container-fluid {
+    margin-left: 0;
+    padding-left: 0;
+}
+
+.sidebar {
+    background-color: #169E83;
+    margin-left: 0;
+    margin-right: 0;
+    padding-right: 0;
+    position: fixed;
+    height: 100%;
+    margin-top: 22px;
+}
+
+.content {
+    float: right;
+}
+
+.sidebar-nav {
+    top: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.sidebar-nav li {
+    text-indent: 20px;
+    line-height: 60px;
+    border-bottom: 3px solid #D1D5D8;
+}
+
+.sidebar-nav li a {
+    display: block;
+    text-decoration: none;
+    color: #fff;
+}
+
+.sidebar-nav li a:hover {
+    text-decoration: none;
+    color: #fff;
+    background: rgba(255,255,255,0.2);
+}
+
+.sidebar-nav li a:active,
+.sidebar-nav li a:focus {
+    text-decoration: none;
+}
+
+.sidebar-nav > .sidebar-brand {
+    height: 65px;
+    font-size: 18px;
+    line-height: 60px;
+}
+
+.sidebar-nav > .sidebar-brand a {
+    color: #999999;
+}
+.sidebar-nav > .sidebar-brand a:hover {
+    color: #fff;
+    background: none;
+}
+
+hr {
+    display: block;
+    height: 1px;
+    border: 0;
+    border-top: 1px solid #169E83;
+    margin: 1em 0;
+    padding: 0; 
+}
+
+.shopping-list-row {
+    border: 3px solid;
+}
+
+.shopping-list-row span {
+    margin: 10px 5px 5px 5px;
+}
+
+.popover-content {
+    background-color: #34495E;
+    color: white;
+}
+

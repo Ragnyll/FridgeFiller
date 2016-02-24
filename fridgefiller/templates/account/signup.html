@@ -1,38 +1,83 @@
-{% extends "plain.html" %}
+{% extends "base.html" %}
 
-{% load url from future %}
 {% load i18n %}
-{% load crispy_forms_tags %}
 
 {% block title %}
-  Sign Up
+Sign Up
 {% endblock %}
 
-{% block main_content %}
-<div class="container">
-  <div class="row">
-    <div class="col-xs-12 col-sm-6 col-sm-offset-3">
+{% block content %}
+  <div class="container">
+    <div class="row">
+      <div class="col-md-12">
+        <h1 class="text-center">{% trans "Sign Up" %}</h1>
 
-      <h1 class="text-center">{% trans "Sign Up" %}</h1>
+        <p class="text-center">
+          
+        </p>
+        
+        <form class="form-horizontal well col-md-12" id="signup_form" method="post" action="{% url 'account_signup' %}">
+          <h4 class="text-center">
+            Already have an account? &nbsp;&nbsp;<a href="{% url 'account_login' %}">Sign In!</a>
+          </h4>
+          <br>
+          {% csrf_token %}
 
-      <p class="text-center">
-        {% blocktrans %}Already have an account? <br> Then please <a href="{{ login_url }}">sign in</a>.{% endblocktrans %}
-      </p>
-
-      <form class="form-horizontal" id="signup_form" method="post" action="{% url 'account_signup' %}">
-        {% csrf_token %}
-        {{ form|crispy }}
-        {% if redirect_field_value %}
-        <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" class="form-control">
-        {% endif %}
-        <div class="form-group">
-          <div class="controls">
-            <input type="submit" class="btn btn-primary form-control" value="Sign Up">
+          <div class="form-group">
+            <label for="username" class="col-lg-2 control-label">Username</label>
+            <div class="col-lg-10">
+              <input type="text" class="form-control" id="username" name="username" placeholder="Username">
+            </div>
           </div>
-        </div>
-      </form>
+          
+          <div class="form-group">
+            <label for="email" class="col-lg-2 control-label">Email</label>
+            <div class="col-lg-10">
+              <input type="email" name="email" class="form-control" id="email" placeholder="Email Address (optional)">
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label for="password1" class="col-lg-2 control-label">Password</label>
+            <div class="col-lg-10">
+              <input type="password" name="password1" class="form-control" id="password1" placeholder="Password">
+            </div>
+          </div>
+          
+          <div class="form-group {% if form.field.errors %} has-error {% endif %}">
+            <label for="password2" class="col-lg-2 control-label">Repeat Password</label>
+            <div class="col-lg-10">
+              <input type="password" name="password2" class="form-control" id="password2" placeholder="Repeat Password">
+
+              {% if form.errors %}
+                <br>
+                {% for field in form %}
+                  {% for error in field.errors %}
+                    <div class="alert alert-danger">
+                      <strong>{{ field.label }}:&nbsp;&nbsp;&nbsp; {{ error|escape }}</strong>
+                    </div>
+                  {% endfor %}
+                {% endfor %}
+                {% for error in form.non_field_errors %}
+                  <div class="alert alert-danger">
+                    <strong>{{ error|escape }}</strong>
+                  </div>
+                {% endfor %}
+              {% endif %}
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <div class="col-lg-offset-2 col-lg-10">
+              <button type="submit" class="btn btn-primary">Sign Up</button>
+            </div>
+          </div>
+          
+          {% if redirect_field_value %}
+          <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" class="form-control">
+          {% endif %}
+        </form>
+      </div>
     </div>
   </div>
-</div>
-
 {% endblock %}

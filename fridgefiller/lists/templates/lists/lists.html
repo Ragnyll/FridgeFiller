@@ -1,9 +1,68 @@
-{% extends "base.html" %}
+{% extends "base_sidebar.html" %}
 
 {% block title %}
   Your Shopping Lists
 {% endblock %}
 
 {% block content %}
-  <h1 class="text-center">You are viewing your Shopping Lists</h1>
+  <h1 class="text-center">Your Shopping Lists</h1>
+    
+  {% if not user_shopping_lists %}
+    <div class="text-center">
+      <br>
+      <h3>
+        Looks like you don't have any lists created.
+      </h3>
+    </div>
+  {% else %}
+    {% for list in user_shopping_lists %}
+      <div class="shopping-list well">
+        <h1 >
+          <a href="/lists/{{ list.id }}/">
+            {{ list }}&nbsp;&nbsp;&nbsp;
+          </a>
+        </h1>
+        <h4>{{ list.description }}</h4>  
+        <hr>
+        <table class="table table-borderless">
+          <tbody>
+            {% for item in list.items.all %}
+              <tr class="shopping-list-row">
+                <td>
+                  <!-- TODO: Add Ajax call to view that deletes item from list -->
+                  <span data-toggle="popover" data-placement="top" data-content="Remove this item from your list" class="btn btn-lg btn-danger fa fa-minus-square">&nbsp;from List</span>  
+                  <!-- TODO: Add javascript to dynamically add form below this row's content that lets you add item to pantry
+                             with all the extra fields that an ItemDetail has -->
+                  <span data-toggle="popover" data-placement="top" data-content="Add this item to your pantry" class="btn btn-lg  btn-primary fa fa-plus-square">&nbsp;to Pantry</span>  
+                  <h4>{{ item.name }}</h4>
+                </td>
+                <td>
+                  <h6>{{ item.description }}</h6>
+                </td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+        <!-- TODO: Add javascript to dynamically add form to add new items to the list -->
+        <div class="text-center">
+          <span class="btn btn-lg btn-primary text-center">Add Item</span>
+        </div>
+      </div>
+    {% endfor %}
+  {% endif %}
+      
+  <div class="text-center">
+    <a href="{% url 'new-list' %}" class="btn btn-lg btn-primary">
+      Create a New List
+    </a>
+  </div>
+
+{% endblock %}
+
+{% block script %}
+  <script>
+    $(document).ready(function(){
+      $('[data-toggle="popover"]').popover({ trigger: "hover" }); 
+    });
+  </script>
 {% endblock %}

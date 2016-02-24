@@ -1,0 +1,82 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <title>{% block title %}{% endblock %}</title>
+
+    {% block head %}
+      {% include "_head.html" %}
+    {% endblock %}
+    
+    {% block meta %}{% endblock %}
+    {% block style %}{% endblock %}
+    {% block link %}{% endblock %}
+  </head>
+  <body>
+    {% include "_navbar.html" %}
+    
+    <!-- Page Content -->
+    <div class="container-fluid">
+      <div class="row">
+        {% block messages-nav %}{% endblock %}
+        <div id="sidebar" class="col-md-2 col-xs-2 hidden-xs sidebar">
+          <ul class="sidebar-nav">
+            <li>
+              <a href="{% url 'pantry' %}">
+                My Pantry
+              </a>
+            </li>
+            <li>
+              <a href="{% url 'lists' %}">
+                My Lists <span class="fa fa-arrow-right"></span>
+              </a>
+            </li>
+            <li>
+              <a href="">
+                My Groups <span class="fa fa-arrow-right"></span>
+              </a>
+            </li>
+            <li>
+              <a href="">
+                Suggested Lists
+              </a>
+            </li>
+          </ul>
+
+          {% block sidebar %}{% endblock %}
+        </div>
+        <div id="content" class="col-lg-10 col-xs-12 content">
+          {% block content %}{% endblock %}
+        </div>
+      </div>
+    </div>
+
+    {% block modal %}{% endblock %}
+    
+    <!-- Scripts -->
+    {% include "_scripts.html" %}
+    
+
+    <!-- responsive sidebar --> 
+    <script>
+      /*
+      $('.navbar-toggle').click(function() {
+          // if sidebar is hidden, show it
+          if ($('#sidebar').hasClass('hidden-xs')) {
+              $('#sidebar').removeClass('hidden-xs');
+              $('#sidebar').addClass('col-xs-12');
+              $('#sidebar').css("height", "auto");
+
+              $('#content').removeClass('col-xs
+          }
+           
+          // if sidebar isnt hidden
+           
+      });*/
+    </script>
+
+
+    <!-- Extra scripts -->
+    {% block script %}{% endblock %}
+    
+  </body>
+</html>
