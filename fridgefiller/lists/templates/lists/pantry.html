@@ -1,0 +1,86 @@
+{% extends "base_sidebar.html" %}
+
+{% block title %}
+  Your Pantry
+{% endblock %}
+
+{% block style %}
+  <style>
+    h4 {
+        display: inline;
+        vertical-align: middle;
+    }
+    .pantry-table-header, .pantry-table-header td {
+        border: 3px solid;
+        border-collapse: collapse;
+    }
+  </style>
+{% endblock %}
+
+
+
+{% block content %}
+  <h1 class="text-center">My Pantry</h1>
+
+  <div class="well">
+    <table class="table table-borderless">
+      <thead>
+        <tr class="pantry-table-header">
+          <td>
+            <h6>Stock</h6>
+          </td>
+          <td>
+            <h6>Name</h6>
+          </td>
+          <td>
+            <h6>Cost</h6>
+          </td>
+          <td>
+            <h6>Last Purchased</h6>
+          </td>
+          <td>
+            <h6>Location Purchased</h6>
+          </td>
+          <td>
+            <h6>Expiration Date</h6>
+          </td>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in pantry_items %}
+          <tr class="shopping-list-row">
+            <td>
+              <h6>{{ item.get_amount }} {{ item.unit }}</h6>
+            </td>
+            <td>
+              <h6><strong>{{ item.name }}</strong></h6>
+            </td>
+            <td>
+              <h6>${{ item.get_cost }}</h6>
+            </td>
+            <td>
+              <h6>{{ item.get_last_purchased }}</h6>
+            </td>
+            <td>
+              <h6>{{ item.get_location_purchased }}</h6>
+            </td>
+            <td>
+              <h6>{{ item.get_expiration_date }}</h6>
+            </td>
+          </tr>
+          {% endfor %}
+      </tbody>
+    </table>
+
+  </div>
+
+{% endblock %}
+
+
+{% block script %}
+  <script>
+    $(document).ready(function(){
+      $('[data-toggle="popover"]').popover({ trigger: "hover" }); 
+    });
+  </script>
+{% endblock %}

@@ -22,13 +22,7 @@
             {{ list }}&nbsp;&nbsp;&nbsp;
           </a>
         </h1>
-        <h4>{{ list.description }}</h4>
-        <h4 class="pull-right">
-          <a href="/lists/edit/{{ list.id }}/">
-            Edit This List
-          </a>
-        </h4>
-          
+        <h4>{{ list.description }}</h4>  
         <hr>
         <table class="table table-borderless">
           <tbody>
@@ -39,7 +33,7 @@
                   <span data-toggle="popover" data-placement="top" data-content="Remove this item from your list" class="btn btn-lg btn-danger fa fa-minus-square">&nbsp;from List</span>  
                   <!-- TODO: Add javascript to dynamically add form below this row's content that lets you add item to pantry
                              with all the extra fields that an ItemDetail has -->
-                  <span data-toggle="popover" data-placement="top" data-content="Add this item to your pantry" class="btn btn-lg  btn-success fa fa-plus-square">&nbsp;to Pantry</span>  
+                  <span data-toggle="popover" data-placement="top" data-content="Add this item to your pantry" class="btn btn-lg  btn-primary fa fa-plus-square">&nbsp;to Pantry</span>  
                   <h4>{{ item.name }}</h4>
                 </td>
                 <td>

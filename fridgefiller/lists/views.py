@@ -4,7 +4,7 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils.decorators import method_decorator
 
-from .models import UserProfile, Party, ShoppingList
+from .models import *
 
 
 def disp_info(request):
@@ -60,3 +60,23 @@ class EditListView(TemplateView):
     """
     template_name = "lists/edit_list.html"
 
+
+class PantryView(TemplateView):
+    """
+    This view displays the user's pantry
+    """
+    template_name = "lists/pantry.html"
+
+
+    def get_context_data(self, **kwargs):
+        context = super(PantryView, self).get_context_data(**kwargs)
+
+        user = UserProfile.objects.get(user=self.request.user)
+        
+        party = Party.objects.filter(owner=user)[0]
+        pantry = Pantry.objects.filter(party=party)[0]
+
+        context['party'] = party
+        context['pantry'] = pantry
+        context['pantry_items'] = pantry.items.all()
+        return context
