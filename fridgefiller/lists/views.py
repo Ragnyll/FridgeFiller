@@ -1,16 +1,18 @@
 from django.shortcuts import render
 from django.views.generic import TemplateView
+
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils.decorators import method_decorator
 
-from .models import *
+from .models import UserProfile, Party, ShoppingList
 
 
 def disp_info(request):
-    users = User.objects.all()
+    users = UserProfile.objects.all()
     parties = Party.objects.all()
     shoppinglists = ShoppingList.objects.all()
+
     return render(request, 'lists/disp_info.html',{'users': users})
 
 

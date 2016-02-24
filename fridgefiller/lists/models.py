@@ -113,5 +113,3 @@ class ItemDetail(Item):
 
     def get_location_purchased(self):
         return self.location_purchased if self.location_purchased != "" else "---"
-
-    

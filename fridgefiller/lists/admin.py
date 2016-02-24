@@ -2,30 +2,27 @@ from django.contrib import admin
 from .models import *
 
 class UserAdmin(admin.ModelAdmin):
-	list_display = ('name', 'description')
+	list_display = ('name', 'user', 'description')
 
-class GroupAdmin(admin.ModelAdmin):
+class PartyAdmin(admin.ModelAdmin):
 	list_display = ('name', 'owner')
 
 class ListAdmin(admin.ModelAdmin):
-	list_display = ('name', 'primary_owner', 'description')
+	list_display = ('name', 'description')
 
 class ItemAdmin(admin.ModelAdmin):
-	list_display = ('name', 'cost', 'description')
+	list_display = ('name', 'description')
 
-class IngredientAdmin(admin.ModelAdmin):
-	list_display = ('name', 'recipe', 'unit', 'amount')
+class PantryAdmin(admin.ModelAdmin):
+	list_display = ('description','party')
 
-class RecipeAdmin(admin.ModelAdmin):
-	list_display = ('recipe_name', 'serving_size')
+class ItemDetAdmin(admin.ModelAdmin):
+	list_display = ('name', 'cost', 'last_purchased', 'location_purchased', 'unit', 'amount', 'expiration_date')
 
-class NutritionAdmin(admin.ModelAdmin):
-	list_display = ('calories', 'total_fat', 'sodium', 'sugar', 'protein')
-
-admin.site.register(User, UserAdmin)
-admin.site.register(Group, GroupAdmin)
-admin.site.register(List, ListAdmin)
+admin.site.register(UserProfile, UserAdmin)
+admin.site.register(Party, PartyAdmin)
+admin.site.register(ShoppingList, ListAdmin)
 admin.site.register(Item, ItemAdmin)
-admin.site.register(Ingredient, IngredientAdmin)
-admin.site.register(Recipe, RecipeAdmin)
-admin.site.register(Nutrition, NutritionAdmin)
+admin.site.register(Pantry, PantryAdmin)
+admin.site.register(ItemDetail, ItemDetAdmin)
+
