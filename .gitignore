@@ -17,3 +17,6 @@ fridgefiller/*/fixtures/*.d
 
 # SQLite DB
 fridgefiller/*.sqlite3
+
+#Secrets
+secret.py
