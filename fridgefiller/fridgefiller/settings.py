@@ -1,5 +1,7 @@
 import os
 
+from secret_settings import POSTGRES_DB, POSTGRES_USER, POSTGRES_PASSWORD
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -9,13 +11,12 @@ SECRET_KEY = 'olnitr_42%kkb91ae!j!#qkxyqs1dkuez!lskye@-00705ie$p'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['fridgefiller.xyz', '.fridgefiller.xyx']
 
 SITE_ID = 1
 
 STATIC_URL = "/static/"
 STATIC_ROOT = "/home/ubuntu/static/"
-
 
 STATICFILES_DIRS = (
     os.path.join(BASE_DIR, 'static'),
@@ -23,8 +24,6 @@ STATICFILES_DIRS = (
 
 LOGIN_REDIRECT_URL = "/"
 LOGOUT_REDIRECT_URL = "/"
-
-
 
 # Application definition
 
@@ -91,12 +90,25 @@ WSGI_APPLICATION = 'fridgefiller.wsgi.application'
 # Database
 # https://docs.djangoproject.com/en/1.9/ref/settings/#databases
 
-DATABASES = {
-    'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': os.path.join(BASE_DIR, 'db.sqlite3'),
+if DEBUG:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.sqlite3',
+            'NAME': 'mydatabase',
+        }
     }
-}
+
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': 'django.db.backends.postgresql_psycopg2',
+            'NAME': POSTGRES_DB,
+            'USER': POSTGRES_USER,
+            'PASSWORD': POSTGRES_PASSWORD,
+            'HOST': 'localhost',
+            'PORT': '',
+        }
+    }
 
 
 # Password validation
