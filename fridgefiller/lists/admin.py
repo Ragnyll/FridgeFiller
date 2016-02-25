@@ -26,3 +26,4 @@ admin.site.register(Item, ItemAdmin)
 admin.site.register(Pantry, PantryAdmin)
 admin.site.register(ItemDetail, ItemDetAdmin)
 
+
