@@ -63,12 +63,12 @@ class Item(models.Model):
 
 class ItemDetail(Item):
     cost = models.FloatField(default=0)
-    last_purchased = models.DateTimeField(null=True)
+    last_purchased = models.DateTimeField(blank=True)
     location_purchased = models.CharField(max_length=64)
 # barcode should be moved to its own entity once we gather what we need from it
     barcode = models.IntegerField(default=0, blank=True)
     unit = models.CharField(default=0, max_length=64)
     amount = models.FloatField(default=0)
-    expiration_date = models.DateTimeField(null=True)
+    expiration_date = models.DateTimeField(blank=True)
 
     
