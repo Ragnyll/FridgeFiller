@@ -47,9 +47,12 @@
         <hr>
         {% if messages %}
           {% for message in messages %}
-            <span {% if message.tags %} class="message alert alert-{% if 'error' in message.tags %}danger{% else %}{{ message.tags }}{% endif %}"{% endif %}>{{ message }}</span>
+            <!-- Only show messages that pertain to the list the operation was completed on -->
+            {% ifequal message.extra_tags list.id %}
+              <span>{{ message|safe }}</span>
+              <br><br>
+            {% endifequal %}
           {% endfor %}
-          <br><br>
         {% endif %}
         <table class="table table-borderless">
           <tbody>

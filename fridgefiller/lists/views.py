@@ -98,28 +98,28 @@ class NewItemView(View):
 
         # Don't make empty items!
         if item_name == "":
-            messages.add_message(request, messages.ERROR, "ERROR: You must provide a name for the item.")            
+            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>ERROR: You must provide a name for the item.</span>", extra_tags=int(list_id))            
             return redirect('/lists')
         
         # Get or create item in database
         try:
             new_item, created = Item.objects.get_or_create(name=item_name, description=item_desc)
         except:
-            messages.add_message(request, messages.ERROR, "Error: can't create or get that item.")
+            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Error: can't create or get that item.</span>", extra_tags=int(list_id))
             return redirect('/lists')
 
         # Don't add duplicate items
         if new_item in list_obj.items.all():
-            messages.add_message(request, messages.ERROR, "That item already exists in the list.")
+            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>That item already exists in the list.</span>", extra_tags=int(list_id))
             return redirect('/lists')
 
         # Add item to list
         try:
             list_obj.items.add(new_item)
             list_obj.save()
-            messages.add_message(request, messages.SUCCESS, "Success!  Added " + item_name + " to list!")
+            messages.add_message(request, messages.SUCCESS, "<span class='alert alert-success'>Success!  Added " + item_name + " to list!</span>", extra_tags=int(list_id))
         except:
-            messages.add_message(request, messages.ERROR, "Unable to add " + item_name + " to list.")
+            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Unable to add " + item_name + " to list.</span>", extra_tags=int(list_id))
 
         return redirect('/lists/#' + list_id)
 
@@ -139,8 +139,8 @@ class RemoveItemFromListView(View):
         # Remove the item from the list
         try:
             list_obj.items.remove(item_obj)
-            messages.add_message(request, messages.SUCCESS, "Successfully removed " + item_name + " from list")
+            messages.add_message(request, messages.SUCCESS, "<span class='alert alert-success'>Successfully removed " + item_name + " from list</span>", extra_tags=int(list_id))
         except:
-            messages.add_message(request, messages.ERROR, "Unable to remove " + item_name + " from list.")
+            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Unable to remove " + item_name + " from list.</span>", extra_tags=int(list_id))
 
         return redirect("/lists")
