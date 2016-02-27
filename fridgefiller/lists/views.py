@@ -122,3 +122,25 @@ class NewItemView(View):
             messages.add_message(request, messages.ERROR, "Unable to add " + item_name + " to list.")
 
         return redirect('/lists/#' + list_id)
+
+class RemoveItemFromListView(View):
+    """
+    This view removes an item from a list and returns the user to their lists page
+    """
+
+    def post(self, request, *args, **kwargs):
+        item_name = request.POST.get('remove-item-name', False)
+        item_desc = request.POST.get('remove-item-description', False)
+        list_id = request.POST.get('list-id', False)
+
+        item_obj = Item.objects.get(name=item_name, description=item_desc)
+        list_obj = ShoppingList.objects.get(id=list_id)
+        
+        # Remove the item from the list
+        try:
+            list_obj.items.remove(item_obj)
+            messages.add_message(request, messages.SUCCESS, "Successfully removed " + item_name + " from list")
+        except:
+            messages.add_message(request, messages.ERROR, "Unable to remove " + item_name + " from list.")
+
+        return redirect("/lists")

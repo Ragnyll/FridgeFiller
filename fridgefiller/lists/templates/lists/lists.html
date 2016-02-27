@@ -6,6 +6,9 @@
 
 {% block style %}
   <style>
+    #remove-item-form {
+        display: inline;
+    }
     #new-item-save {
         float: right;
     }
@@ -53,8 +56,14 @@
             {% for item in list.items.all %}
               <tr class="shopping-list-row">
                 <td>
-                  <!-- TODO: Add Ajax call to view that deletes item from list -->
-                  <span data-toggle="popover" data-placement="top" data-content="Remove this item from your list" class="btn btn-lg btn-danger fa fa-minus-square">&nbsp;from List</span>  
+                  <!-- Remove item form -->
+                  <form method="POST" id="remove-item-form" action="{% url 'remove-item' %}">
+                    {% csrf_token %}
+                    <input type="hidden" value="{{ item.name }}" name="remove-item-name">
+                    <input type="hidden" value="{{ item.description }}" name="remove-item-description">
+                    <input type="hidden" value="{{ list.id }}" name="list-id">
+                    <button type="submit" data-toggle="popover" data-placement="top" data-content="Remove this item from your list" class="btn btn-lg btn-danger fa fa-minus-square">&nbsp;from List</button>  
+                  </form>
                   <!-- TODO: Add javascript to dynamically add form below this row's content that lets you add item to pantry
                              with all the extra fields that an ItemDetail has -->
                   <span data-toggle="popover" data-placement="top" data-content="Add this item to your pantry" class="btn btn-lg  btn-primary fa fa-plus-square">&nbsp;to Pantry</span>  
