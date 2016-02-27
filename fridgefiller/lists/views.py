@@ -1,12 +1,13 @@
-from django.shortcuts import render
-from django.views.generic import TemplateView
-
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from django.views.generic import TemplateView, UpdateView, View
+from django.core.urlresolvers import reverse
+from django.contrib import messages
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils.decorators import method_decorator
 
-from .models import UserProfile, Party, ShoppingList
-
+from .models import *
 
 def disp_info(request):
     users = UserProfile.objects.all()
@@ -82,3 +83,42 @@ class PantryView(TemplateView):
         context['pantry'] = pantry
         context['pantry_items'] = pantry.items.all()
         return context
+
+
+class NewItemView(View):
+    """
+    This view adds a new item to a list, and returns the user to the lists page
+    """
+    def post(self, request, *args, **kwargs):
+        item_name = request.POST.get('new-item-name', False)
+        item_desc = request.POST.get('new-item-description', False)
+        
+        list_id = request.POST.get('list-id', False)
+        list_obj = ShoppingList.objects.get(id=list_id)
+
+        # Don't make empty items!
+        if item_name == "":
+            messages.add_message(request, messages.ERROR, "ERROR: You must provide a name for the item.")            
+            return redirect('/lists')
+        
+        # Get or create item in database
+        try:
+            new_item, created = Item.objects.get_or_create(name=item_name, description=item_desc)
+        except:
+            messages.add_message(request, messages.ERROR, "Error: can't create or get that item.")
+            return redirect('/lists')
+
+        # Don't add duplicate items
+        if new_item in list_obj.items.all():
+            messages.add_message(request, messages.ERROR, "That item already exists in the list.")
+            return redirect('/lists')
+
+        # Add item to list
+        try:
+            list_obj.items.add(new_item)
+            list_obj.save()
+            messages.add_message(request, messages.SUCCESS, "Success!  Added " + item_name + " to list!")
+        except:
+            messages.add_message(request, messages.ERROR, "Unable to add " + item_name + " to list.")
+
+        return redirect('/lists/#' + list_id)
