@@ -99,19 +99,19 @@ class NewItemView(View):
         # Don't make empty items!
         if item_name == "":
             messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>ERROR: You must provide a name for the item.</span>", extra_tags=int(list_id))            
-            return redirect('/lists')
+            return redirect('/lists/#' + list_id)
         
         # Get or create item in database
         try:
             new_item, created = Item.objects.get_or_create(name=item_name, description=item_desc)
         except:
             messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Error: can't create or get that item.</span>", extra_tags=int(list_id))
-            return redirect('/lists')
+            return redirect('/lists/#' + list_id)
 
         # Don't add duplicate items
         if new_item in list_obj.items.all():
             messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>That item already exists in the list.</span>", extra_tags=int(list_id))
-            return redirect('/lists')
+            return redirect('/lists/#' + list_id)
 
         # Add item to list
         try:
@@ -143,4 +143,4 @@ class RemoveItemFromListView(View):
         except:
             messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Unable to remove " + item_name + " from list.</span>", extra_tags=int(list_id))
 
-        return redirect("/lists")
+        return redirect("/lists/#" + list_id)
