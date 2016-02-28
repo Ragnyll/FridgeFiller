@@ -90,8 +90,8 @@ class NewItemView(View):
     This view adds a new item to a list, and returns the user to the lists page
     """
     def post(self, request, *args, **kwargs):
-        item_name = request.POST.get('new-item-name', False)
-        item_desc = request.POST.get('new-item-description', False)
+        item_name = request.POST.get('new-item-name', False).title()
+        item_desc = request.POST.get('new-item-description', False).capitalize()
         
         list_id = request.POST.get('list-id', False)
         list_obj = ShoppingList.objects.get(id=list_id)
