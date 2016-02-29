@@ -87,5 +87,16 @@ def generate_db():
     guild_bank.save()
 
 
+
+    fruit_list = [Item.objects.create(name="Orange", description="orange"),
+                  Item.objects.create(name="Banana", description="yellow made for holding"),
+                  Item.objects.create(name="Green Apple", description="Sour")]
+
+    codex_shop_list = ShoppingList.objects.create(name="Codex Fruit list")
+    for i in fruit_list:
+        codex_shop_list.items.add(i)
+    codex_shop_list.owners.add(codex_up)
+
+
 if __name__ == "__main__":
     generate_db()
