@@ -4,6 +4,27 @@
   Your Shopping Lists
 {% endblock %}
 
+{% block style %}
+  <style>
+    #remove-item-form {
+        display: inline;
+    }
+    #new-item-save {
+        float: right;
+    }
+    #new-item-desc-wrapper {
+        overflow: hidden;
+        padding-right: .5em;
+    }
+    #new-item-desc {
+        width: 100%;
+    }
+    .message {
+        width: 100%;
+    }
+  </style>
+{% endblock %}
+
 {% block content %}
   <h1 class="text-center">Your Shopping Lists</h1>
     
@@ -16,21 +37,36 @@
     </div>
   {% else %}
     {% for list in user_shopping_lists %}
-      <div class="shopping-list well">
-        <h1 >
+      <div id="{{ list.id }}" class="shopping-list well">
+        <h1>
           <a href="/lists/{{ list.id }}/">
             {{ list }}&nbsp;&nbsp;&nbsp;
           </a>
         </h1>
         <h4>{{ list.description }}</h4>  
         <hr>
+        {% if messages %}
+          {% for message in messages %}
+            <!-- Only show messages that pertain to the list the operation was completed on -->
+            {% ifequal message.extra_tags list.id %}
+              <span>{{ message|safe }}</span>
+              <br><br>
+            {% endifequal %}
+          {% endfor %}
+        {% endif %}
         <table class="table table-borderless">
           <tbody>
             {% for item in list.items.all %}
               <tr class="shopping-list-row">
                 <td>
-                  <!-- TODO: Add Ajax call to view that deletes item from list -->
-                  <span data-toggle="popover" data-placement="top" data-content="Remove this item from your list" class="btn btn-lg btn-danger fa fa-minus-square">&nbsp;from List</span>  
+                  <!-- Remove item form -->
+                  <form method="POST" id="remove-item-form" action="{% url 'remove-item' %}">
+                    {% csrf_token %}
+                    <input type="hidden" value="{{ item.name }}" name="remove-item-name">
+                    <input type="hidden" value="{{ item.description }}" name="remove-item-description">
+                    <input type="hidden" value="{{ list.id }}" name="list-id">
+                    <button type="submit" data-toggle="popover" data-placement="top" data-content="Remove this item from your list" class="btn btn-lg btn-danger fa fa-minus-square">&nbsp;from List</button>  
+                  </form>
                   <!-- TODO: Add javascript to dynamically add form below this row's content that lets you add item to pantry
                              with all the extra fields that an ItemDetail has -->
                   <span data-toggle="popover" data-placement="top" data-content="Add this item to your pantry" class="btn btn-lg  btn-primary fa fa-plus-square">&nbsp;to Pantry</span>  
@@ -41,11 +77,28 @@
                 </td>
               </tr>
             {% endfor %}
-          </tbody>
-        </table>
+            <tr>
+              <!-- add item form -->
+              <form class="form-horizontal" id="new-item-form" action="{% url 'new-item' %}" method="POST">
+                {% csrf_token %}
+                <td>
+                  <input type="text" class="form-control" name="new-item-name" id="new-item-name" placeholder="Item Name">
+                </td>
+                <td>
+                  <input type="submit" class="btn btn-primary" value="Save" id="new-item-save" />
+                  <div id="new-item-desc-wrapper">
+                    <input type="text" class="form-control" name="new-item-description" id="new-item-desc" placeholder="Item Description" />
+                  </div>
+                  <input type="hidden" value="{{list.id}}" name="list-id">
+                </td>
+              </form>
+            </tr>
+          </tbody>              
+        </table>            
+  
         <!-- TODO: Add javascript to dynamically add form to add new items to the list -->
         <div class="text-center">
-          <span class="btn btn-lg btn-primary text-center">Add Item</span>
+          <span class="btn btn-lg btn-primary text-center">Add Another Item</span>
         </div>
       </div>
     {% endfor %}

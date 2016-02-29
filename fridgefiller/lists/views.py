@@ -1,16 +1,19 @@
-from django.shortcuts import render
-from django.views.generic import TemplateView
+from django.shortcuts import render, redirect
+from django.http import HttpResponse
+from django.views.generic import TemplateView, UpdateView, View
+from django.core.urlresolvers import reverse
+from django.contrib import messages
 from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils.decorators import method_decorator
 
 from .models import *
 
-
 def disp_info(request):
-    users = User.objects.all()
+    users = UserProfile.objects.all()
     parties = Party.objects.all()
     shoppinglists = ShoppingList.objects.all()
+
     return render(request, 'lists/disp_info.html',{'users': users})
 
 
@@ -80,3 +83,64 @@ class PantryView(TemplateView):
         context['pantry'] = pantry
         context['pantry_items'] = pantry.items.all()
         return context
+
+
+class NewItemView(View):
+    """
+    This view adds a new item to a list, and returns the user to the lists page
+    """
+    def post(self, request, *args, **kwargs):
+        item_name = request.POST.get('new-item-name', False)
+        item_desc = request.POST.get('new-item-description', False)
+        
+        list_id = request.POST.get('list-id', False)
+        list_obj = ShoppingList.objects.get(id=list_id)
+
+        # Don't make empty items!
+        if item_name == "":
+            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>ERROR: You must provide a name for the item.</span>", extra_tags=int(list_id))            
+            return redirect('/lists')
+        
+        # Get or create item in database
+        try:
+            new_item, created = Item.objects.get_or_create(name=item_name, description=item_desc)
+        except:
+            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Error: can't create or get that item.</span>", extra_tags=int(list_id))
+            return redirect('/lists')
+
+        # Don't add duplicate items
+        if new_item in list_obj.items.all():
+            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>That item already exists in the list.</span>", extra_tags=int(list_id))
+            return redirect('/lists')
+
+        # Add item to list
+        try:
+            list_obj.items.add(new_item)
+            list_obj.save()
+            messages.add_message(request, messages.SUCCESS, "<span class='alert alert-success'>Success!  Added " + item_name + " to list!</span>", extra_tags=int(list_id))
+        except:
+            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Unable to add " + item_name + " to list.</span>", extra_tags=int(list_id))
+
+        return redirect('/lists/#' + list_id)
+
+class RemoveItemFromListView(View):
+    """
+    This view removes an item from a list and returns the user to their lists page
+    """
+
+    def post(self, request, *args, **kwargs):
+        item_name = request.POST.get('remove-item-name', False)
+        item_desc = request.POST.get('remove-item-description', False)
+        list_id = request.POST.get('list-id', False)
+
+        item_obj = Item.objects.get(name=item_name, description=item_desc)
+        list_obj = ShoppingList.objects.get(id=list_id)
+        
+        # Remove the item from the list
+        try:
+            list_obj.items.remove(item_obj)
+            messages.add_message(request, messages.SUCCESS, "<span class='alert alert-success'>Successfully removed " + item_name + " from list</span>", extra_tags=int(list_id))
+        except:
+            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Unable to remove " + item_name + " from list.</span>", extra_tags=int(list_id))
+
+        return redirect("/lists")

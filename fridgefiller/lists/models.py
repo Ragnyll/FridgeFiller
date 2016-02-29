@@ -77,7 +77,7 @@ class Pantry(models.Model):
 
 class Item(models.Model):
     name = models.CharField(max_length=64)
-    description = models.TextField()
+    description = models.TextField(blank=True)
 
     def __str__(self):
        return str(self.name)
@@ -87,13 +87,13 @@ class Item(models.Model):
 
 class ItemDetail(Item):
     cost = models.FloatField(default=0)
-    last_purchased = models.DateTimeField(null=True)
-    location_purchased = models.CharField(max_length=64)
+    last_purchased = models.DateTimeField(blank=True)
+    location_purchased = models.CharField(max_length=64, blank=True)
 # barcode should be moved to its own entity once we gather what we need from it
     barcode = models.IntegerField(default=0, blank=True)
     unit = models.CharField(default=0, max_length=64)
     amount = models.FloatField(default=0)
-    expiration_date = models.DateTimeField(null=True)
+    expiration_date = models.DateTimeField(blank=True)
 
     def get_cost(self):
         if self.cost == int(self.cost):
@@ -113,5 +113,3 @@ class ItemDetail(Item):
 
     def get_location_purchased(self):
         return self.location_purchased if self.location_purchased != "" else "---"
-
-    
