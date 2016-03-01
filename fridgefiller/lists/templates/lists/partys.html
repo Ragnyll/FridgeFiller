@@ -1,0 +1,45 @@
+{% extends "base_sidebar.html" %}
+
+{% block title %}
+  Your Parties
+{% endblock %}
+
+{% block style %}
+
+{% endblock %}
+
+{% block content %}
+
+  <h1 class="text-center">Your Parties</h1>
+  <br>
+  <h3>Parties you own:</h3>
+  
+    {% if not user_partys %}
+      <div class="text-center">
+        <br>
+        <h3>Looks like you don't belong to any parties yet.</h3>
+      </div>
+    {% else %}
+      {% for party in party_own %}
+        <div id="{{ party.id }}" class="party well">
+          <h2>
+            <a href="/lists/party/{{ party.id }}/">
+              {{ party.name }}&nbsp;&nbsp;&nbsp;
+            </a>
+          </h2>
+          <h4>Owner: {{ party.owner }}</h4>
+        </div>
+      {% endfor %}
+      <h3>Parties you belong to:</h3>
+      {% for party in user_partys %}
+        <div id="{{ party.id }}" class="party well">
+          <h2>
+            <a href="/lists/party/{{party.id }}/">
+              {{ party }}
+            </a>
+          </h2>
+          <h4>Owner: {{ party.owner }}</h4>
+        </div>
+      {% endfor %}
+    {% endif %}
+{% endblock %}

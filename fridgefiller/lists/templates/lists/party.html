@@ -1,0 +1,17 @@
+{% extends "base_sidebar.html" %}
+
+{% block title %}
+  Party {{ party_id }}
+{% endblock %}
+
+{% block content %}
+  <h1 class="text-center">{{ party }}</h1>
+  <br>
+  <h2 class="text-center">Party Members:</h2>
+  {% for user in users %}
+    <h5 class="text-center">
+      {{user}} <!-- When user page exists, link user names to user pages -->
+    </h5> 
+  {% endfor %}
+
+{% endblock %}

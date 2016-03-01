@@ -102,3 +102,9 @@ hr {
     color: white;
 }
 
+.party h2, .party h4{
+    display: inline;
+    vertical-align: middle;
+    margin-bottom: 0;
+}
+

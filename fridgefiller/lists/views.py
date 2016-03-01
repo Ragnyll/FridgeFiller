@@ -144,3 +144,35 @@ class RemoveItemFromListView(View):
             messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Unable to remove " + item_name + " from list.</span>", extra_tags=int(list_id))
 
         return redirect("/lists")
+
+class PartyView(TemplateView):
+    """
+    This view displays a party with <party-id> and the party's users 
+    """
+    template_name = "lists/party.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(PartyView, self).get_context_data(**kwargs)
+
+        party = Party.objects.get(id=kwargs['party_id'])
+        user = UserProfile.objects.get(user=self.request.user)
+        context['party'] = party
+        context['users'] = party.users.all()
+        return context
+        
+
+class PartysView(TemplateView):
+    """
+    This view displays a list of partys a user belongs too
+    """
+    template_name = "lists/partys.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(PartysView, self).get_context_data(**kwargs)
+
+        user = UserProfile.objects.get(user=self.request.user)
+        
+        context['party_own'] = Party.objects.filter(owner__in=[user])
+        context['user_partys'] = Party.objects.filter(users__in=[user])
+
+        return context
