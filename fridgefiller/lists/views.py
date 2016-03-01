@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.generic import TemplateView, UpdateView, View
 from django.core.urlresolvers import reverse
 from django.contrib import messages
@@ -8,6 +8,7 @@ from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils.decorators import method_decorator
 
 from .models import *
+import walmart_api as wapi
 
 def disp_info(request):
     users = UserProfile.objects.all()
@@ -144,3 +145,15 @@ class RemoveItemFromListView(View):
             messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Unable to remove " + item_name + " from list.</span>", extra_tags=int(list_id))
 
         return redirect("/lists")
+
+
+def item_detail(request, *args, **kwargs):
+    return JsonResponse({'items': wapi.item_search(request.GET.get('item-name', False))})
+
+def upc(request, *args, **kwargs):
+    items = wapi.upc_search(request.GET.get('upc', False))
+    print items
+    return JsonResponse({'items': items})
+
+class test(TemplateView):
+    template_name = "lists/test.html"    

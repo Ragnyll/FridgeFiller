@@ -66,7 +66,7 @@ $(function() {
       },
       numOfWorkers: 1,
       decoder: {
-        readers: ["ean_reader"]
+        readers: ["upc_reader"]
       },
       locate: true,
       src: null
