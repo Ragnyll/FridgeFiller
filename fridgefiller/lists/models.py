@@ -3,6 +3,10 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 
+from datetime import datetime
+
+import pytz
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name="profile")
     name = models.CharField(max_length=32)
@@ -106,10 +110,10 @@ class ItemDetail(Item):
         return self.amount
 
     def get_last_purchased(self):
-        return self.last_purchased if self.last_purchased != None else "---"
+        return self.last_purchased if self.last_purchased not in [datetime.min.replace(tzinfo=pytz.UTC), None] else "---"
 
     def get_expiration_date(self):
-        return self.expiration_date if self.expiration_date != None else "---"
+        return self.expiration_date if self.expiration_date not in [datetime.min.replace(tzinfo=pytz.UTC), None] else "---"
 
     def get_location_purchased(self):
         return self.location_purchased if self.location_purchased != "" else "---"
