@@ -12,5 +12,6 @@ urlpatterns = [
     url(r'^new/item/', NewItemView.as_view(), name="new-item"),
     url(r'^remove/item/', RemoveItemFromListView.as_view(), name="remove-item"),
     url(r'^parties/', PartiesView.as_view(), name="parties"),
-    url(r'^party/(?P<party_id>\d+)', PartyView.as_view())
+    url(r'^party/(?P<party_id>\d+)', PartyView.as_view()),
+    url(r'^party/leave', LeavePartyView.as_view(), name ="leave-party")
 ]

@@ -27,19 +27,20 @@
               {{ party.name }}&nbsp;&nbsp;&nbsp;
             </a>
           </h2>
-          <h4>Owner: {{ party.owner }}</h4>
         </div>
       {% endfor %}
       <h3>Parties you belong to:</h3>
       {% for party in user_parties %}
-        <div id="{{ party.id }}" class="party well">
-          <h2>
-            <a href="/lists/party/{{party.id }}/">
-              {{ party }}
-            </a>
-          </h2>
-          <h4>Owner: {{ party.owner }}</h4>
-        </div>
+        {% if party not in party_own %}
+          <div id="{{ party.id }}" class="party well">
+            <h2>
+              <a href="/lists/party/{{party.id }}/">
+                {{ party }}
+              </a>
+            </h2>
+            <h4>Owner: {{ party.owner }}</h4>
+          </div>
+        {% endif %}
       {% endfor %}
     {% endif %}
 {% endblock %}

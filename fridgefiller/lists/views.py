@@ -167,11 +167,33 @@ class PartyView(TemplateView):
         party = Party.objects.get(id=kwargs['party_id'])
         user = UserProfile.objects.get(user=self.request.user)
         context['party'] = party
+        context['cuser'] = user
         context['users'] = party.users.all()
         context['party_lists'] = party.shoppinglists.all()
         context['party_pantry'] = Pantry.objects.filter(party__in=[party])
         return context
         
+class LeavePartyView(View):
+    """
+    This view removes you from a party and redirects back to your parties page
+    """
+
+    def post(self, request, *args, **kwargs):
+        party_id = request.POST.get('leave-group-id', False)
+
+        party_obj = Party.objects.get(id=party_id)
+        user = UserProfile.objects.get(user=self.request.user)
+        
+        # Shouldn't be able to leave party if you are the owner
+        # Remove user from party
+        try:
+            party_obj.users.remove(user)
+            messages.add_message(request, messages.SUCCESS, "<span class='alert alert-success'>Successfully left " + party_obj.name + "</span>")
+        except:
+            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'> Error in leaving " + party_obj.name + "</span>")
+       
+        return redirect("/lists/parties")
+
 
 class PartiesView(TemplateView):
     """

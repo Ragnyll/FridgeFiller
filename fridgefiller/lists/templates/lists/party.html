@@ -35,5 +35,20 @@
       {{user}} <!-- When user page exists, link user names to user pages -->
     </h5> 
   {% endfor %}
+  <br>
+
+  {% if cuser != party.owner %}
+
+  <form method="POST" id="leave-party-form" action="{% url 'leave-party' %}">
+    {% csrf_token %}
+    <input type="hidden" value="{{ party.id }}" name="leave-group-id">
+    <button type="submit" data-toggle="popover" data-placement="top" data-content="Leave this Party" class="btn btn-lg btn-danger">&nbsp;Leave Party</button>
+  </form>
+
+  {% else %}
+  <button data-toggle="popover" data-placement="top" data-content="Cannot leave group you are the owner of" class="btn btn-lg btn-primary">&nbsp;Can't Leave</button>
+  {% endif %}
+  <br>
+  <br>
 
 {% endblock %}
