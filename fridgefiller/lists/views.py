@@ -148,11 +148,11 @@ class RemoveItemFromListView(View):
 
 
 def item_detail(request, *args, **kwargs):
-    return JsonResponse({'items': wapi.item_search(request.GET.get('item-name', False))})
+    items = wapi.item_search(request.GET.get('item-name', False))
+    return JsonResponse({'items': items})
 
 def upc(request, *args, **kwargs):
     items = wapi.upc_search(request.GET.get('upc', False))
-    print items
     return JsonResponse({'items': items})
 
 class test(TemplateView):
