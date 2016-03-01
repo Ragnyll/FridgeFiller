@@ -14,7 +14,7 @@
   <br>
   <h3>Parties you own:</h3>
   
-    {% if not user_partys %}
+    {% if not user_parties %}
       <div class="text-center">
         <br>
         <h3>Looks like you don't belong to any parties yet.</h3>
@@ -31,7 +31,7 @@
         </div>
       {% endfor %}
       <h3>Parties you belong to:</h3>
-      {% for party in user_partys %}
+      {% for party in user_parties %}
         <div id="{{ party.id }}" class="party well">
           <h2>
             <a href="/lists/party/{{party.id }}/">

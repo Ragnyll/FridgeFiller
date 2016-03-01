@@ -7,19 +7,19 @@
 {% block content %}
   <h1 class="text-center">{{ party }}</h1>
   <br>
-  <h2 class="text-center">Party Members:</h2>
-  {% for user in users %}
-    <h5 class="text-center">
-      {{user}} <!-- When user page exists, link user names to user pages -->
-    </h5> 
-  {% endfor %}
+  
+  <h2 class="text-center">{{party.name}}'s Pantry</h2>
+
+
   <h2 class="text-center">Party Shopping Lists:</h2>
   <table class="table table-borderless">
     <tbody>
       {% for list in party_lists %}
         <tr class="shopping-list-row">
           <td>
-            <h4>{{ list.name}}</h4>
+            <a href="/lists/{{ list.id }}/">
+              <h4>{{ list.name}}</h4>
+            </a>
           </td>
           <td>
             <h5>{{ list.description }}</h5>
@@ -28,5 +28,12 @@
       {% endfor %}
     </tbody>
   </table>
+
+  <h2 class="text-center">Party Members:</h2>
+  {% for user in users %}
+    <h5 class="text-center">
+      {{user}} <!-- When user page exists, link user names to user pages -->
+    </h5> 
+  {% endfor %}
 
 {% endblock %}

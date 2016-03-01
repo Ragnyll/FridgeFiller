@@ -159,21 +159,22 @@ class PartyView(TemplateView):
         context['party'] = party
         context['users'] = party.users.all()
         context['party_lists'] = party.shoppinglists.all()
+        context['party_pantry'] = Pantry.objects.filter(party__in=[party])
         return context
         
 
-class PartysView(TemplateView):
+class PartiesView(TemplateView):
     """
     This view displays a list of partys a user belongs too
     """
-    template_name = "lists/partys.html"
+    template_name = "lists/parties.html"
 
     def get_context_data(self, **kwargs):
-        context = super(PartysView, self).get_context_data(**kwargs)
+        context = super(PartiesView, self).get_context_data(**kwargs)
 
         user = UserProfile.objects.get(user=self.request.user)
         
         context['party_own'] = Party.objects.filter(owner__in=[user])
-        context['user_partys'] = Party.objects.filter(users__in=[user])
+        context['user_parties'] = Party.objects.filter(users__in=[user])
 
         return context
