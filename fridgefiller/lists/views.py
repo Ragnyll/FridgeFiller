@@ -158,6 +158,7 @@ class PartyView(TemplateView):
         user = UserProfile.objects.get(user=self.request.user)
         context['party'] = party
         context['users'] = party.users.all()
+        context['party_lists'] = party.shoppinglists.all()
         return context
         
 

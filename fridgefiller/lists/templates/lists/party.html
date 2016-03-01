@@ -1,7 +1,7 @@
 {% extends "base_sidebar.html" %}
 
 {% block title %}
-  Party {{ party_id }}
+  {{ party.name }}
 {% endblock %}
 
 {% block content %}
@@ -13,5 +13,20 @@
       {{user}} <!-- When user page exists, link user names to user pages -->
     </h5> 
   {% endfor %}
+  <h2 class="text-center">Party Shopping Lists:</h2>
+  <table class="table table-borderless">
+    <tbody>
+      {% for list in party_lists %}
+        <tr class="shopping-list-row">
+          <td>
+            <h4>{{ list.name}}</h4>
+          </td>
+          <td>
+            <h5>{{ list.description }}</h5>
+          </td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
 
 {% endblock %}
