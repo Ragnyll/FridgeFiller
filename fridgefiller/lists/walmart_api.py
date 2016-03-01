@@ -1,18 +1,25 @@
-import json
 import requests
 import secret
 
 
 def item_search(item):
-    response = requests.get("https://qpi.walmartlabs.com/v1/search?apiKey{" 
-                           + secret.walmart_api_key + "}&lsPublisherId=\
-                           {FridgeFiller}&query=" + item)
-    return json.loads(response)
+    query = {
+        'apiKey': secret.walmart_api_key,
+        'lsPublisherId': 'FrideFiller',
+        'query': item
+    }
+    response = requests.get('https://api.walmartlabs.com/v1/search', params=query)
+    parsed = response.json()
+    return parsed.get('items',{})
 
 
-def ean_search(upc):
-    response = requests.get("https://qpi.walmartlabs.com/v1/items?apiKey{" 
-                           + secret.walmart_api_key + "}&lsPublisherId=\
-                           {FridgeFiller}&upc=" + upc)
-    return json.loads(response)
+def upc_search(upc):
+    query = {
+        'apiKey': secret.walmart_api_key,
+        'lsPublisherId': 'FrideFiller',
+        'upc': upc
+    }
+    response = requests.get('https://api.walmartlabs.com/v1/items', params=query)
+    parsed = response.json()
+    return parsed.get('items',{})
 
