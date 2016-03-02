@@ -9,8 +9,8 @@ import pytz
 
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name="profile")
-    name = models.CharField(max_length=32)
-    description = models.TextField()
+    name = models.CharField(max_length=32, default="")
+    description = models.TextField(, default="")
     lists = models.ManyToManyField('ShoppingList')
     
     def __str__(self):
@@ -36,7 +36,7 @@ def create_user_party(sender, instance, created, **kwargs):
 post_save.connect(create_user_party, sender=UserProfile)
         
 class Party(models.Model):
-    name = models.CharField(max_length=32)
+    name = models.CharField(max_length=32, default="")
     owner = models.ForeignKey('UserProfile', related_name="owner")
     users = models.ManyToManyField('UserProfile')
     shoppinglists = models.ManyToManyField('ShoppingList')
@@ -62,9 +62,9 @@ def add_owner_to_users(sender, instance, **kwargs):
         instance.users.add(instance.owner)
 
 class ShoppingList(models.Model):
-    name = models.CharField(max_length=32)
+    name = models.CharField(max_length=32, default="")
     owners = models.ManyToManyField('UserProfile', related_name="owners")
-    description = models.TextField()
+    description = models.TextField(default="")
     items = models.ManyToManyField('Item')
     
     def __str__(self):
@@ -72,15 +72,15 @@ class ShoppingList(models.Model):
 
 class Pantry(models.Model):
     items = models.ManyToManyField('ItemDetail', related_name='items')
-    description = models.CharField(max_length=64)
+    description = models.CharField(max_length=64, default="")
     party = models.ForeignKey('Party', related_name='party')
     
     def __str__(self):
         return str(self.party.name + "'s Pantry")
 
 class Item(models.Model):
-    name = models.CharField(max_length=64)
-    description = models.TextField(blank=True)
+    name = models.CharField(max_length=64, default="")
+    description = models.TextField(blank=True, default="")
 
     def __str__(self):
        return str(self.name)
@@ -90,13 +90,13 @@ class Item(models.Model):
 
 class ItemDetail(Item):
     cost = models.FloatField(default=0)
-    last_purchased = models.DateTimeField(blank=True)
-    location_purchased = models.CharField(max_length=64, blank=True)
+    last_purchased = models.DateTimeField(blank=True, default=datetime.min)
+    location_purchased = models.CharField(max_length=64, blank=True, default="")
 # barcode should be moved to its own entity once we gather what we need from it
     barcode = models.IntegerField(default=0, blank=True)
     unit = models.CharField(default=0, max_length=64)
     amount = models.FloatField(default=0)
-    expiration_date = models.DateTimeField(blank=True)
+    expiration_date = models.DateTimeField(blank=True, default=datetime.min)
 
     def get_cost(self):
         if self.cost == int(self.cost):
