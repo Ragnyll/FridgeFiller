@@ -10,7 +10,7 @@ import pytz
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name="profile")
     name = models.CharField(max_length=32, default="")
-    description = models.TextField(, default="")
+    description = models.TextField(default="")
     lists = models.ManyToManyField('ShoppingList')
     
     def __str__(self):
