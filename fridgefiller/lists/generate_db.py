@@ -1,29 +1,44 @@
 
-import sys, os
+import sys
+import logging
+import os
+
 file_path = __file__
 
 app_loc = os.path.dirname(os.path.dirname(os.path.abspath(file_path)))
-print app_loc
 sys.path.append(app_loc)
-
-
-import os, django
+import django
 os.environ.setdefault("DJANGO_SETTINGS_MODULE", "fridgefiller.settings")
 django.setup()
 
 
+
 from django.contrib.auth.models import User
+from django.utils import timezone
 from lists.models import UserProfile, Party, ShoppingList, Pantry, Item, ItemDetail
+
+import datetime
+
+logging.basicConfig(level=logging.DEBUG)
+logger = logging.getLogger(__file__)
+
+logger.setLevel(logging.DEBUG)
 
 # pre: The database is empty
 # post: fills up the database with model entries
 def generate_db():
-    codex_u = User.objects.create(username="codex", first_name="Cyd")
-    zaboo_u = User.objects.create(username="zaboo", first_name="Sujan")
-    tink_u = User.objects.create(username="tinkerballa", first_name="April")
-    vork_u = User.objects.create(username="vork", first_name="Herman")
-    bladezz_u = User.objects.create(username="bladezz", first_name="Simon")
-    clara_u = User.objects.create(username="clara", first_name="clara")
+    codex_u, created = User.objects.get_or_create(username="codex", first_name="Cyd")
+    if created:
+        logger.debug("Created codex user")
+    else:
+        logger.debug("Did no create codex user")
+        logger.debug("Codex username %s" % codex_u.username)
+        
+    zaboo_u, created = User.objects.get_or_create(username="zaboo", first_name="Sujan")
+    tink_u, created = User.objects.get_or_create(username="tinkerballa", first_name="April")
+    vork_u, created = User.objects.get_or_create(username="vork", first_name="Herman")
+    bladezz_u, created = User.objects.get_or_create(username="bladezz", first_name="Simon")
+    clara_u, created = User.objects.get_or_create(username="clara", first_name="clara")
 
     users = [codex_u, zaboo_u, tink_u, vork_u, bladezz_u, clara_u]
 
@@ -73,11 +88,17 @@ def generate_db():
 
 
     pot_details = [ItemDetail.objects.create(name=pots[0].name, description=pots[0].description,
-                                             cost="100", barcode="1032231", unit="oz", amount=20),
+                                             cost="100", barcode="1032231", unit="oz", amount=20,
+                                             last_purchased=timezone.now(),
+                                             expiration_date=timezone.now()),
                    ItemDetail.objects.create(name=pots[1].name, description=pots[1].description,
-                                             cost="100", barcode="3242312", unit="oz", amount=30),
+                                             cost="100", barcode="3242312", unit="oz", amount=30,
+                                             last_purchased=timezone.now(),
+                                             expiration_date=timezone.now()),
                    ItemDetail.objects.create(name=pots[2].name, description=pots[2].description,
-                                             cost="30", barcode="2332413", unit="oz", amount=1)]
+                                             cost="30", barcode="2332413", unit="oz", amount=1,
+                                             last_purchased=timezone.now(),
+                                             expiration_date=timezone.now())]
 
     guild_bank = Pantry.objects.create(party=p, description="guild bank")
     for i in pot_details:

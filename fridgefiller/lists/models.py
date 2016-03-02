@@ -59,7 +59,6 @@ post_save.connect(create_party_pantry, sender=Party)
 @receiver(post_save, sender=Party)
 def add_owner_to_users(sender, instance, **kwargs):
     if not instance.owner in instance.users.all():
-        print "owner not in users"
         instance.users.add(instance.owner)
 
 class ShoppingList(models.Model):
