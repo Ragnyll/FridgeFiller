@@ -4,6 +4,18 @@
   {{ party.name }}
 {% endblock %}
 
+{% block style %}
+<style>
+    .popover-content {
+        background-color: #34495E;
+        color: white;
+    }
+    .popover.top .arrow:after {
+        border-top-color: #34495E;
+    }
+  </style>
+{% endblock %}
+
 {% block content %}
   <h1 class="text-center">{{ party }}</h1>
   <br>
@@ -28,7 +40,6 @@
     </tbody>
   </table>
   <br>
-  <br>
   <div class="text-center">
     <form method="POST" id="add-group-list" action="{% url 'add-group-list' %}">
       {% csrf_token %}
@@ -45,7 +56,6 @@
     </h5> 
   {% endfor %}
   <br>
-  <br>
   <div class="text-center">
     <form method="POST" id="invite-to-party" action="{% url 'invite-to-party' %}">
       {% csrf_token %}
@@ -53,7 +63,6 @@
       <button type="submit" data-toggle="popover" data-placement="top" data-content="Invite more People to Group" class="btn btn-lg btn-success">&nbsp;Invite People to Group</button>
     </form>
   </div>
-  <br>
   <br>
   <div class="text-center">
     {% if cuser != party.owner %}
@@ -68,7 +77,6 @@
       <button data-toggle="popover" data-placement="top" data-content="Cannot Leave Person Group" class="btn btn-lg btn-primary">&nbsp;Can't Leave</button>
     {% endif %}
   </div>
-  <br>
   <br>
 
 {% endblock %}
