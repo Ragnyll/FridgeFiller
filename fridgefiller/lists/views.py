@@ -194,6 +194,32 @@ class LeavePartyView(View):
        
         return redirect("/lists/parties")
 
+class InvitetoParty(View):
+    """
+    This view contains logic to invite a person to a party
+    """
+    def post(self, request, *args, **kwargs):
+        party_id = request.POST.get('party-id', False)
+        party_obj = Party.objects.get(id=party_id)
+
+        return redirect("/lists/parties")
+
+class CreateParty(View):
+    """
+    This view contains logic to create a new party
+    """
+    def post(self, request, *args, **kwargs):
+        #do something
+        return redirect("/lists/parties")
+
+class AddPartyList(View):
+    """
+    This view contains logic to add a shopping list to a party
+    """
+
+    def post(self, request, *args, **kwargs):
+        #do something?
+        return redirect("/lists/parties")
 
 class PartiesView(TemplateView):
     """

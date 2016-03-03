@@ -1,7 +1,7 @@
 {% extends "base_sidebar.html" %}
 
 {% block title %}
-  Your Parties
+  Your Groups
 {% endblock %}
 
 {% block style %}
@@ -10,14 +10,14 @@
 
 {% block content %}
 
-  <h1 class="text-center">Your Parties</h1>
+  <h1 class="text-center">Your Groups</h1>
   <br>
-  <h3>Parties you own:</h3>
+  <h3>Groups you own:</h3>
   
     {% if not user_parties %}
       <div class="text-center">
         <br>
-        <h3>Looks like you don't belong to any parties yet.</h3>
+        <h3>Looks like you don't belong to any groups yet.</h3>
       </div>
     {% else %}
       {% for party in party_own %}
@@ -29,7 +29,7 @@
           </h2>
         </div>
       {% endfor %}
-      <h3>Parties you belong to:</h3>
+      <h3>Groups you belong to:</h3>
       {% for party in user_parties %}
         {% if party not in party_own %}
           <div id="{{ party.id }}" class="party well">
@@ -43,4 +43,21 @@
         {% endif %}
       {% endfor %}
     {% endif %}
+    
+    <br>
+    <div class="text-center">
+      <form method="POST" id="create-party" action="{% url 'create-party' %}">
+        {% csrf_token %}
+        <button type="submit" data-toggle="popover" data-placement="top" data-content="Create a new Group" class="btn btn-lg btn-success">&nbsp;Create New Party</button>
+      </form>  
+    </div>
+
+{% endblock %}
+
+{% block script %}
+  <script>
+    $(document).ready(function(){
+      $('[data-toggle="popover"]').popover({ trigger: "hover" });
+    });
+  </script>
 {% endblock %}

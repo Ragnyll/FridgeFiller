@@ -13,5 +13,8 @@ urlpatterns = [
     url(r'^remove/item/', RemoveItemFromListView.as_view(), name="remove-item"),
     url(r'^parties/', PartiesView.as_view(), name="parties"),
     url(r'^party/(?P<party_id>\d+)', PartyView.as_view()),
-    url(r'^party/leave', LeavePartyView.as_view(), name ="leave-party")
+    url(r'^party/leave', LeavePartyView.as_view(), name="leave-party"),
+    url(r'^party/invite', InvitetoParty.as_view(), name="invite-to-party"),
+    url(r'^party/create', CreateParty.as_view(), name="create-party"),
+    url(r'^party/addlist', AddPartyList.as_view(), name="add-group-list")
 ]

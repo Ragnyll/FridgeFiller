@@ -10,9 +10,8 @@
   
   <h2 class="text-center">{{party.name}}'s Pantry</h2>
 
-
   <h2 class="text-center">Party Shopping Lists:</h2>
-  <table class="table table-borderless">
+  <table class="table table-bordered">
     <tbody>
       {% for list in party_lists %}
         <tr class="shopping-list-row">
@@ -28,27 +27,56 @@
       {% endfor %}
     </tbody>
   </table>
+  <br>
+  <br>
+  <div class="text-center">
+    <form method="POST" id="add-group-list" action="{% url 'add-group-list' %}">
+      {% csrf_token %}
+      <input type="hidden" value="{{ party.id }}" name="party-id">
+      <button type="submit" data-toggle="popover" data-placement="top" data-content="Add Another Shooping List to this Group" class="btn btn-large btn-success">&nbsp;Add Shopping List</button>
+    </form>
+  </div>
 
-  <h2 class="text-center">Party Members:</h2>
+
+  <h2 class="text-center">Group Members:</h2>
   {% for user in users %}
     <h5 class="text-center">
       {{user}} <!-- When user page exists, link user names to user pages -->
     </h5> 
   {% endfor %}
   <br>
+  <br>
+  <div class="text-center">
+    <form method="POST" id="invite-to-party" action="{% url 'invite-to-party' %}">
+      {% csrf_token %}
+      <input type="hidden" value="{{ party.id }}" name="party-id">
+      <button type="submit" data-toggle="popover" data-placement="top" data-content="Invite more People to Group" class="btn btn-lg btn-success">&nbsp;Invite People to Group</button>
+    </form>
+  </div>
+  <br>
+  <br>
+  <div class="text-center">
+    {% if cuser != party.owner %}
 
-  {% if cuser != party.owner %}
+      <form method="POST" id="leave-party-form" action="{% url 'leave-party' %}">
+        {% csrf_token %}
+        <input type="hidden" value="{{ party.id }}" name="leave-group-id">
+        <button type="submit" data-toggle="popover" data-placement="top" data-content="Leave this Group" class="btn btn-lg btn-danger">&nbsp;  Leave Group</button>
+      </form>
 
-  <form method="POST" id="leave-party-form" action="{% url 'leave-party' %}">
-    {% csrf_token %}
-    <input type="hidden" value="{{ party.id }}" name="leave-group-id">
-    <button type="submit" data-toggle="popover" data-placement="top" data-content="Leave this Party" class="btn btn-lg btn-danger">&nbsp;Leave Party</button>
-  </form>
-
-  {% else %}
-  <button data-toggle="popover" data-placement="top" data-content="Cannot leave group you are the owner of" class="btn btn-lg btn-primary">&nbsp;Can't Leave</button>
-  {% endif %}
+    {% else %}
+      <button data-toggle="popover" data-placement="top" data-content="Cannot Leave Person Group" class="btn btn-lg btn-primary">&nbsp;Can't Leave</button>
+    {% endif %}
+  </div>
   <br>
   <br>
 
+{% endblock %}
+
+{% block script %}
+  <script>
+    $(document).ready(function(){
+      $('[data-toggle="popover"]').popover({ trigger: "hover" });
+    });
+  </script>
 {% endblock %}
