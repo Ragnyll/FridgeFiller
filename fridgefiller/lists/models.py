@@ -3,10 +3,14 @@ from django.dispatch import receiver
 from django.db.models.signals import post_save
 from django.contrib.auth.models import User
 
+from datetime import datetime
+
+import pytz
+
 class UserProfile(models.Model):
     user = models.OneToOneField(User, related_name="profile")
-    name = models.CharField(max_length=32)
-    description = models.TextField()
+    name = models.CharField(max_length=32, default="")
+    description = models.TextField(default="")
     lists = models.ManyToManyField('ShoppingList')
     
     def __str__(self):
@@ -32,7 +36,7 @@ def create_user_party(sender, instance, created, **kwargs):
 post_save.connect(create_user_party, sender=UserProfile)
         
 class Party(models.Model):
-    name = models.CharField(max_length=32)
+    name = models.CharField(max_length=32, default="")
     owner = models.ForeignKey('UserProfile', related_name="owner")
     users = models.ManyToManyField('UserProfile')
     shoppinglists = models.ManyToManyField('ShoppingList')
@@ -55,13 +59,12 @@ post_save.connect(create_party_pantry, sender=Party)
 @receiver(post_save, sender=Party)
 def add_owner_to_users(sender, instance, **kwargs):
     if not instance.owner in instance.users.all():
-        print "owner not in users"
         instance.users.add(instance.owner)
 
 class ShoppingList(models.Model):
-    name = models.CharField(max_length=32)
+    name = models.CharField(max_length=32, default="")
     owners = models.ManyToManyField('UserProfile', related_name="owners")
-    description = models.TextField()
+    description = models.TextField(default="")
     items = models.ManyToManyField('Item')
     
     def __str__(self):
@@ -69,15 +72,15 @@ class ShoppingList(models.Model):
 
 class Pantry(models.Model):
     items = models.ManyToManyField('ItemDetail', related_name='items')
-    description = models.CharField(max_length=64)
+    description = models.CharField(max_length=64, default="")
     party = models.ForeignKey('Party', related_name='party')
     
     def __str__(self):
         return str(self.party.name + "'s Pantry")
 
 class Item(models.Model):
-    name = models.CharField(max_length=64)
-    description = models.TextField(blank=True)
+    name = models.CharField(max_length=64, default="")
+    description = models.TextField(blank=True, default="")
 
     def __str__(self):
        return str(self.name)
@@ -87,13 +90,13 @@ class Item(models.Model):
 
 class ItemDetail(Item):
     cost = models.FloatField(default=0)
-    last_purchased = models.DateTimeField(blank=True)
-    location_purchased = models.CharField(max_length=64, blank=True)
+    last_purchased = models.DateTimeField(blank=True, default=datetime.min)
+    location_purchased = models.CharField(max_length=64, blank=True, default="")
 # barcode should be moved to its own entity once we gather what we need from it
     barcode = models.IntegerField(default=0, blank=True)
     unit = models.CharField(default=0, max_length=64)
     amount = models.FloatField(default=0)
-    expiration_date = models.DateTimeField(blank=True)
+    expiration_date = models.DateTimeField(blank=True, default=datetime.min)
 
     def get_cost(self):
         if self.cost == int(self.cost):
@@ -106,10 +109,10 @@ class ItemDetail(Item):
         return self.amount
 
     def get_last_purchased(self):
-        return self.last_purchased if self.last_purchased != None else "---"
+        return self.last_purchased if self.last_purchased not in [datetime.min.replace(tzinfo=pytz.UTC), None] else "---"
 
     def get_expiration_date(self):
-        return self.expiration_date if self.expiration_date != None else "---"
+        return self.expiration_date if self.expiration_date not in [datetime.min.replace(tzinfo=pytz.UTC), None] else "---"
 
     def get_location_purchased(self):
         return self.location_purchased if self.location_purchased != "" else "---"
