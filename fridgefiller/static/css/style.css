@@ -46,7 +46,7 @@
 .sidebar-nav li {
     text-indent: 20px;
     line-height: 60px;
-    border-bottom: 3px solid #D1D5D8;
+    border-bottom: 3px solid white;
 }
 
 .sidebar-nav li a {
@@ -97,8 +97,5 @@ hr {
     margin: 10px 5px 5px 5px;
 }
 
-.popover-content {
-    background-color: #34495E;
-    color: white;
-}
+
 

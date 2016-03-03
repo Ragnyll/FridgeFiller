@@ -7,6 +7,10 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils.decorators import method_decorator
 
+from datetime import datetime
+
+import re
+
 from .models import *
 import walmart_api as wapi
 
@@ -36,7 +40,13 @@ class ListsView(TemplateView):
         context = super(ListsView, self).get_context_data(**kwargs)
 
         user = UserProfile.objects.get(user=self.request.user)
+        user_party = Party.objects.get(owner=user)
+        user_pantry = Pantry.objects.get(party=user_party)
         
+        user_pantry_item_names = [x.name for x in user_pantry.items.all()]
+
+        context['user_pantry_item_names'] = user_pantry_item_names
+        context['user_pantry'] = user_pantry
         context['user_shopping_lists'] = ShoppingList.objects.filter(owners__in=[user])
         
         return context
@@ -91,8 +101,8 @@ class NewItemView(View):
     This view adds a new item to a list, and returns the user to the lists page
     """
     def post(self, request, *args, **kwargs):
-        item_name = request.POST.get('new-item-name', False)
-        item_desc = request.POST.get('new-item-description', False)
+        item_name = request.POST.get('new-item-name', False).title()
+        item_desc = request.POST.get('new-item-description', False).capitalize()
         
         list_id = request.POST.get('list-id', False)
         list_obj = ShoppingList.objects.get(id=list_id)
@@ -100,19 +110,19 @@ class NewItemView(View):
         # Don't make empty items!
         if item_name == "":
             messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>ERROR: You must provide a name for the item.</span>", extra_tags=int(list_id))            
-            return redirect('/lists')
+            return redirect('/lists/#' + list_id)
         
         # Get or create item in database
         try:
             new_item, created = Item.objects.get_or_create(name=item_name, description=item_desc)
         except:
             messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Error: can't create or get that item.</span>", extra_tags=int(list_id))
-            return redirect('/lists')
+            return redirect('/lists/#' + list_id)
 
         # Don't add duplicate items
         if new_item in list_obj.items.all():
             messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>That item already exists in the list.</span>", extra_tags=int(list_id))
-            return redirect('/lists')
+            return redirect('/lists/#' + list_id)
 
         # Add item to list
         try:
@@ -144,16 +154,100 @@ class RemoveItemFromListView(View):
         except:
             messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Unable to remove " + item_name + " from list.</span>", extra_tags=int(list_id))
 
-        return redirect("/lists")
+        return redirect("/lists/#" + list_id)
+
+
+class AddItemToPantryView(View):
+    """
+    This view adds an item from a shopping list to a user's Pantry
+    """
+
+    def post(self, request, *args, **kwargs):
+        item_name = request.POST.get('add-item-to-pantry-name', False)
+        item_description = request.POST.get('add-item-ro-pantry-desc', False)
+        amount = request.POST.get('add-item-to-pantry-stock', False)
+        units = request.POST.get('add-item-to-pantry-unit', False)
+        cost = request.POST.get('add-item-to-pantry-cost', False)
+        location_purchased = request.POST.get('add-item-to-pantry-location-purchased', False)
+        list_id = request.POST.get('list_id', False)
+
+        date_pattern = re.compile('/(0[1-9]|1[012])[- \/.](0[1-9]|[12][0-9]|3[01])[- \/.](19|20)\d\d/')
+
+        last_purchased_str = request.POST.get('add-item-to-pantry-last-purchased', False)
+        expiration_date_str = request.POST.get('add-item-to-pantry-expiration-date', False)
+
+
+        # convert empty values to zero for non-required data
+        if amount == "":
+            amount = float(0)
+        else:
+            amount = float(amount)
+
+        if cost == "":
+            cost = float(0)
+        else:
+            cost = float(cost)
+        
+
+        # Don't let user supply zero amount
+        if amount == float(0):
+            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>You must fill out the amount field to add " + item_name + " to your pantry.  Try again!</span>", extra_tags=int(list_id))
+            return redirect("/lists/#" + list_id)
+        
+
+        # If last_purchased and expiration_date are proper dates, make datetime objects for them
+        # else, create minimum datetime objects
+        if date_pattern.match(last_purchased_str):
+            month, day, year = map(int,last_purchased_str.split("/"))
+            last_purchased = datetime(month=month, day=day, year=year)
+        else:
+            last_purchased = datetime.min
+
+        if date_pattern.match(expiration_date_str):
+            month, day, year = map(int,expiration_date_str.split("/"))
+            expiration_date = datetime(month=month, day=day, year=year)
+        else:
+            expiration_date = datetime.min
+
+        # try to create itemdetail with passed values
+        try:
+            item_detail_obj, created = ItemDetail.objects.get_or_create(name=item_name,
+                                                                        description=item_description,
+                                                                        cost=cost,
+                                                                        last_purchased=last_purchased,
+                                                                        location_purchased=location_purchased,
+                                                                        barcode=-1,
+                                                                        unit=units,
+                                                                        amount=amount,
+                                                                        expiration_date=expiration_date)
+
+            # User's pantry object
+            user_userprofile = UserProfile.objects.get(name=request.user.username)
+            user_party = Party.objects.get(owner=user_userprofile)
+            pantry_obj = Pantry.objects.get(party=user_party)
+
+            pantry_obj.items.add(item_detail_obj)
+            
+            # successful, return to lists page with success message
+            messages.add_message(request, messages.SUCCESS, "<span class='alert alert-success'>" + str(amount) + " " + str(units) + " of " + str(item_name) + " has been added to your pantry!</span>", extra_tags=int(list_id))
+            return redirect("/lists/#" + list_id)
+
+        # Something went wront creating the Item Detail, give them an error
+        except:
+            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Unable to create ItemDetail for that item.  Please let a developer know!</span>", extra_tags=int(list_id))
+            return redirect("/lists/#" + list_id)
 
 
 def item_detail(request, *args, **kwargs):
     items = wapi.item_search(request.GET.get('item-name', False))
     return JsonResponse({'items': items})
 
+
 def upc(request, *args, **kwargs):
     items = wapi.upc_search(request.GET.get('upc', False))
     return JsonResponse({'items': items})
 
+
 class test(TemplateView):
     template_name = "lists/test.html"    
+        
