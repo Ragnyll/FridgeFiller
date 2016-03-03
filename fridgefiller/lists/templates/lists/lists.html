@@ -137,7 +137,9 @@
               <div class="hidden" id="add-item-to-pantry-form-{{item.id}}-{{list.id}}">
                 <br>
                 <form class="form-inline" id="add-item-to-pantry-form-{{ item.id }}" action="{% url 'add-item-to-pantry' %}" method="POST"> 
-                  {% csrf_token %} 
+                  {% csrf_token %}
+                  &nbsp;&nbsp;<span class="btn btn-warning fa fa-barcode">&nbsp;&nbsp;Scan Item Barcode</span>
+                  <br><br>
                   <input type="hidden" class="form-control" name="add-item-to-pantry-desc" id="add-item-to-pantry-desc" value="{{ item.description }}"> 
                   <input type="hidden" class="form-control" name="list_id" value="{{ list.id }}"> 
                   <input type="text" class="form-control" name="add-item-to-pantry-name" id="add-item-to-pantry-name" placeholder="Item Name" value="{{ item.name }}"> 
