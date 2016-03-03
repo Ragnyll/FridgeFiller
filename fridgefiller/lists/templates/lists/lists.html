@@ -175,29 +175,32 @@
       </div>
     {% endfor %}
   {% endif %}
-  {% if messages %}
-    {% for message in messages %}
-      <!-- Only show messages that pertain to the list the operation was completed on -->
-      {% ifequal message.extra_tags -1 %}
-        <span>{{ message|safe }}</span>
-        <br><br>
-      {% endifequal %}
-    {% endfor %}
-  {% endif %}
+  <div id="new-list-error">
+    {% if messages %}
+      {% for message in messages %}
+        <!-- Only show messages that pertain to the list the operation was completed on -->
+        {% ifequal message.extra_tags -1 %}
+          <span>{{ message|safe }}</span>
+          <br><br>
+        {% endifequal %}
+      {% endfor %}
+    {% endif %}
+  </div>
 
   <div id="new-list">
     <h1 class="text-center">Create a new Shopping List Below</h1>
       <form class="form-horizantal" id="new-shoppinglist-form" action="{% url 'new-list' %}" method="POST">
         <div class="row">
           {% csrf_token %}
-          <div class="col-md-8">
+          <div class="col-md-3">
             <input type="text" class="form-control" name="new-shoppinglist-name" id="new-shoppinglist-name" placeholder="Shopping List Name">
           </div>
-          <div class="col-md-4">
+          <div class="col-md-6">
             <input type="text" class="form-control" name="new-shoppinglist-desc" id="new-shoppinglist-desc" placeholder="Shopping List Description">
           </div>
           <input type="submit" class="btn btn-primary" value="Save" id="new-item-save" />
         </div>
+        <br><br><br>
       </form>
     </div>
   </div>   

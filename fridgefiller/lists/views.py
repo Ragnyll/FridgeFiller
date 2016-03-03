@@ -142,7 +142,7 @@ class NewListView(View):
         
         if shoppinglist_name == "":
             messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Error you must provide a name for your new shopping list.</span>", extra_tags=int(-1))
-            return redirect('/lists')
+            return redirect('/lists/#new-list-error')
         
         try:
             new_list = ShoppingList.objects.create(name=shoppinglist_name, description=shoppinglist_desc)
