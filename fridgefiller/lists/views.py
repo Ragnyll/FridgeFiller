@@ -48,13 +48,6 @@ class ListView(TemplateView):
     template_name = "lists/list.html"
 
 
-class NewListView(TemplateView):
-    """
-    This view lets a user add new items to a list, and submit that tentative list as a new list object
-    """
-    template_name = "lists/new_list.html"
-
-
 class EditListView(TemplateView):
     """
     This view lets a user edit a list with id <list_id>
@@ -122,6 +115,34 @@ class NewItemView(View):
             messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Unable to add " + item_name + " to list.</span>", extra_tags=int(list_id))
 
         return redirect('/lists/#' + list_id)
+
+
+class NewListView(View):
+    """
+    This view lets a user add new items to a list, and submit that tentative list as a new list object
+    """
+
+    def post(self, request, *args, **kwargs):
+        list_id = -1
+
+        shoppinglist_name = request.POST.get('new-shoppinglist-name', False)
+        shoppinglist_desc = request.POST.get('new-shoppinglist-desc', False)
+
+        user_obj = UserProfile.objects.get(name=request.user.username)
+        
+        if shoppinglist_name == "":
+            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Error you must provide a name for your new shopping list.</span>", extra_tags=int(-1))
+            return redirect('/lists')
+        
+        try:
+            new_list = ShoppingList.objects.create(name=shoppinglist_name, description=shoppinglist_desc)
+	    new_list.owners.add(user_obj)
+            print list_id
+            list_id = new_list.id
+        except:
+            messages.add_message(request, messages.ERROR,"<span class='alert alert-danger'>Error: can't create or get that item.</span>", extra_tags=int(1))
+     
+        return redirect('/lists/#')
 
 class RemoveItemFromListView(View):
     """
