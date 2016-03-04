@@ -5,14 +5,14 @@
 {% endblock %}
 
 {% block style %}
-  <style>
+  <style type="text/css">
     #remove-item-form {
         display: inline;
     }
     #new-item-save {
         float: right;
     }
-    
+
     #new-item-name {
         width: 43%;
     }
@@ -41,7 +41,7 @@
     a.anchor {
         display: block;
         position: relative;
-        top: -55px;
+        top: -77px;
         visibility: hidden;
     }
     .popover-content {
@@ -60,12 +60,19 @@
     #add-item-to-pantry-unit {
         width: 10%;
     }
+    .panel-heading {
+        padding: 1em;
+    }
+    .fa .fa-minus, .fa .fa-plus {
+        text-size: 32px;
+        vertical-align: middle;
+    }
   </style>
 {% endblock %}
 
 {% block content %}
   <h1 class="text-center">Your Shopping Lists</h1>
-    
+
   {% if not user_shopping_lists %}
     <div class="text-center">
       <br>
@@ -75,116 +82,124 @@
     </div>
   {% else %}
     {% for list in user_shopping_lists %}
-      <a class="anchor" id="{{ list.id }}"></a> 
-      <div class="shopping-list well">
-        <h1>
-          <a href="#{{ list.id }}">
-            {{ list }}&nbsp;&nbsp;&nbsp;
-          </a>
-        </h1>
-        <h4>{{ list.description }}</h4>  
-        <hr>
-        {% if messages %}
-          {% for message in messages %}
-            <!-- Only show messages that pertain to the list the operation was completed on -->
-            {% ifequal message.extra_tags list.id %}
-              <span>{{ message|safe }}</span>
-            {% endifequal %}
-          {% endfor %}
-        {% endif %}
-            
-        {% if list.items.all %}
-          <div class="row">
-            <div class="col-md-3"></div>
-            <div class="col-md-4">
-              Item Name
-            </div>
-            <div class="col-md-5">
-              Item Description
-            </div>
+      <div class="panel panel-success">
+        <div class="panel-heading" id="panel-heading-{{ list.id }}" data-listid="{{ list.id }}" data-toggle="collapse" data-target="l-{{ list.id }}">
+          <a class="anchor" id="{{ list.id }}"></a>
+          <div class="shopping-list">
+            <h1>
+              <span id="{{ list.id }}-collapse-indicator" class="fa fa-plus "></span>&nbsp;
+              <a>
+                {{ list }}&nbsp;&nbsp;&nbsp;
+              </a>
+            </h1>
+            <h4>{{ list.description }}</h4>
           </div>
-              
-          {% for item in list.items.all %}
-            <div class="item-well well">    
+        </div>
+        <div id="l-{{ list.id }}" class="panel-collapse">
+          <div class="panel-body collapse" id="panel-body-{{ list.id }}">
+            {% if messages %}
+              {% for message in messages %}
+                <!-- Only show messages that pertain to the list the operation was completed on -->
+                {% ifequal message.extra_tags list.id %}
+                  <span>{{ message|safe }}</span>
+                {% endifequal %}
+              {% endfor %}
+            {% endif %}
+
+            {% if list.items.all %}
               <div class="row">
-                <div class="col-md-3">
-                  <!-- Remove item form -->
-                  <form method="POST" id="remove-item-form" action="{% url 'remove-item' %}">
-                    {% csrf_token %}
-                    <input type="hidden" value="{{ item.name }}" name="remove-item-name">
-                    <input type="hidden" value="{{ item.description }}" name="remove-item-description">
-                    <input type="hidden" value="{{ list.id }}" name="list-id">
-                    <button type="submit" data-toggle="popover" data-placement="top" data-content="Remove this item from your list" class="btn btn-lg btn-danger fa fa-minus-square">&nbsp;from List</button>  
-                  </form>
-
-                  <!-- Add item to pantry button -->
-                  {% if item.name not in user_pantry_item_names %}
-                    <button data-itemid="{{ item.id }}" data-listid="{{ list.id }}" data-toggle="popover" data-placement="top" data-content="Add this item to your pantry" class="btn btn-lg  btn-primary fa fa-plus-square add-item-to-pantry-button" id="add-item-to-pantry-button-{{ item.id }}-{{ list.id }}">&nbsp;to Pantry</button>
-
-                    <!-- Scan Barcode button -->
-                    <span id="scan-barcode-button-{{ item.id }}-{{ list.id }}" class="btn btn-warning btn-sm fa fa-barcode hidden">&nbsp;Scan Barcode</span>
-                  <!-- Edit Pantry amount button -->
-                  <!-- TODO: connect this to JS to spawn a form that POSTs to a view that edits an ItemDetail -->
-                  {% else %}
-                    <button data-itemid="{{ item.id }}" data-listid="{{ list.id }}" data-toggle="popover" data-placement="top" data-content="Edit amount of {{ item.name }} in your Pantry" class="btn btn-lg  btn-info fa fa-edit edit-item-in-pantry-button" id="edit-item-in-pantry-button-{{ item.id }}-{{ list.id }}">&nbsp;in Pantry</button>
-                  {% endif %}
-                </div>
+                <div class="col-md-3"></div>
                 <div class="col-md-4">
-                  <h4>{{ item.name }}</h4>
+                  Item Name
                 </div>
                 <div class="col-md-5">
-                  <h6>{{ item.description }}</h6>
+                  Item Description
                 </div>
               </div>
-              
-              <div class="hidden" id="add-item-to-pantry-form-{{item.id}}-{{list.id}}">
-                <br>
-                <form class="form-inline" id="add-item-to-pantry-form-{{ item.id }}" action="{% url 'add-item-to-pantry' %}" method="POST"> 
-                  {% csrf_token %}
-                  <input type="hidden" class="form-control" name="add-item-to-pantry-desc" id="add-item-to-pantry-desc" value="{{ item.description }}"> 
-                  <input type="hidden" class="form-control" name="list_id" value="{{ list.id }}"> 
-                  <input type="text" class="form-control" name="add-item-to-pantry-name" id="add-item-to-pantry-name" placeholder="Item Name" value="{{ item.name }}"> 
-                  <input type="text" class="form-control" name="add-item-to-pantry-stock" id="add-item-to-pantry-stock" placeholder="Amount to add"> 
-                  <input type="text" class="form-control" name="add-item-to-pantry-unit" id="add-item-to-pantry-unit" placeholder="Units (ex: oz)"> 
-                  <input type="text" class="form-control" name="add-item-to-pantry-cost" id="add-item-to-pantry-cost" placeholder="Item Cost ($)"> 
-                  <input type="text" class="form-control" name="add-item-to-pantry-last-purchased" id="datepicker-last-purchased" placeholder="Date Purchased"> 
-                  <input type="text" class="form-control" name="add-item-to-pantry-location-purchased" id="add-item-to-pantry-location-purchased" placeholder="Location Purchased"> 
-                  <input type="text" class="form-control" name="add-item-to-pantry-expiration-date" id="datepicker-exp-date" placeholder="Expiration Date"> 
-                  <input type="submit" class="btn btn-sm btn-primary" value="Add to Pantry"> 
-                </form>
-              </div>
-            </div>
-          {% endfor %}
-        {% else %}
-          <h3 class="text-center">Looks like this list doesn't contain any items, consider adding some below!</h3>
-          <br>
-        {% endif %}
-            
-        <!-- add item form -->
-        <form class="form-inline" id="new-item-form" action="{% url 'new-item' %}" method="POST">
-          {% csrf_token %}
-          <input type="text" class="form-control" name="new-item-name" id="new-item-name" placeholder="Item Name">
-          <input type="text" class="form-control" name="new-item-description" id="new-item-desc" placeholder="Item Description" />
-          <input type="submit" class="btn btn-primary" value="Add Item" id="new-item-save" />
-          <input type="hidden" value="{{list.id}}" name="list-id">
-        </form>
-        
-        <br>
 
-        <!-- TODO: Add javascript to dynamically add form to add new items to the list -->
-        <div class="text-center">
-          <span class="btn btn-lg btn-primary text-center">Add Another Item</span>
+              {% for item in list.items.all %}
+                <div class="item-well well">
+                  <div class="row">
+                    <div class="col-md-3">
+                      <!-- Remove item form -->
+                      <form method="POST" id="remove-item-form" action="{% url 'remove-item' %}">
+                        {% csrf_token %}
+                        <input type="hidden" value="{{ item.name }}" name="remove-item-name">
+                        <input type="hidden" value="{{ item.description }}" name="remove-item-description">
+                        <input type="hidden" value="{{ list.id }}" name="list-id">
+                        <button type="submit" data-toggle="popover" data-placement="top" data-content="Remove this item from your list" class="btn btn-lg btn-danger fa fa-minus-square">&nbsp;from List</button>
+                      </form>
+
+                      <!-- Add item to pantry button -->
+                      {% if item.name not in user_pantry_item_names %}
+                        <button data-itemid="{{ item.id }}" data-listid="{{ list.id }}" data-toggle="popover" data-placement="top" data-content="Add this item to your pantry" class="btn btn-lg  btn-primary fa fa-plus-square add-item-to-pantry-button" id="add-item-to-pantry-button-{{ item.id }}-{{ list.id }}">&nbsp;to Pantry</button>
+
+                        <!-- Scan Barcode button -->
+                        <span id="scan-barcode-button-{{ item.id }}-{{ list.id }}" class="btn btn-warning btn-sm fa fa-barcode hidden">&nbsp;Scan Barcode</span>
+                        <!-- Edit Pantry amount button -->
+                        <!-- TODO: connect this to JS to spawn a form that POSTs to a view that edits an ItemDetail -->
+                      {% else %}
+                        <button data-itemid="{{ item.id }}" data-listid="{{ list.id }}" data-toggle="popover" data-placement="top" data-content="Edit amount of {{ item.name }} in your Pantry" class="btn btn-lg  btn-info fa fa-edit edit-item-in-pantry-button" id="edit-item-in-pantry-button-{{ item.id }}-{{ list.id }}">&nbsp;in Pantry</button>
+                      {% endif %}
+                    </div>
+                    <div class="col-md-4">
+                      <h4>{{ item.name }}</h4>
+                    </div>
+                    <div class="col-md-5">
+                      <h6>{{ item.description }}</h6>
+                    </div>
+                  </div>
+
+                  <div class="hidden" id="add-item-to-pantry-form-{{item.id}}-{{list.id}}">
+                    <br>
+                    <form class="form-inline" id="add-item-to-pantry-form-{{ item.id }}" action="{% url 'add-item-to-pantry' %}" method="POST">
+                      {% csrf_token %}
+                      <input type="hidden" class="form-control" name="add-item-to-pantry-desc" id="add-item-to-pantry-desc" value="{{ item.description }}">
+                      <input type="hidden" class="form-control" name="list_id" value="{{ list.id }}">
+                      <input type="text" class="form-control" name="add-item-to-pantry-name" id="add-item-to-pantry-name" placeholder="Item Name" value="{{ item.name }}">
+                      <input type="text" class="form-control" name="add-item-to-pantry-stock" id="add-item-to-pantry-stock" placeholder="Amount to add">
+                      <input type="text" class="form-control" name="add-item-to-pantry-unit" id="add-item-to-pantry-unit" placeholder="Units (ex: oz)">
+                      <input type="text" class="form-control" name="add-item-to-pantry-cost" id="add-item-to-pantry-cost" placeholder="Item Cost ($)">
+                      <input type="text" class="form-control" name="add-item-to-pantry-last-purchased" id="datepicker-last-purchased" placeholder="Date Purchased">
+                      <input type="text" class="form-control" name="add-item-to-pantry-location-purchased" id="add-item-to-pantry-location-purchased" placeholder="Location Purchased">
+                      <input type="text" class="form-control" name="add-item-to-pantry-expiration-date" id="datepicker-exp-date" placeholder="Expiration Date">
+                      <input type="submit" class="btn btn-sm btn-primary" value="Add to Pantry">
+                    </form>
+                  </div>
+                </div>
+              {% endfor %}
+            {% else %}
+              <h3 class="text-center">Looks like this list doesn't contain any items, consider adding some below!</h3>
+              <br>
+            {% endif %}
+
+            <!-- add item form -->
+            <form class="form-inline" id="new-item-form" action="{% url 'new-item' %}" method="POST">
+              {% csrf_token %}
+              <input type="text" class="form-control" name="new-item-name" id="new-item-name" placeholder="Item Name">
+              <input type="text" class="form-control" name="new-item-description" id="new-item-desc" placeholder="Item Description" />
+              <input type="submit" class="btn btn-primary" value="Add Item" id="new-item-save" />
+              <input type="hidden" value="{{list.id}}" name="list-id">
+            </form>
+
+            <br>
+
+            <!-- TODO: Add javascript to dynamically add form to add new items to the list -->
+            <div class="text-center">
+              <span class="btn btn-lg btn-primary text-center">Add Another Item</span>
+            </div>
+          </div>
         </div>
       </div>
     {% endfor %}
   {% endif %}
+
   <div id="new-list-error">
     {% if messages %}
       {% for message in messages %}
         <!-- Only show messages that pertain to the list the operation was completed on -->
         {% ifequal message.extra_tags -1 %}
           <span>{{ message|safe }}</span>
-          <br><br>
         {% endifequal %}
       {% endfor %}
     {% endif %}
@@ -192,65 +207,80 @@
 
   <div id="new-list">
     <h1 class="text-center">Create a new Shopping List Below</h1>
-      <form class="form-horizantal" id="new-shoppinglist-form" action="{% url 'new-list' %}" method="POST">
-        <div class="row">
-          {% csrf_token %}
-          <div class="col-md-3">
-            <input type="text" class="form-control" name="new-shoppinglist-name" id="new-shoppinglist-name" placeholder="Shopping List Name">
-          </div>
-          <div class="col-md-6">
-            <input type="text" class="form-control" name="new-shoppinglist-desc" id="new-shoppinglist-desc" placeholder="Shopping List Description">
-          </div>
-          <input type="submit" class="btn btn-primary" value="Save" id="new-item-save" />
+    <br>
+    <form class="form-horizantal" id="new-shoppinglist-form" action="{% url 'new-list' %}" method="POST">
+      <div class="row">
+        {% csrf_token %}
+        <div class="col-md-3">
+          <input type="text" class="form-control" name="new-shoppinglist-name" id="new-shoppinglist-name" placeholder="Shopping List Name">
         </div>
-        <br><br><br>
-      </form>
-    </div>
-  </div>   
-  <br>
-  <div class="text-center">
-    <a href="{% url 'new-list' %}" class="btn btn-lg btn-primary">
-      Create a New List
-    </a>
+        <div class="col-md-6">
+          <input type="text" class="form-control" name="new-shoppinglist-desc" id="new-shoppinglist-desc" placeholder="Shopping List Description">
+        </div>
+        <input type="submit" class="btn btn-primary" value="Save" id="new-item-save" />
+      </div>
+      <br><br><br>
+    </form>
   </div>
-
   <br>
-
 {% endblock %}
 
 {% block script %}
-  <script>
+  <script type="text/javascript">
     $(document).ready(function(){
       $('[data-toggle="popover"]').popover({ trigger: "hover" });
-      $(function() {
-        $( "#datepicker" ).datepicker();
-      });
+
+      // if list_id in url, click the panel-header to un-collapse it and change the plus to minus
+      if(window.location.hash) {
+          var hash = window.location.hash.substring(1)
+
+          // Only try to open panels if the hash is a number
+          if(!isNaN(hash)) {
+              $('#panel-heading-' + hash).click()
+          }
+      }
     });
 
     $('.add-item-to-pantry-button').click(function(e){
       var item_id = this.dataset.itemid;
       var list_id = this.dataset.listid;
-    
+
       // hide pantry button
       $('#add-item-to-pantry-button-' + item_id + '-' + list_id).hide();
 
       // show scan barcode button
       $('#scan-barcode-button-' + item_id + '-' + list_id).removeClass('hidden');
-      
+
       // show pantry form
       $('#add-item-to-pantry-form-' + item_id + '-' + list_id).removeClass('hidden');
-    
-      // init datepicker for last_purchased 
-      var picker1 = new Pikaday({ 
+
+      // init datepicker for last_purchased
+      var picker1 = new Pikaday({
         field: $('#add-item-to-pantry-form-' + item_id + '-' + list_id + ' #datepicker-last-purchased')[0],
         format: 'MM/DD/YYYY',
       });
 
-      // init datepicker for expiration_date 
-      var picker2 = new Pikaday({ 
+      // init datepicker for expiration_date
+      var picker2 = new Pikaday({
         field: $('#add-item-to-pantry-form-' + item_id + '-' + list_id + ' #datepicker-exp-date')[0],
         format: 'MM/DD/YYYY',
       });
+    });
+    $('.panel-heading').click(function() {
+        var list_id = this.dataset.listid;
+
+        // If collapsed, change plus to minus
+        if($('#panel-body-' + list_id).hasClass('collapse')) {
+            $('#' + list_id + '-collapse-indicator').removeClass('fa-plus')
+            $('#' + list_id + '-collapse-indicator').addClass('fa-minus')
+        }
+        // change minus to plus
+        else {
+            $('#' + list_id + '-collapse-indicator').removeClass('fa-minus')
+            $('#' + list_id + '-collapse-indicator').addClass('fa-plus')
+        }
+
+        $('#panel-body-' + list_id).toggleClass('collapse in');
     });
   </script>
 {% endblock %}
