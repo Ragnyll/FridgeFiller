@@ -189,7 +189,6 @@
                   <input type="submit" class="btn btn-success" value="Yes, I am sure, delete it!">
                   <span class="btn btn-danger delete-list-cancel-button" data-listid="{{ list.id }}">No, do not delete the list!</span>
                 </form>
-
               </div>
 
               <br>
@@ -211,6 +210,22 @@
                 <span class="btn btn-lg btn-primary text-center">Add Another Item</span>
               </div>
             </div>
+
+            <!-- Only show delete form down here if there are items in the list -->
+            {% ifnotequal list.items.count 0 %}
+              <h3 class="text-center" id="delete-list-{{ list.id }}">Done with this list?&nbsp;&nbsp;&nbsp;<button id="delete-list-button-{{ list.id }}" data-listid="{{ list.id }}" class="btn btn-danger delete-list-button">Delete It</button></h3>
+
+              <div class="text-center well hidden" id="delete-list-confirmation-form-{{ list.id }}">
+                <h3>Are you sure you want to delete this list?</h3>
+                <br>
+                <form action="{% url 'delete-list' %}" method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" class="form-control" name="list_id" value="{{ list.id }}">
+                  <input type="submit" class="btn btn-success" value="Yes, I am sure, delete it!">
+                  <span class="btn btn-danger delete-list-cancel-button" data-listid="{{ list.id }}">No, do not delete the list!</span>
+                </form>
+              </div>
+            {% endifnotequal %}
           </div>
         </div>
       </div>
