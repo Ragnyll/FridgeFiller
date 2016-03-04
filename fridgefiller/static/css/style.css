@@ -30,7 +30,11 @@
     padding-right: 0;
     position: fixed;
     height: 100%;
-    margin-top: 22px;
+    margin-top: 53px;
+}
+
+#content {
+    margin-top: 53px;
 }
 
 .content {
