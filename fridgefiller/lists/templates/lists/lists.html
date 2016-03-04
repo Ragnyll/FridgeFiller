@@ -83,7 +83,7 @@
   {% else %}
     {% for list in user_shopping_lists %}
       <div class="panel panel-success">
-        <div class="panel-heading" data-listid="{{ list.id }}" data-toggle="collapse" data-target="l-{{ list.id }}">
+        <div class="panel-heading" id="panel-heading-{{ list.id }}" data-listid="{{ list.id }}" data-toggle="collapse" data-target="l-{{ list.id }}">
           <a class="anchor" id="{{ list.id }}"></a>
           <div class="shopping-list">
             <h1>
@@ -209,9 +209,16 @@
   <script type="text/javascript">
     $(document).ready(function(){
       $('[data-toggle="popover"]').popover({ trigger: "hover" });
-      $(function() {
-        $( "#datepicker" ).datepicker();
-      });
+
+      // if list_id in url, click the panel-header to un-collapse it and change the plus to minus
+      if(window.location.hash) {
+          var hash = window.location.hash.substring(1)
+
+          // Only try to open panels if the hash is a number
+          if(!isNaN(hash)) {
+              $('#panel-heading-' + hash).click()
+          }
+      }
     });
 
     $('.add-item-to-pantry-button').click(function(e){
@@ -242,14 +249,13 @@
     $('.panel-heading').click(function() {
         var list_id = this.dataset.listid;
 
-        // If collapsed
+        // If collapsed, change plus to minus
         if($('#panel-body-' + list_id).hasClass('collapse')) {
-            console.log('NOT COLLAPSED')
             $('#' + list_id + '-collapse-indicator').removeClass('fa-plus')
             $('#' + list_id + '-collapse-indicator').addClass('fa-minus')
         }
+        // change minus to plus
         else {
-            console.log("COLLAPSED")
             $('#' + list_id + '-collapse-indicator').removeClass('fa-minus')
             $('#' + list_id + '-collapse-indicator').addClass('fa-plus')
         }
