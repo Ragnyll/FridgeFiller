@@ -6,8 +6,10 @@ $(function() {
     attachListeners: function() {
       var self = this;
 
-      $(".controls button").on("click", function(e) {
-        var input = document.querySelector(".controls input[type=file]");
+      $(".fa-barcode button").on("click", function(e) {
+        var input = {};
+        $(this).find("input").click();
+        input = $(this).find("input").val();
         if (input.files && input.files.length) {
           App.decode(URL.createObjectURL(input.files[0]));
         }
@@ -31,7 +33,7 @@ $(function() {
       });
     },
     detachListeners: function() {
-      $(".controls input[type=file]").off("change");
+      $(". input[type=file]").off("change");
       $(".controls .reader-config-group").off("change", "input, select");
       $(".controls button").off("click");
     },
@@ -80,9 +82,6 @@ $(function() {
         $node,
         canvas = Quagga.canvas.dom.image;
 
-    $node = $('<li><div class="caption"><h4 class="code"></h4></div></li>');
-    $node.find("img").attr("src", canvas.toDataURL());
-    $node.find("h4.code").html(code);
-    $("#result_strip ul.codes").prepend($node);
+    $("")
   });
 });

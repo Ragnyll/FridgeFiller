@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block style %}
-  <style>
+  <style type="text/css">
     #remove-item-form {
         display: inline;
     }
@@ -122,7 +122,10 @@
                     <button data-itemid="{{ item.id }}" data-listid="{{ list.id }}" data-toggle="popover" data-placement="top" data-content="Add this item to your pantry" class="btn btn-lg  btn-primary fa fa-plus-square add-item-to-pantry-button" id="add-item-to-pantry-button-{{ item.id }}-{{ list.id }}">&nbsp;to Pantry</button>
 
                     <!-- Scan Barcode button -->
-                    <span id="scan-barcode-button-{{ item.id }}-{{ list.id }}" class="btn btn-warning btn-sm fa fa-barcode hidden">&nbsp;Scan Barcode</span>
+                    
+                    <button id="scan-barcode-button-{{ item.id }}-{{ list.id }}" class="btn btn-primary btn-lg fa fa-barcode">
+                      <input id="scan-barcode-input-{{ item.id }}-{{ list.id }}" type="file hidden" capture/>
+                      &nbsp;Scan Barcode</button>
                   <!-- Edit Pantry amount button -->
                   <!-- TODO: connect this to JS to spawn a form that POSTs to a view that edits an ItemDetail -->
                   {% else %}
@@ -219,7 +222,7 @@
 {% endblock %}
 
 {% block script %}
-  <script>
+  <script type="text/javascript">
     $(document).ready(function(){
       $('[data-toggle="popover"]').popover({ trigger: "hover" });
       $(function() {
