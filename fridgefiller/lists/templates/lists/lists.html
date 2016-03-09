@@ -1,5 +1,7 @@
 {% extends "base_sidebar.html" %}
 
+{% load item_tags %}
+
 {% block title %}
   Your Shopping Lists
 {% endblock %}
@@ -54,13 +56,13 @@
     .popover.top .arrow:after {
         border-top-color: #34495E;
     }
-    #add-item-to-pantry-cost {
+    #add-item-to-pantry-cost, #edit-item-in-pantry-cost {
         width: 10%;
     }
-    #add-item-to-pantry-stock {
+    #add-item-to-pantry-stock, #edit-item-in-pantry-stock {
         width: 10%;
     }
-    #add-item-to-pantry-unit {
+    #add-item-to-pantry-unit, #edit-item-in-pantry-unit {
         width: 10%;
     }
     .panel-heading {
@@ -158,6 +160,7 @@
                     </div>
                   </div>
 
+                  <!-- Add to pantry form -->
                   <div class="hidden" id="add-item-to-pantry-form-{{item.id}}-{{list.id}}">
                     <br>
                     <form class="form-inline" id="add-item-to-pantry-form-{{ item.id }}" action="{% url 'add-item-to-pantry' %}" method="POST">
@@ -174,6 +177,31 @@
                       <input type="submit" class="btn btn-sm btn-primary" value="Add to Pantry">
                     </form>
                   </div>
+
+                  <!-- Edit in pantry form -->
+                  {% if item.name in user_pantry_item_names %}
+                    <!-- Get ItemDetail object for item -->
+                    {% get_item_detail user_pantry_items item.name as item_detail %}
+                    {{ item_detail. }}
+
+                  <div class="hidden" id="edit-item-in-pantry-form-{{item.id}}-{{list.id}}">
+                    <br>
+                    <form class="form-inline" id="edit-item-in-pantry-form-{{ item.id }}" action="someurl" method="POST">
+                      {% csrf_token %}
+                      <input type="hidden" class="form-control" name="edit-item-in-pantry-desc" id="edit-item-in-pantry-desc" value="{{ item_detail.description }}">
+                      <input type="hidden" class="form-control" name="list_id" value="{{ list.id }}">
+
+                      <input type="text" class="form-control" name="edit-item-in-pantry-name" id="edit-item-in-pantry-name" placeholder="Item Name" value="{{ item_detail.name }}">
+                      <input type="text" class="form-control" name="edit-item-in-pantry-stock" id="edit-item-in-pantry-stock" placeholder="Amount to add" value="{{ item_detail.get_amount }}">
+                      <input type="text" class="form-control" name="edit-item-in-pantry-unit" id="edit-item-in-pantry-unit" placeholder="Units (ex: oz)" value="{{ item_detail.unit }}">
+                      <input type="text" class="form-control" name="edit-item-in-pantry-cost" id="edit-item-in-pantry-cost" placeholder="Item Cost ($)" value="{{ item_detail.get_cost }}">
+                      <input type="text" class="form-control" name="edit-item-in-pantry-last-purchased" id="datepicker-last-purchased" placeholder="Date Purchased" value="{{ item_detail.get_pretty_last_purchased }}">
+                      <input type="text" class="form-control" name="edit-item-in-pantry-location-purchased" id="edit-item-in-pantry-location-purchased" placeholder="Location Purchased" value="{{ item_detail.location_purchased }}">
+                      <input type="text" class="form-control" name="edit-item-in-pantry-expiration-date" id="datepicker-exp-date" placeholder="Expiration Date" value="{{ item_detail.get_pretty_expiration_date }}">
+                      <input type="submit" class="btn btn-sm btn-primary" value="Update Values">
+                    </form>
+                  </div>
+                  {% endif %}
                 </div>
               {% endfor %}
             {% else %}
@@ -303,6 +331,12 @@
         field: $('#add-item-to-pantry-form-' + item_id + '-' + list_id + ' #datepicker-exp-date')[0],
         format: 'MM/DD/YYYY',
       });
+    });
+    $('.edit-item-in-pantry-button').click(function() {
+        var list_id = this.dataset.listid;
+        var item_id = this.dataset.itemid;
+
+        $('#edit-item-in-pantry-form-' + item_id + '-' + list_id).removeClass('hidden')
     });
     $('.panel-heading').click(function() {
         var list_id = this.dataset.listid;
