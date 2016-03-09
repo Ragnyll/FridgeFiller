@@ -83,6 +83,7 @@
           </a>
         </h1>
         <h4>{{ list.description }}</h4>  
+        <input type="submit" class="btn btn-sm btn-primary" value="Print list">
         <hr>
         {% if messages %}
           {% for message in messages %}
@@ -139,6 +140,7 @@
               
               <div class="hidden" id="add-item-to-pantry-form-{{item.id}}-{{list.id}}">
                 <br>
+
                 <form class="form-inline" id="add-item-to-pantry-form-{{ item.id }}" action="{% url 'add-item-to-pantry' %}" method="POST"> 
                   {% csrf_token %}
                   <input type="hidden" class="form-control" name="add-item-to-pantry-desc" id="add-item-to-pantry-desc" value="{{ item.description }}"> 
@@ -149,7 +151,7 @@
                   <input type="text" class="form-control" name="add-item-to-pantry-cost" id="add-item-to-pantry-cost" placeholder="Item Cost ($)"> 
                   <input type="text" class="form-control" name="add-item-to-pantry-last-purchased" id="datepicker-last-purchased" placeholder="Date Purchased"> 
                   <input type="text" class="form-control" name="add-item-to-pantry-location-purchased" id="add-item-to-pantry-location-purchased" placeholder="Location Purchased"> 
-                  <input type="text" class="form-control" name="add-item-to-pantry-expiration-date" id="datepicker-exp-date" placeholder="Expiration Date"> 
+                  <input type="text" class="form-control" name="add-item-to-pantry-expiration-date" id="datepicker-exp-date" placeholder="Expiration Date">
                   <input type="submit" class="btn btn-sm btn-primary" value="Add to Pantry"> 
                 </form>
               </div>
