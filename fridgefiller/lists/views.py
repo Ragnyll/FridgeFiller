@@ -42,8 +42,11 @@ class ListsView(TemplateView):
         user_party = Party.objects.get(owner=user)
         user_pantry = Pantry.objects.get(party=user_party)
 
-        user_pantry_item_names = [x.name for x in user_pantry.items.all()]
+        user_pantry_items = user_pantry.items.all()
 
+        user_pantry_item_names = [x.name for x in user_pantry_items]
+
+        context['user_pantry_items'] = user_pantry_items
         context['user_pantry_item_names'] = user_pantry_item_names
         context['user_pantry'] = user_pantry
         context['user_shopping_lists'] = ShoppingList.objects.filter(owners__in=[user])
@@ -184,14 +187,16 @@ class AddItemToPantryView(View):
 
     def post(self, request, *args, **kwargs):
         item_name = request.POST.get('add-item-to-pantry-name', False)
-        item_description = request.POST.get('add-item-ro-pantry-desc', False)
+        item_description = request.POST.get('add-item-to-pantry-desc', False)
         amount = request.POST.get('add-item-to-pantry-stock', False)
         units = request.POST.get('add-item-to-pantry-unit', False)
         cost = request.POST.get('add-item-to-pantry-cost', False)
         location_purchased = request.POST.get('add-item-to-pantry-location-purchased', False)
         list_id = request.POST.get('list_id', False)
 
-        date_pattern = re.compile('/(0[1-9]|1[012])[- \/.](0[1-9]|[12][0-9]|3[01])[- \/.](19|20)\d\d/')
+        date_pattern = re.compile('(0[1-9]|1[012])[- \/.](0[1-9]|[12][0-9]|3[01])[- \/.](19|20)\d\d')
+
+        print date_pattern.match('12/12/1993')
 
         last_purchased_str = request.POST.get('add-item-to-pantry-last-purchased', False)
         expiration_date_str = request.POST.get('add-item-to-pantry-expiration-date', False)
