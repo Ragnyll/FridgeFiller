@@ -10,7 +10,7 @@
       <span class="icon-bar"></span>
     </button>
   </div>
-  
+
   <div class="navbar-collapse collapse">
     <ul class="nav pull-left navbar-nav">
       <!-- List Items for left navbar here -->
@@ -28,14 +28,13 @@
           </li>
         {% endif %}
         <li>
-	  <a href="{% url 'account_logout' %}">Logout</a>
-	</li>
+          <a href="{% url 'account_logout' %}">Logout</a>
+        </li>
       {% else %}
-	<li>
-	  <a href="{% url 'account_login' %}">Login</a>
-	</li>
+        <li>
+          <a href="{% url 'account_login' %}">Login</a>
+        </li>
       {% endif %}
     </ul>
   </div>
 </div>
-x
