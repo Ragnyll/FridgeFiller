@@ -1,0 +1,53 @@
+{% extends "base_sidebar.html" %}
+
+{% block page-header %}
+  <div class="page-header">
+    <h1>Invitation</h1>
+  </div>
+{% endblock %}
+
+{% block competition_content %}
+  <div class="well">
+    <h2>Invitation to <a href="{{ invitation.team.get_absolute_url }}"><i>{{ invitation.party.name }}</i></a></h2>
+    <p>
+      <span><strong>To:</strong> {{ invitation.receiver }}</span><br>
+      <span><strong>From:</strong> {{ invitation.sender }}</span><br>
+      <span><strong>Sent:</strong> {{ invitation.sent }}</span><br>
+      <span>
+        <strong>Competition:</strong>
+        <a href="{{ invitation.team.competition.get_absolute_url }}">
+          {{ invitation.team.competition.name }}
+        </a>
+      </span>
+    </p>
+
+    <hr>
+
+    <p>
+      {{ invitation.message }}
+    </p>
+
+    <br>
+
+    {% if invitation.response == 'A' %} {# Accepted #}
+      <a href="#" class="btn btn-success disabled">
+        Accepted
+      </a>
+    {% endif %}
+
+    {% if invitation.response == 'D' %} {# Declined #}
+      <a href="#" class="btn btn-danger disabled">
+        Declined
+      </a>
+    {% endif %}
+
+    {% if invitation.receiver == user and not invitation.response %}
+      <a data-toggle="modal" data-target="#acceptInviteModal" class="btn btn-success" href="#">
+        Accept Invitation
+      </a>
+      <a data-toggle="modal" data-target="#declineInviteModal" class="btn btn-danger" href="#">
+        Decline Invitation
+      </a>
+    {% endif %}
+  </div>
+{% endblock %}

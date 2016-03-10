@@ -1,13 +1,18 @@
+from django.db.models import Q
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
-from django.views.generic import TemplateView, UpdateView, View
+from django.http import HttpResponse, Http404
+from django.views.generic import TemplateView, UpdateView, View, DetailView, CreateView
 from django.core.urlresolvers import reverse
 from django.contrib import messages
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils.decorators import method_decorator
 
 from datetime import datetime
+
+from mixins import *
+from invitation_forms import InvitationForm
 
 import re
 
@@ -317,3 +322,221 @@ class AddItemToPantryView(View):
             messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Unable to create ItemDetail for that item.  Please let a developer know!</span>", extra_tags=int(list_id))
             return redirect("/lists/#" + list_id)
 
+class InvitationListView(LoggedInMixin, TemplateView):
+    """Lists all teams, provided that the user is logged in"""
+    #template_name = 'competition/invitation/invitation_list.html'
+    paginate_by = 10
+
+    def process_page(self, items, query_param):
+        paginator = Paginator(items, self.paginate_by)
+        page_num = self.request.GET.get(query_param)
+
+        try:
+            return paginator.page(page_num)
+        except PageNotAnInteger:
+            return paginator.page(1)
+        except EmptyPage:
+            return paginator.page(paginator.num_pages)
+
+    def get_context_data(self, **kwargs):
+        context = super(InvitationListView, self).get_context_data(**kwargs)
+        user = self.request.user
+        invitations = Invitation.objects.filter(Q(sender=user) | Q(receiver=user))
+        received = self.process_page(invitations.filter(receiver=user),
+                                     'received_page')
+        sent = self.process_page(invitations.filter(sender=user),
+                                 'sent_page')
+        context.update({'received': received, 'sent': sent})
+        return context
+
+
+class InvitationDetailView(LoggedInMixin, DetailView):
+    """Show details about a particular team"""
+    #template_name = 'competition/invitation/invitation_detail.html'
+    context_object_name = 'invitation'
+
+    def get_queryset(self):
+        """Only show invitations for this user"""
+        user = self.request.user
+        return Invitation.objects.filter(Q(sender=user) | Q(receiver=user))
+
+    def get_object(self, queryset=None):
+        """When we fetch the invitation, mark it as read"""
+        obj = super(InvitationDetailView, self).get_object(queryset)
+        if self.request.user == obj.receiver:
+            obj.read = True
+            obj.save()
+        return obj
+
+
+class InvitationCreateView(LoggedInMixin,
+                           CreateView):
+    """Allow users to create invitations"""
+   # template_name = 'competition/invitation/invitation_create.html'
+    form_class = InvitationForm
+
+    def get_available_teams(self):
+        """Returns a list of competitions that are open for
+        registration and team changes"""
+
+        #Should just list all parties but not person parties
+        parties = Party.objects.all()
+        
+        if not parties.exists():
+            msg = "Can't send invites at this time. It looks"
+            msg += " like there are no groups"
+            messages.error(self.request, msg)
+            raise Http404(msg)
+        return parties
+
+    def get_available_invitees(self):
+        """Returns a list of users who can be invited"""
+        return UserProfile.objects.all()
+
+    def get_team(self):
+        """If the user provided a 'party' query parameter, look up the
+        team. Otherwise return None"""
+        try:
+            party_id = self.request.GET.get('party')
+            if party_id is not None:
+                party_id = int(party_id)
+                return self.get_available_teams().get(pk=party_id)
+            return self.get_available_teams().latest()
+        except (Party.DoesNotExist, ValueError):
+            return None
+
+    def get_invitee(self):
+        """If the user provided a 'invitee' query parameter, look up the
+        team. Otherwise return None"""
+        try:
+            invitee_id = int(self.request.GET['invitee'])
+            return self.get_available_invitees().get(pk=invitee_id)
+        except (UserProfile.DoesNotExist, KeyError, ValueError):
+            return None
+
+    def get_form(self, form_class):
+        """Limit the teams that the user can choose from to the teams
+        that they are a member of"""
+        form = super(InvitationCreateView, self).get_form(form_class)
+        form.fields["receiver"].queryset = self.get_available_invitees()
+        form.fields["party"].queryset = self.get_available_teams()
+        form.fields["party"].empty_label = None
+        return form
+
+    def get_form_kwargs(self):
+        # Set up keyword arguments for a new Invitation
+        invitation_kwargs = (('sender', self.request.user),
+                             ('receiver', self.get_invitee()),
+                             ('party', self.get_team()))
+
+        # Filter out the values that are None (e.g., if the 'team'
+        # query parameter wasn't set, self.get_team() will be None, so
+        # we need to filter it out)
+        invitation_kwargs = dict((k, v) for (k, v) in invitation_kwargs
+                                 if v is not None)
+
+        # Get the default form keyword arguments created by CreateView
+        form_kwargs = super(InvitationCreateView, self).get_form_kwargs()
+
+        # Set our instance with our special keyword arguments and
+        # return it
+        form_kwargs['instance'] = Invitation(**invitation_kwargs)
+        return form_kwargs
+
+
+class InvitationResponseView(LoggedInMixin,
+                             CheckAllowedMixin,
+                             ConfirmationMixin):
+    """Allows a user to accept or decline an invitation"""
+    error_message = 'Cannot accept or decline this invitation at this time'
+
+    def dispatch(self, request, *args, **kwargs):
+        """Sets up self.kwargs since we don't have that by default :/"""
+        self.kwargs = kwargs
+        parent = super(InvitationResponseView, self)
+        return parent.dispatch(request, *args, **kwargs)
+
+    def check_if_allowed(self, request):
+        # Competition has to be open
+        #if not self.invitation.team.competition.is_open:
+         #   logger.debug("Can't change invite. Competition closed")
+          #  return False
+        # They can't accept or decline again if they've already
+        # responded
+        if self.invitation.has_response():
+            logger.debug("Can't change invite. Already responded")
+            return False
+        # They can't accept or decline if the message wasn't meant for
+        # them.
+        if request.user != self.invitation.receiver:
+            logger.debug("Can't change invite. Not yours.")
+            return False
+
+        # Otherwise we're in good shape.
+        return True
+
+    @property
+    def invitation(self):
+        if not hasattr(self, '_invitation'):
+            logger.debug("Fetching invitation")
+            invitations = Invitation.objects.select_related()
+            self._invitation = get_object_or_404(invitations,
+                                                 pk=self.kwargs['pk'])
+            logger.debug("Invitation Fetched")
+        return self._invitation
+
+    def get_check_box_label(self):
+        return "Yes I'm sure"
+
+
+class InvitationAcceptView(InvitationResponseView):
+    """Allows a user to accept an invitation"""
+    #template_name = 'competition/invitation/invitation_accept.html'
+
+    #def get_question(self):
+     #   msg = "Are you sure you want to accept your invitation to join %s?"
+    #    msg += " Joining another team will cause you to automatically leave"
+    #    msg += " any teams that you're on right now."
+    #    return msg % self.invitation.party.name
+
+    def agreed(self):
+        #competition = self.invitation.party.competition
+        invitee = self.invitation.receiver
+        #if not competition.is_user_registered(invitee):
+            # If the user isn't registered, make them register
+         #   msg = "You need to register for %s before you can join a team"
+          #  messages.error(self.request, msg % competition.name)
+           # url = reverse('register_for',
+            #              kwargs={'comp_slug': competition.slug})
+            #query = urllib.urlencode(
+            #    {'next': self.invitation.get_absolute_url()}
+            #)
+            #return redirect(url + '?' + query)
+
+        self.invitation.accept()
+
+        msg = "Successfully joined %s" % self.invitation.party.name
+        messages.success(self.request, msg)
+        return redirect(self.invitation.party)
+
+    def disagreed(self):
+        return redirect(self.invitation.party.competition)
+
+
+class InvitationDeclineView(InvitationResponseView):
+    """Allows a user to decline an invitation"""
+    #template_name = 'competition/invitation/invitation_decline.html'
+
+    def get_question(self):
+        msg = "Are you sure you want to decline your invitation to join %s?"
+        return msg % self.invitation.party.name
+
+    def agreed(self):
+        self.invitation.decline()
+
+        msg = "Successfully declined to join %s" % self.invitation.party.name
+        messages.success(self.request, msg)
+        return redirect(self.invitation.party)
+
+    def disagreed(self):
+        return redirect(self.invitation.party)

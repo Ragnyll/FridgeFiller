@@ -1,6 +1,7 @@
 from django.db import models
+from django.conf import settings
 from django.dispatch import receiver
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save, pre_delete
 from django.contrib.auth.models import User
 
 from datetime import datetime
@@ -43,6 +44,12 @@ class Party(models.Model):
 
     def __str__(self):
         return str(self.name)
+
+    def is_user_on_team(self, user):
+        """
+        Returns true if user is on the calling team, else false
+        """
+        return self.members.filter(pk=user.pk).exists()
 
 def create_party_pantry(sender, instance, created, **kwargs):
     """
@@ -117,3 +124,55 @@ class ItemDetail(Item):
 
     def get_location_purchased(self):
         return self.location_purchased if self.location_purchased != "" else "---"
+
+class Invitation(models.Model):
+    class Meta:
+        app_label = 'lists'
+        ordering = ['-sent']
+
+    RESPONSE_CHOICES = (('A', 'Accepted'),
+                        ('D', 'Declined'))
+
+    party = models.ForeignKey(Party)
+    sender = models.ForeignKey(UserProfile, related_name="sent_invitations")
+    receiver = models.ForeignKey(UserProfile, related_name="received_invitations")
+    message = models.TextField()
+    sent = models.DateTimeField(auto_now_add=True)
+    read = models.BooleanField(default=False)
+    response = models.CharField(blank=True, null=True, max_length=2,
+                                choices=RESPONSE_CHOICES)
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('invitation_detail', (), {'pk': self.pk})
+
+    def __str__(self):
+        return "%s invites %s to join %s" % (self.sender.name,
+                                             self.receiver.name,
+                                             self.party.name)
+
+    def has_response(self):
+        """Returns True if the receiver has responded, else False"""
+        return self.response is not None
+
+    def accept(self):
+        """Accepts an invitation to join a team.
+        Adds the invitation's recipient to the team. If the team is
+        already full, throws an instance of TeamException """
+        # If the user's already responded, don't let them respond again
+        if self.has_response():
+            return
+        self.team.add_team_member(self.receiver)
+        self.read = True
+        self.response = 'A'     # Accepted
+        self.save()
+
+    def decline(self):
+        """Declines an invitation to join a team.
+        Just marks the invitation as declined"""
+        # If the user's already responded, don't let them respond again
+        if self.has_response():
+            return
+        self.read = True
+        self.response = 'D'     # Declined
+        self.save()

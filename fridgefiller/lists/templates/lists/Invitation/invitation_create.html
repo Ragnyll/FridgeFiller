@@ -1,0 +1,11 @@
+{% extends "base_sidebar.html" %}
+{% load crispy_forms_tags%}
+
+{% block competition_content %}
+  {% if not form.fields.party.queryset.exists %}
+    <p> You cannot send invitations at the moment</p>
+  {% endif %}
+
+  {% crispy form %}
+
+{% endblock %}

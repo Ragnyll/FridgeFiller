@@ -16,5 +16,21 @@ urlpatterns = [
     url(r'^party/leave', LeavePartyView.as_view(), name="leave-party"),
     url(r'^party/invite', InvitetoParty.as_view(), name="invite-to-party"),
     url(r'^party/create', CreateParty.as_view(), name="create-party"),
-    url(r'^party/addlist', AddPartyList.as_view(), name="add-group-list")
+    url(r'^party/addlist', AddPartyList.as_view(), name="add-group-list"),
+    url(r'^invitations/$',
+        InvitationListView.as_view(),
+        name='invitation_list'),
+    url(r'^invitations/invite/$',
+        InvitationCreateView.as_view(),
+        name='invitation_create'),
+    url(r'^invitations/(?P<pk>\d+)/$',
+        InvitationDetailView.as_view(),
+        name='invitation_detail'),
+    url(r'^invitations/(?P<pk>\d+)/accept$',
+        InvitationAcceptView.as_view(),
+        name='invitation_accept'),
+    url(r'^invitations/(?P<pk>\d+)/decline$',
+        InvitationDeclineView.as_view(),
+        name='invitation_decline')
+    
 ]
