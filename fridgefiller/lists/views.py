@@ -191,7 +191,7 @@ class PrintListMiniView(TemplateView):
         context = super(PrintListMiniView, self).get_context_data(**kwargs)
         print(kwargs)
         print(dir(self.request))
-        context["id"] = 10
+        context["id"] = kwargs["list_id"]
         print(context)
         return context
 
@@ -208,7 +208,7 @@ class PrintListView(View):
         data = {"id" : list_id}
         print "PrintList View: ", list_id
         data.update({"items" : [i for i in list_obj.items.all()]})
-        return redirect("/lists/printm/")
+        return redirect("/lists/printm/", list_id=list_id)
 
 class AddItemToPantryView(View):
     """
