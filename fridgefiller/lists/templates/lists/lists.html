@@ -83,7 +83,12 @@
           </a>
         </h1>
         <h4>{{ list.description }}</h4>  
-        <input type="submit" class="btn btn-sm btn-primary" value="Print list">
+        <!-- print list form -->
+        <form class="form-inline" id="print-list-form" action="{% url 'print-list' %}" method="POST">
+          {% csrf_token %}
+          <input type="hidden" value="{{ list.id }}" name="list-id">
+          <input type="submit" class="btn btn-sm btn-primary" value="Print list">
+        </form>
         <hr>
         {% if messages %}
           {% for message in messages %}

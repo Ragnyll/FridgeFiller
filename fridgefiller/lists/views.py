@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404
 from django.views.generic import TemplateView, UpdateView, View
 from django.core.urlresolvers import reverse
 from django.contrib import messages
@@ -73,7 +73,6 @@ class PantryView(TemplateView):
     """
     template_name = "lists/pantry.html"
 
-
     def get_context_data(self, **kwargs):
         context = super(PantryView, self).get_context_data(**kwargs)
 
@@ -131,7 +130,6 @@ class NewListView(View):
     """
     This view lets a user add new items to a list, and submit that tentative list as a new list object
     """
-
     def post(self, request, *args, **kwargs):
         list_id = -1
 
@@ -176,6 +174,41 @@ class RemoveItemFromListView(View):
 
         return redirect("/lists/#" + list_id)
 
+class PrintListMiniView(TemplateView):
+    template_name = "lists/print.html"
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        """
+        Ensures that only authenticated users can access the view.
+        """
+        print "Dispatch", dir(request)
+        print "args: ", args
+        print "kwargs: ", kwargs
+        return super(PrintListMiniView, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(PrintListMiniView, self).get_context_data(**kwargs)
+        print(kwargs)
+        print(dir(self.request))
+        context["id"] = 10
+        print(context)
+        return context
+
+class PrintListView(View):
+    """
+    This view presents a list in a minimalisitic way for printing
+    """
+    def get(self, request, *args, **kwargs):
+        raise Http404
+
+    def post(self, request, *args, **kwargs):
+        list_id = request.POST.get('list-id', False)
+        list_obj = ShoppingList.objects.get(id=list_id)
+        data = {"id" : list_id}
+        print "PrintList View: ", list_id
+        data.update({"items" : [i for i in list_obj.items.all()]})
+        return redirect("/lists/printm/")
 
 class AddItemToPantryView(View):
     """
