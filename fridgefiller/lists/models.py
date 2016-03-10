@@ -88,7 +88,9 @@ class Item(models.Model):
 
 # use default = null for optional stuff
 
-class ItemDetail(Item):
+class ItemDetail(models.Model):
+    name = models.CharField(max_length=64, default="")
+    description = models.TextField(blank=True, default="")
     cost = models.FloatField(default=0)
     last_purchased = models.DateTimeField(blank=True, default=datetime.min)
     location_purchased = models.CharField(max_length=64, blank=True, default="")
