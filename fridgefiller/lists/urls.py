@@ -12,5 +12,5 @@ urlpatterns = [
     url(r'^new/item/', NewItemView.as_view(), name="new-item"),
     url(r'^remove/item/', RemoveItemFromListView.as_view(), name="remove-item"),
     url(r'^print/', PrintListView.as_view(), name="print-list"),
-    url(r'^printm/', PrintListMiniView.as_view(), name="print-m-list"),
+    url(r'^printm/(?P<list_id>\d+)', PrintListMiniView.as_view(), name="print-m-list"),
 ]

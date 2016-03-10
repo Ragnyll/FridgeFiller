@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, Http404
+from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.views.generic import TemplateView, UpdateView, View
 from django.core.urlresolvers import reverse
 from django.contrib import messages
@@ -182,17 +182,22 @@ class PrintListMiniView(TemplateView):
         """
         Ensures that only authenticated users can access the view.
         """
-        print "Dispatch", dir(request)
-        print "args: ", args
-        print "kwargs: ", kwargs
         return super(PrintListMiniView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(PrintListMiniView, self).get_context_data(**kwargs)
-        print(kwargs)
-        print(dir(self.request))
+        user = UserProfile.objects.get(user=self.request.user)
+        
+        try:
+            print "printing lists"
+            for i in user.lists.all():
+                print i
+            item_list = user.lists.get(pk=kwargs["list_id"])
+        except :
+            raise Http404
+
         context["id"] = kwargs["list_id"]
-        print(context)
+
         return context
 
 class PrintListView(View):
@@ -204,11 +209,7 @@ class PrintListView(View):
 
     def post(self, request, *args, **kwargs):
         list_id = request.POST.get('list-id', False)
-        list_obj = ShoppingList.objects.get(id=list_id)
-        data = {"id" : list_id}
-        print "PrintList View: ", list_id
-        data.update({"items" : [i for i in list_obj.items.all()]})
-        return redirect("/lists/printm/", {"list_id": list_id})
+        return redirect("print-m-list", list_id=list_id)
 
 class AddItemToPantryView(View):
     """
