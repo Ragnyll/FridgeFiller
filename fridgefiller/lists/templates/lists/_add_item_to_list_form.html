@@ -1,0 +1,8 @@
+<form class="form-inline" id="new-item-form" action="{% url 'new-item' %}" method="POST">
+  {% csrf_token %}
+  <input type="text" class="form-control" name="new-item-name" id="new-item-name" placeholder="Item Name">
+  <input type="text" class="form-control" name="new-item-description" id="new-item-desc" placeholder="Item Description" />
+  <input type="submit" class="btn btn-primary" value="Add Item" id="new-item-save" />
+  <input type="hidden" value="{{list.id}}" name="list-id">
+</form>
+<br>
