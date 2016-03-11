@@ -109,9 +109,13 @@ class NewItemView(View):
 
         # Get or create item in database
         try:
-            new_item, created = Item.objects.get_or_create(name=item_name, description=item_desc)
-        except:
-            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Error: can't create or get that item.</span>", extra_tags=int(list_id))
+            new_item = Item.objects.get(name=item_name, description=item_desc)
+        except Item.MultipleObjectsReturned:
+            new_item = Item.objects.filter(name=item_name, description=item_desc)[0]
+        except Item.DoesNotExist:
+            new_item = Item.objects.create(name=item_name, description=item_desc)
+        except Exception, e:
+            messages.add_message(request, messages.ERROR, str(e) +"<span class='alert alert-danger'>Error: can't create or get that item.</span>", extra_tags=int(list_id))
             return redirect('/lists/#' + list_id)
 
         # Don't add duplicate items
@@ -167,7 +171,7 @@ class RemoveItemFromListView(View):
         item_desc = request.POST.get('remove-item-description', False)
         list_id = request.POST.get('list-id', False)
 
-        item_obj = Item.objects.get(name=item_name, description=item_desc)
+        item_obj = Item.objects.filter(name=item_name, description=item_desc)[0]
         list_obj = ShoppingList.objects.get(id=list_id)
 
         # Remove the item from the list
@@ -188,18 +192,43 @@ class AddItemToPantryView(View):
     def post(self, request, *args, **kwargs):
         item_name = request.POST.get('add-item-to-pantry-name', False)
         item_description = request.POST.get('add-item-to-pantry-desc', False)
-        amount = request.POST.get('add-item-to-pantry-stock', False)
-        units = request.POST.get('add-item-to-pantry-unit', False)
-        cost = request.POST.get('add-item-to-pantry-cost', False)
-        location_purchased = request.POST.get('add-item-to-pantry-location-purchased', False)
+        list_id = request.POST.get('list_id', False)
+        try:
+            item_detail_obj, c = ItemDetail.objects.get_or_create(name=item_name,
+                                                                  description=item_description)
+
+            # User's pantry object
+            user_userprofile = UserProfile.objects.get(name=request.user.username)
+            user_party = Party.objects.get(owner=user_userprofile)
+            pantry_obj = Pantry.objects.get(party=user_party)
+
+            pantry_obj.items.add(item_detail_obj)
+
+            # successful, return to lists page with success message
+            messages.add_message(request, messages.SUCCESS, "<span class='alert alert-success'><strong>" + str(item_name) + "</strong>&nbsp;has been added to your pantry!</span>", extra_tags=int(list_id))
+            return redirect("/lists/#" + list_id)
+
+        # Something went wront creating the Item Detail, give them an error
+        except:
+            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Unable to create ItemDetail for that item.  Please let a developer know!</span>", extra_tags=int(list_id))
+            return redirect("/lists/#" + list_id)
+
+
+
+class EditItemInPantryView(View):
+    def post(self, request, *args, **kwargs):
+        item_name = request.POST.get('edit-item-in-pantry-name', False)
+        item_description = request.POST.get('edit-item-in-pantry-desc', False)
+        amount = request.POST.get('edit-item-in-pantry-stock', False)
+        units = request.POST.get('edit-item-in-pantry-unit', False)
+        cost = request.POST.get('edit-item-in-pantry-cost', False)
+        location_purchased = request.POST.get('edit-item-in-pantry-location-purchased', False)
         list_id = request.POST.get('list_id', False)
 
         date_pattern = re.compile('(0[1-9]|1[012])[- \/.](0[1-9]|[12][0-9]|3[01])[- \/.](19|20)\d\d')
 
-        print date_pattern.match('12/12/1993')
-
-        last_purchased_str = request.POST.get('add-item-to-pantry-last-purchased', False)
-        expiration_date_str = request.POST.get('add-item-to-pantry-expiration-date', False)
+        last_purchased_str = request.POST.get('edit-item-in-pantry-last-purchased', False)
+        expiration_date_str = request.POST.get('edit-item-in-pantry-expiration-date', False)
 
 
         # convert empty values to zero for non-required data
@@ -234,24 +263,26 @@ class AddItemToPantryView(View):
         else:
             expiration_date = datetime.min
 
-        # try to create itemdetail with passed values
+        # Get ItemDetail object from pantry and update the values
         try:
-            item_detail_obj, created = ItemDetail.objects.get_or_create(name=item_name,
-                                                                        description=item_description,
-                                                                        cost=cost,
-                                                                        last_purchased=last_purchased,
-                                                                        location_purchased=location_purchased,
-                                                                        barcode=-1,
-                                                                        unit=units,
-                                                                        amount=amount,
-                                                                        expiration_date=expiration_date)
-
             # User's pantry object
             user_userprofile = UserProfile.objects.get(name=request.user.username)
             user_party = Party.objects.get(owner=user_userprofile)
             pantry_obj = Pantry.objects.get(party=user_party)
+            pantry_items = pantry_obj.items.all()
 
-            pantry_obj.items.add(item_detail_obj)
+            item_detail_obj = pantry_items.filter(name=item_name, description=item_description)
+
+            item_detail_obj.update(name=item_name,
+                                   description=item_description,
+                                   cost=cost,
+                                   last_purchased=last_purchased,
+                                   location_purchased=location_purchased,
+                                   barcode=-1,
+                                   unit=units,
+                                   amount=amount,
+                                   expiration_date=expiration_date)
+
 
             # successful, return to lists page with success message
             messages.add_message(request, messages.SUCCESS, "<span class='alert alert-success'>" + str(amount) + " " + str(units) + " of " + str(item_name) + " has been added to your pantry!</span>", extra_tags=int(list_id))

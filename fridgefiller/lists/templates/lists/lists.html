@@ -11,7 +11,7 @@
     #item-count {
         vertical-align: -webkit-baseline-middle;
     }
-    #remove-item-form {
+    #remove-item-form, #add-item-to-pantry-form {
         display: inline;
     }
     #new-item-save {
@@ -142,12 +142,17 @@
 
                       <!-- Add item to pantry button -->
                       {% if item.name not in user_pantry_item_names %}
-                        <button data-itemid="{{ item.id }}" data-listid="{{ list.id }}" data-toggle="popover" data-placement="top" data-content="Add this item to your pantry" class="btn btn-lg  btn-primary fa fa-plus-square add-item-to-pantry-button" id="add-item-to-pantry-button-{{ item.id }}-{{ list.id }}">&nbsp;to Pantry</button>
+                        <form method="POST" id="add-item-to-pantry-form" action="{% url 'add-item-to-pantry' %}">
+                          {% csrf_token %}
+                          <input type="hidden" name="list_id" value="{{ list.id }}">
+                          <input type="hidden" name="add-item-to-pantry-name" value="{{ item.name }}">
+                          <input type="hidden" name="add-item-to-pantry-desc" value="{{ item.description }}">
 
+                          <button type="submit" data-itemid="{{ item.id }}" data-listid="{{ list.id }}" data-toggle="popover" data-placement="top" data-content="Add this item to your pantry" class="btn btn-lg  btn-primary fa fa-plus-square add-item-to-pantry-button" id="add-item-to-pantry-button-{{ item.id }}-{{ list.id }}">&nbsp;to Pantry</button>
+                        </form>
                         <!-- Scan Barcode button -->
                         <span id="scan-barcode-button-{{ item.id }}-{{ list.id }}" class="btn btn-warning btn-sm fa fa-barcode hidden">&nbsp;Scan Barcode</span>
-                        <!-- Edit Pantry amount button -->
-                        <!-- TODO: connect this to JS to spawn a form that POSTs to a view that edits an ItemDetail -->
+                      <!-- Edit Pantry amount button -->
                       {% else %}
                         <button data-itemid="{{ item.id }}" data-listid="{{ list.id }}" data-toggle="popover" data-placement="top" data-content="Edit amount of {{ item.name }} in your Pantry" class="btn btn-lg  btn-info fa fa-edit edit-item-in-pantry-button" id="edit-item-in-pantry-button-{{ item.id }}-{{ list.id }}">&nbsp;in Pantry</button>
                       {% endif %}
@@ -160,24 +165,6 @@
                     </div>
                   </div>
 
-                  <!-- Add to pantry form -->
-                  <div class="hidden" id="add-item-to-pantry-form-{{item.id}}-{{list.id}}">
-                    <br>
-                    <form class="form-inline" id="add-item-to-pantry-form-{{ item.id }}" action="{% url 'add-item-to-pantry' %}" method="POST">
-                      {% csrf_token %}
-                      <input type="hidden" class="form-control" name="add-item-to-pantry-desc" id="add-item-to-pantry-desc" value="{{ item.description }}">
-                      <input type="hidden" class="form-control" name="list_id" value="{{ list.id }}">
-                      <input type="text" class="form-control" name="add-item-to-pantry-name" id="add-item-to-pantry-name" placeholder="Item Name" value="{{ item.name }}">
-                      <input type="text" class="form-control" name="add-item-to-pantry-stock" id="add-item-to-pantry-stock" placeholder="Amount to add">
-                      <input type="text" class="form-control" name="add-item-to-pantry-unit" id="add-item-to-pantry-unit" placeholder="Units (ex: oz)">
-                      <input type="text" class="form-control" name="add-item-to-pantry-cost" id="add-item-to-pantry-cost" placeholder="Item Cost ($)">
-                      <input type="text" class="form-control" name="add-item-to-pantry-last-purchased" id="datepicker-last-purchased" placeholder="Date Purchased">
-                      <input type="text" class="form-control" name="add-item-to-pantry-location-purchased" id="add-item-to-pantry-location-purchased" placeholder="Location Purchased">
-                      <input type="text" class="form-control" name="add-item-to-pantry-expiration-date" id="datepicker-exp-date" placeholder="Expiration Date">
-                      <input type="submit" class="btn btn-sm btn-primary" value="Add to Pantry">
-                    </form>
-                  </div>
-
                   <!-- Edit in pantry form -->
                   {% if item.name in user_pantry_item_names %}
                     <!-- Get ItemDetail object for item -->
@@ -186,7 +173,7 @@
 
                   <div class="hidden" id="edit-item-in-pantry-form-{{item.id}}-{{list.id}}">
                     <br>
-                    <form class="form-inline" id="edit-item-in-pantry-form-{{ item.id }}" action="someurl" method="POST">
+                    <form class="form-inline" id="edit-item-in-pantry-form-{{ item.id }}" action="{% url 'edit-item-in-pantry' %}" method="POST">
                       {% csrf_token %}
                       <input type="hidden" class="form-control" name="edit-item-in-pantry-desc" id="edit-item-in-pantry-desc" value="{{ item_detail.description }}">
                       <input type="hidden" class="form-control" name="list_id" value="{{ list.id }}">
@@ -307,7 +294,7 @@
       }
     });
 
-    $('.add-item-to-pantry-button').click(function(e){
+    $('.edit-item-in-pantry-button').click(function(e){
       var item_id = this.dataset.itemid;
       var list_id = this.dataset.listid;
 
@@ -317,18 +304,15 @@
       // show scan barcode button
       $('#scan-barcode-button-' + item_id + '-' + list_id).removeClass('hidden');
 
-      // show pantry form
-      $('#add-item-to-pantry-form-' + item_id + '-' + list_id).removeClass('hidden');
-
       // init datepicker for last_purchased
       var picker1 = new Pikaday({
-        field: $('#add-item-to-pantry-form-' + item_id + '-' + list_id + ' #datepicker-last-purchased')[0],
+        field: $('#edit-item-in-pantry-form-' + item_id + '-' + list_id + ' #datepicker-last-purchased')[0],
         format: 'MM/DD/YYYY',
       });
 
       // init datepicker for expiration_date
       var picker2 = new Pikaday({
-        field: $('#add-item-to-pantry-form-' + item_id + '-' + list_id + ' #datepicker-exp-date')[0],
+        field: $('#edit-item-in-pantry-form-' + item_id + '-' + list_id + ' #datepicker-exp-date')[0],
         format: 'MM/DD/YYYY',
       });
     });
