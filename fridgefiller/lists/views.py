@@ -192,9 +192,14 @@ class AddItemToPantryView(View):
     """
 
     def post(self, request, *args, **kwargs):
-        item_name = request.POST.get('add-item-to-pantry-name', False)
-        item_description = request.POST.get('add-item-to-pantry-desc', False)
+        item_name = request.POST.get('add-item-to-pantry-name', False).title()
+        item_description = request.POST.get('add-item-to-pantry-desc', False).capitalize()
         list_id = request.POST.get('list_id', False)
+        from_url = request.POST.get('from_url', False)
+
+        if from_url == "/pantry/":
+            list_id = str(-1)
+
         try:
             item_detail_obj, c = ItemDetail.objects.get_or_create(name=item_name,
                                                                   description=item_description)
@@ -204,16 +209,21 @@ class AddItemToPantryView(View):
             user_party = Party.objects.get(owner=user_userprofile)
             pantry_obj = Pantry.objects.get(party=user_party)
 
+            # don't add duplicate items
+            if item_detail_obj in pantry_obj.items.all():
+                messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>:  That item already exists in your pantry!" + ALERT_CLOSE, extra_tags=int(list_id))
+                return redirect(from_url + "#" + list_id)
+
             pantry_obj.items.add(item_detail_obj)
 
             # successful, return to lists page with success message
             messages.add_message(request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS:" + str(item_name) + "</strong>&nbsp;has been added to your pantry!" + ALERT_CLOSE, extra_tags=int(list_id))
-            return redirect("/lists/#" + list_id)
+            return redirect(from_url + "#" + list_id)
 
         # Something went wront creating the Item Detail, give them an error
         except:
             messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>:  Unable to create ItemDetail for that item.  Please let a developer know!" + ALERT_CLOSE, extra_tags=int(list_id))
-            return redirect("/lists/#" + list_id)
+            return redirect(from_url + "#" + list_id)
 
 
 

@@ -103,6 +103,9 @@ class ItemDetail(models.Model):
     def get_cost(self):
         if self.cost == int(self.cost):
             self.cost = int(self.cost)
+
+        if self.cost == 0:
+            return "---"
         return self.cost
 
     def get_amount(self):
