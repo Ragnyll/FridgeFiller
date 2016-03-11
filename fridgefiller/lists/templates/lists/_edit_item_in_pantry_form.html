@@ -2,10 +2,11 @@
 
 <!-- Get ItemDetail object for item -->
 {% get_item_detail user_pantry_items item.name as item_detail %}
-<div class="hidden" id="edit-item-in-pantry-form-{{item.id}}-{{list.id}}">
+<div class="hidden" id="edit-item-in-pantry-form-{{item.id}}{% if list.id %}-{{list.id}}{% else %}{% endif %}">
   <br>
   <form class="form-inline" id="edit-item-in-pantry-form-{{ item.id }}" action="{% url 'edit-item-in-pantry' %}" method="POST">
     {% csrf_token %}
+    <input type="hidden" name="from_url" value="{{ from_url }}">
     <input type="hidden" class="form-control" name="edit-item-in-pantry-desc" id="edit-item-in-pantry-desc" value="{{ item_detail.description }}">
     <input type="hidden" class="form-control" name="list_id" value="{{ list.id }}">
 

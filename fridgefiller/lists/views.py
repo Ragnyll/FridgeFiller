@@ -236,6 +236,7 @@ class EditItemInPantryView(View):
         cost = request.POST.get('edit-item-in-pantry-cost', False)
         location_purchased = request.POST.get('edit-item-in-pantry-location-purchased', False)
         list_id = request.POST.get('list_id', False)
+        from_url = request.POST.get('from_url', False)
 
         date_pattern = re.compile('(0[1-9]|1[012])[- \/.](0[1-9]|[12][0-9]|3[01])[- \/.](19|20)\d\d')
 
@@ -243,13 +244,16 @@ class EditItemInPantryView(View):
         expiration_date_str = request.POST.get('edit-item-in-pantry-expiration-date', False)
 
 
+        if from_url == "/pantry/":
+            list_id = str(-1)
+
         # convert empty values to zero for non-required data
         if amount == "":
             amount = float(0)
         else:
             amount = float(amount)
 
-        if cost == "":
+        if cost == "" or cost == "---":
             cost = float(0)
         else:
             cost = float(cost)
@@ -258,7 +262,7 @@ class EditItemInPantryView(View):
         # Don't let user supply zero amount
         if amount == float(0):
             messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>: You must fill out the amount field to add <strong>&nbsp;" + item_name + "</strong>&nbsp;to your pantry.  Try again!" + ALERT_CLOSE, extra_tags=int(list_id))
-            return redirect("/lists/#" + list_id)
+            return redirect(from_url + "#" + list_id)
 
 
         # If last_purchased and expiration_date are proper dates, make datetime objects for them
@@ -298,12 +302,12 @@ class EditItemInPantryView(View):
 
             # successful, return to lists page with success message
             messages.add_message(request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS</strong>:  " + str(amount) + " " + str(units) + " of " + str(item_name) + " has been added to your pantry!" + ALERT_CLOSE, extra_tags=int(list_id))
-            return redirect("/lists/#" + list_id)
+            return redirect(from_url + "#" + list_id)
 
         # Something went wront creating the Item Detail, give them an error
         except:
             messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>:  Unable to update the values for <strong>&nbsp;" + item_name + "</strong>.  Please let a developer know!" + ALERT_CLOSE, extra_tags=int(list_id))
-            return redirect("/lists/#" + list_id)
+            return redirect(from_url + "#" + list_id)
 
 
 class DeleteListView(View):

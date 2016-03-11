@@ -71,7 +71,7 @@
       <div class="well pantry-item">
         <div class="row">
           <div class="col-md-2">
-            <button class="fa fa-pencil-square btn btn-info">&nbsp;Edit</button>
+            <button data-itemid="{{ item.id }}" class="fa fa-pencil-square btn btn-info" id="edit-item-in-pantry-button">&nbsp;Edit</button>
             <button class="fa fa-minus-square btn btn-danger">&nbsp;Remove</button>
           </div>
           <div class="col-md-3">
@@ -93,12 +93,12 @@
           </div>
         </div>
         <div class="row">
-          {% include 'lists/_edit_item_in_pantry_form.html' with user_pantry_items=pantry_items %}
+          {% include 'lists/_edit_item_in_pantry_form.html' with user_pantry_items=pantry_items from_url='/pantry/' %}
         </div>
       </div>
     {% endfor %}
   {% else %}
-    <h3 class="text-center">Looks like you don't have any items in your pantry.  Consider adding some below!</h3>
+    <h3 class="text-center">Looks like you don&apos;t have any items in your pantry.  Consider adding some below!</h3>
   {% endif %}
   <!-- Add item to pantry form -->
   {% include 'lists/_add_item_to_pantry_form.html' %}
@@ -107,7 +107,23 @@
 {% block script %}
   <script type="text/javascript">
     $(document).ready(function(){
-      $('[data-toggle="popover"]').popover({ trigger: "hover" });
+        $('[data-toggle="popover"]').popover({ trigger: "hover" });
+    });
+
+    $('#edit-item-in-pantry-button').click(function() {
+        var item_id = this.dataset.itemid;
+        $("#edit-item-in-pantry-form-" + item_id).removeClass("hidden");
+
+        // init datepicker for last_purchased
+        var picker1 = new Pikaday({
+            field: $('#edit-item-in-pantry-form-' + item_id + ' #datepicker-last-purchased')[0],
+            format: 'MM/DD/YYYY',
+        });
+        // init datepicker for expiration_date
+        var picker2 = new Pikaday({
+            field: $('#edit-item-in-pantry-form-' + item_id + ' #datepicker-exp-date')[0],
+            format: 'MM/DD/YYYY',
+        });
     });
   </script>
 {% endblock %}
