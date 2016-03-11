@@ -7,6 +7,8 @@ from django.shortcuts import redirect
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils.decorators import method_decorator
 
+from statuses import *
+
 from datetime import datetime
 
 import re
@@ -104,7 +106,7 @@ class NewItemView(View):
 
         # Don't make empty items!
         if item_name == "":
-            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>ERROR: You must provide a name for the item.</span>", extra_tags=int(list_id))
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>: You must provide a name for the item." + ALERT_CLOSE, extra_tags=int(list_id))
             return redirect('/lists/#' + list_id)
 
         # Get or create item in database
@@ -114,22 +116,22 @@ class NewItemView(View):
             new_item = Item.objects.filter(name=item_name, description=item_desc)[0]
         except Item.DoesNotExist:
             new_item = Item.objects.create(name=item_name, description=item_desc)
-        except Exception, e:
-            messages.add_message(request, messages.ERROR, str(e) +"<span class='alert alert-danger'>Error: can't create or get that item.</span>", extra_tags=int(list_id))
+        except:
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>: Can't create or get that item.  Please let a developer know!" + ALER_CLOSE, extra_tags=int(list_id))
             return redirect('/lists/#' + list_id)
 
         # Don't add duplicate items
         if new_item in list_obj.items.all():
-            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>That item already exists in the list.</span>", extra_tags=int(list_id))
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>:That item already exists in the list." + ALERT_CLOSE, extra_tags=int(list_id))
             return redirect('/lists/#' + list_id)
 
         # Add item to list
         try:
             list_obj.items.add(new_item)
             list_obj.save()
-            messages.add_message(request, messages.SUCCESS, "<span class='alert alert-success'>Success!  Added " + item_name + " to list!</span>", extra_tags=int(list_id))
+            messages.add_message(request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS</strong>!  Added <strong>&nbsp;" + item_name + "</strong>&nbsp;to list!" + ALERT_CLOSE, extra_tags=int(list_id))
         except:
-            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Unable to add " + item_name + " to list.</span>", extra_tags=int(list_id))
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>:Unable to add <strong>&nbsp;" + item_name + "</strong>&nbsp;to list." + ALERT_CLOSE, extra_tags=int(list_id))
 
         return redirect('/lists/#' + list_id)
 
@@ -142,13 +144,13 @@ class NewListView(View):
     def post(self, request, *args, **kwargs):
         list_id = -1
 
-        shoppinglist_name = request.POST.get('new-shoppinglist-name', False)
-        shoppinglist_desc = request.POST.get('new-shoppinglist-desc', False)
+        shoppinglist_name = request.POST.get('new-shoppinglist-name', False).title()
+        shoppinglist_desc = request.POST.get('new-shoppinglist-desc', False).capitalize()
 
         user_obj = UserProfile.objects.get(name=request.user.username)
 
         if shoppinglist_name == "":
-            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Error you must provide a name for your new shopping list.</span>", extra_tags=int(-1))
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>: You must provide a name for your new shopping list." + ALERT_CLOSE, extra_tags=int(-1))
             return redirect('/lists/#new-list-error')
 
         try:
@@ -157,7 +159,7 @@ class NewListView(View):
             print list_id
             list_id = new_list.id
         except:
-            messages.add_message(request, messages.ERROR,"<span class='alert alert-danger'>Error: can't create or get that item.</span>", extra_tags=int(1))
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>: Can't create or get that item.  Please let a developer know!" + ALERT_CLOSE, extra_tags=int(1))
 
         return redirect('/lists/#')
 
@@ -177,9 +179,9 @@ class RemoveItemFromListView(View):
         # Remove the item from the list
         try:
             list_obj.items.remove(item_obj)
-            messages.add_message(request, messages.SUCCESS, "<span class='alert alert-success'>Successfully removed " + item_name + " from list</span>", extra_tags=int(list_id))
+            messages.add_message(request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS</strong>: Removed <strong>&nbsp;" + item_name + "</strong>&nbsp;from list." + ALERT_CLOSE, extra_tags=int(list_id))
         except:
-            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Unable to remove " + item_name + " from list.</span>", extra_tags=int(list_id))
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>: Unable to remove <strong>&nbsp;" + item_name + "</strong>&nbsp;from list.  Please let e developer know!" + ALERT_CLOSE, extra_tags=int(list_id))
 
         return redirect("/lists/#" + list_id)
 
@@ -205,12 +207,12 @@ class AddItemToPantryView(View):
             pantry_obj.items.add(item_detail_obj)
 
             # successful, return to lists page with success message
-            messages.add_message(request, messages.SUCCESS, "<span class='alert alert-success'><strong>" + str(item_name) + "</strong>&nbsp;has been added to your pantry!</span>", extra_tags=int(list_id))
+            messages.add_message(request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS:" + str(item_name) + "</strong>&nbsp;has been added to your pantry!" + ALERT_CLOSE, extra_tags=int(list_id))
             return redirect("/lists/#" + list_id)
 
         # Something went wront creating the Item Detail, give them an error
         except:
-            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Unable to create ItemDetail for that item.  Please let a developer know!</span>", extra_tags=int(list_id))
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>:  Unable to create ItemDetail for that item.  Please let a developer know!" + ALERT_CLOSE, extra_tags=int(list_id))
             return redirect("/lists/#" + list_id)
 
 
@@ -245,7 +247,7 @@ class EditItemInPantryView(View):
 
         # Don't let user supply zero amount
         if amount == float(0):
-            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>You must fill out the amount field to add " + item_name + " to your pantry.  Try again!</span>", extra_tags=int(list_id))
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>: You must fill out the amount field to add <strong>&nbsp;" + item_name + "</strong>&nbsp;to your pantry.  Try again!" + ALERT_CLOSE, extra_tags=int(list_id))
             return redirect("/lists/#" + list_id)
 
 
@@ -285,12 +287,12 @@ class EditItemInPantryView(View):
 
 
             # successful, return to lists page with success message
-            messages.add_message(request, messages.SUCCESS, "<span class='alert alert-success'>" + str(amount) + " " + str(units) + " of " + str(item_name) + " has been added to your pantry!</span>", extra_tags=int(list_id))
+            messages.add_message(request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS</strong>:  " + str(amount) + " " + str(units) + " of " + str(item_name) + " has been added to your pantry!" + ALERT_CLOSE, extra_tags=int(list_id))
             return redirect("/lists/#" + list_id)
 
         # Something went wront creating the Item Detail, give them an error
         except:
-            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Unable to create ItemDetail for that item.  Please let a developer know!</span>", extra_tags=int(list_id))
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>:  Unable to update the values for <strong>&nbsp;" + item_name + "</strong>.  Please let a developer know!" + ALERT_CLOSE, extra_tags=int(list_id))
             return redirect("/lists/#" + list_id)
 
 
@@ -305,11 +307,11 @@ class DeleteListView(View):
             # Delete the object
             try:
                 list_obj.delete()
-                messages.add_message(request, messages.SUCCESS, "<span class='alert alert-success'>Successfully deleted your " + list_obj.name + " list for you.", extra_tags=int(-1))
+                messages.add_message(request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS</strong>:  Deleted your <strong>&nbsp;" + list_obj.name + "</strong>&nbsp;list for you." + ALERT_CLOSE, extra_tags=int(-1))
                 return redirect("/lists/#new-list-error")
             except:
-                messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Unable to delete that list for you, sorry!  Please let a developer know!</span>", extra_tags=int(list_id))
+                messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>:  Unable to delete that list for you, sorry!  Please let a developer know!" + ALERT_CLOSE, extra_tags=int(list_id))
                 return redirect("/lists/#" + list_id)
         except:
-            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Unable to delete that list for you, sorry!  Please let a developer know!</span>", extra_tags=int(list_id))
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>:  Unable to delete that list for you, sorry!  Please let a developer know!</span>", extra_tags=int(list_id))
             return redirect("/lists/#" + list_id)
