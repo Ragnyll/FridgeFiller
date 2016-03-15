@@ -40,15 +40,25 @@
 {% endblock %}
 
 {% block content %}
-  <h1 class="text-center">My Pantry</h1>
+  <h1 class="text-center">My Pantry
+    {% ifequal pantry_items.count 1 %}
+      <span class="label label-info">{{ pantry_items.count }} item</span>
+    {% else %}
+      {% ifequal pantry_items.count 0 %}
+        <span class="label label-danger">{{ pantry_items.count }} items</span>
+      {% else %}
+        <span class="label label-info">{{ pantry_items.count }} items</span>
+      {% endifequal %}
+    {% endifequal %}
+  </h1>
 
-  {% if pantry_items.all %}
-    {% if messages %}
+  {% if messages %}
       {% for message in messages %}
         <span>{{ message|safe }}</span>
       {% endfor %}
     {% endif %}
 
+  {% if pantry_items.all %}
     {% for item in pantry_items %}
       {% if forloop.first %}
         <div class="row">
@@ -72,7 +82,12 @@
         <div class="row">
           <div class="col-md-2">
             <button data-itemid="{{ item.id }}" class="fa fa-pencil-square btn btn-info" id="edit-item-in-pantry-button">&nbsp;Edit</button>
-            <button class="fa fa-minus-square btn btn-danger">&nbsp;Remove</button>
+            <form method="POST" action="{% url 'remove-item-from-pantry' %}">
+              {% csrf_token %}
+              <input type="hidden" name="item_id" value="{{ item.id }}">
+              <input type="hidden" name="from_url" value="/pantry/">
+              <button type="submit" class="fa fa-minus-square btn btn-danger">&nbsp;Remove</button>
+            </form>
           </div>
           <div class="col-md-3">
             <h6>{% ifnotequal item.get_amount 0 %}{{ item.get_amount }}{% else %}---{% endifnotequal %}&nbsp;

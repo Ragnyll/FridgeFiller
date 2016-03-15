@@ -106,7 +106,7 @@ class NewItemView(View):
 
         # Don't make empty items!
         if item_name == "":
-            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>: You must provide a name for the item." + ALERT_CLOSE, extra_tags=int(list_id))
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;: You must provide a name for the item." + ALERT_CLOSE, extra_tags=int(list_id))
             return redirect('/lists/#' + list_id)
 
         # Get or create item in database
@@ -117,21 +117,21 @@ class NewItemView(View):
         except Item.DoesNotExist:
             new_item = Item.objects.create(name=item_name, description=item_desc)
         except:
-            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>: Can't create or get that item.  Please let a developer know!" + ALER_CLOSE, extra_tags=int(list_id))
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;: Can't create or get that item.  Please let a developer know!" + ALER_CLOSE, extra_tags=int(list_id))
             return redirect('/lists/#' + list_id)
 
         # Don't add duplicate items
         if new_item in list_obj.items.all():
-            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>:That item already exists in the list." + ALERT_CLOSE, extra_tags=int(list_id))
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;:That item already exists in the list." + ALERT_CLOSE, extra_tags=int(list_id))
             return redirect('/lists/#' + list_id)
 
         # Add item to list
         try:
             list_obj.items.add(new_item)
             list_obj.save()
-            messages.add_message(request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS</strong>!  Added <strong>&nbsp;" + item_name + "</strong>&nbsp;to list!" + ALERT_CLOSE, extra_tags=int(list_id))
+            messages.add_message(request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS</strong>&nbsp;!  Added <strong>&nbsp;" + item_name + "</strong>&nbsp;&nbsp;to list!" + ALERT_CLOSE, extra_tags=int(list_id))
         except:
-            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>:Unable to add <strong>&nbsp;" + item_name + "</strong>&nbsp;to list." + ALERT_CLOSE, extra_tags=int(list_id))
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;:Unable to add <strong>&nbsp;" + item_name + "</strong>&nbsp;&nbsp;to list." + ALERT_CLOSE, extra_tags=int(list_id))
 
         return redirect('/lists/#' + list_id)
 
@@ -150,7 +150,7 @@ class NewListView(View):
         user_obj = UserProfile.objects.get(name=request.user.username)
 
         if shoppinglist_name == "":
-            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>: You must provide a name for your new shopping list." + ALERT_CLOSE, extra_tags=int(-1))
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;: You must provide a name for your new shopping list." + ALERT_CLOSE, extra_tags=int(-1))
             return redirect('/lists/#new-list-error')
 
         try:
@@ -159,7 +159,7 @@ class NewListView(View):
             print list_id
             list_id = new_list.id
         except:
-            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>: Can't create or get that item.  Please let a developer know!" + ALERT_CLOSE, extra_tags=int(1))
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;: Can't create or get that item.  Please let a developer know!" + ALERT_CLOSE, extra_tags=int(1))
 
         return redirect('/lists/#')
 
@@ -179,9 +179,9 @@ class RemoveItemFromListView(View):
         # Remove the item from the list
         try:
             list_obj.items.remove(item_obj)
-            messages.add_message(request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS</strong>: Removed <strong>&nbsp;" + item_name + "</strong>&nbsp;from list." + ALERT_CLOSE, extra_tags=int(list_id))
+            messages.add_message(request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS</strong>&nbsp;: Removed <strong>&nbsp;" + item_name + "</strong>&nbsp;&nbsp;from list." + ALERT_CLOSE, extra_tags=int(list_id))
         except:
-            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>: Unable to remove <strong>&nbsp;" + item_name + "</strong>&nbsp;from list.  Please let e developer know!" + ALERT_CLOSE, extra_tags=int(list_id))
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;: Unable to remove <strong>&nbsp;" + item_name + "</strong>&nbsp;&nbsp;from list.  Please let e developer know!" + ALERT_CLOSE, extra_tags=int(list_id))
 
         return redirect("/lists/#" + list_id)
 
@@ -211,18 +211,18 @@ class AddItemToPantryView(View):
 
             # don't add duplicate items
             if item_detail_obj in pantry_obj.items.all():
-                messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>:  That item already exists in your pantry!" + ALERT_CLOSE, extra_tags=int(list_id))
+                messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;:  That item already exists in your pantry!" + ALERT_CLOSE, extra_tags=int(list_id))
                 return redirect(from_url + "#" + list_id)
 
             pantry_obj.items.add(item_detail_obj)
 
             # successful, return to lists page with success message
-            messages.add_message(request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS:" + str(item_name) + "</strong>&nbsp;has been added to your pantry!" + ALERT_CLOSE, extra_tags=int(list_id))
+            messages.add_message(request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS:" + str(item_name) + "</strong>&nbsp;&nbsp;has been added to your pantry!" + ALERT_CLOSE, extra_tags=int(list_id))
             return redirect(from_url + "#" + list_id)
 
         # Something went wront creating the Item Detail, give them an error
         except:
-            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>:  Unable to create ItemDetail for that item.  Please let a developer know!" + ALERT_CLOSE, extra_tags=int(list_id))
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;:  Unable to create ItemDetail for that item.  Please let a developer know!" + ALERT_CLOSE, extra_tags=int(list_id))
             return redirect(from_url + "#" + list_id)
 
 
@@ -261,7 +261,7 @@ class EditItemInPantryView(View):
 
         # Don't let user supply zero amount
         if amount == float(0):
-            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>: You must fill out the amount field to add <strong>&nbsp;" + item_name + "</strong>&nbsp;to your pantry.  Try again!" + ALERT_CLOSE, extra_tags=int(list_id))
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;: You must fill out the amount field to add <strong>&nbsp;" + item_name + "</strong>&nbsp;&nbsp;to your pantry.  Try again!" + ALERT_CLOSE, extra_tags=int(list_id))
             return redirect(from_url + "#" + list_id)
 
 
@@ -301,13 +301,36 @@ class EditItemInPantryView(View):
 
 
             # successful, return to lists page with success message
-            messages.add_message(request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS</strong>:  " + str(amount) + " " + str(units) + " of " + str(item_name) + " has been added to your pantry!" + ALERT_CLOSE, extra_tags=int(list_id))
+            messages.add_message(request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS</strong>&nbsp;:  " + str(amount) + " " + str(units) + " of " + str(item_name) + " has been added to your pantry!" + ALERT_CLOSE, extra_tags=int(list_id))
             return redirect(from_url + "#" + list_id)
 
         # Something went wront creating the Item Detail, give them an error
         except:
-            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>:  Unable to update the values for <strong>&nbsp;" + item_name + "</strong>.  Please let a developer know!" + ALERT_CLOSE, extra_tags=int(list_id))
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;:  Unable to update the values for <strong>&nbsp;" + item_name + "</strong>&nbsp;.  Please let a developer know!" + ALERT_CLOSE, extra_tags=int(list_id))
             return redirect(from_url + "#" + list_id)
+
+class RemoveItemFromPantryView(View):
+    def post(self, request, *args, **kwargs):
+        item_id = request.POST.get('item_id', False)
+        from_url = request.POST.get('from_url', False)
+
+        # Get the user's pantry object
+        party_obj = Party.objects.get(owner=request.user.profile)
+        pantry_obj = Pantry.objects.get(party=party_obj)
+        item_obj = pantry_obj.items.get(id=item_id)
+
+
+
+        # remove the item from the pantry
+        try:
+            pantry_obj.items.remove(item_obj)
+
+            messages.add_message(request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS</strong>&nbsp;:  Removed <strong>&nbsp;" + item_obj.name + "</strong>&nbsp; from " + pantry_obj.party.owner.name + "'s pantry." + ALERT_CLOSE, extra_tags=int(item_id))
+            return redirect(from_url + "#" + item_id)
+        except:
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;:  Unable to remove <strong>&nbsp;" + item_obj.name + "</strong>&nbsp; from " + pantry_obj.party.owner.name + "'s pantry.  Please let a developer know!" + ALERT_CLOSE, extra_tags=int(item_id))
+            return redirect(from_url + "#" + item_id)
+
 
 
 class DeleteListView(View):
@@ -321,11 +344,11 @@ class DeleteListView(View):
             # Delete the object
             try:
                 list_obj.delete()
-                messages.add_message(request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS</strong>:  Deleted your <strong>&nbsp;" + list_obj.name + "</strong>&nbsp;list for you." + ALERT_CLOSE, extra_tags=int(-1))
+                messages.add_message(request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS</strong>&nbsp;:  Deleted your <strong>&nbsp;" + list_obj.name + "</strong>&nbsp;&nbsp;list for you." + ALERT_CLOSE, extra_tags=int(-1))
                 return redirect("/lists/#new-list-error")
             except:
-                messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>:  Unable to delete that list for you, sorry!  Please let a developer know!" + ALERT_CLOSE, extra_tags=int(list_id))
+                messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;:  Unable to delete that list for you, sorry!  Please let a developer know!" + ALERT_CLOSE, extra_tags=int(list_id))
                 return redirect("/lists/#" + list_id)
         except:
-            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>:  Unable to delete that list for you, sorry!  Please let a developer know!</span>", extra_tags=int(list_id))
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;:  Unable to delete that list for you, sorry!  Please let a developer know!</span>", extra_tags=int(list_id))
             return redirect("/lists/#" + list_id)
