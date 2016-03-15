@@ -188,6 +188,9 @@ class PrintListMiniView(TemplateView):
         context = super(PrintListMiniView, self).get_context_data(**kwargs)
         user = UserProfile.objects.get(user=self.request.user)
         
+        print(user)
+        print(user.lists.all())
+
         try:
             print "printing lists"
             for i in user.lists.all():
