@@ -147,6 +147,8 @@ class NewListView(View):
             new_list.owners.add(user_obj)
             print list_id
             list_id = new_list.id
+
+            user_obj.lists.add(new_list)
         except:
             messages.add_message(request, messages.ERROR,"<span class='alert alert-danger'>Error: can't create or get that item.</span>", extra_tags=int(1))
 
