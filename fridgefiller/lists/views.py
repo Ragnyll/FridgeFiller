@@ -202,7 +202,7 @@ class PrintListMiniView(TemplateView):
             raise Http404
 
         context["id"] = kwargs["list_id"]
-
+        context["data"] = [i.name for i in item_list.items.all()]
         return context
 
 class PrintListView(View):
