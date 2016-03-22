@@ -67,7 +67,7 @@
       <form method="POST" id="leave-party-form" action="{% url 'leave-party' %}">
         {% csrf_token %}
         <input type="hidden" value="{{ party.id }}" name="leave-group-id">
-        <button type="submit" data-toggle="popover" data-placement="top" data-content="Leave this Group" class="btn btn-lg btn-danger">&nbsp;  Leave Group</button>
+        <button type="submit" data-toggle="popover" data-placement="top" data-content="Leave this Group" class="btn btn-lg btn-danger">&nbsp;Leave Group</button>
       </form>
 
     {% else %}

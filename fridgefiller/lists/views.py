@@ -209,15 +209,29 @@ class InvitetoParty(View):
 
         return redirect("/lists/parties")
 
-class CreateParty(CreateView):
+class CreateParty(View):
     """
     This view contains logic to create a new group
     """
     template_name = 'lists/party/create.html'
     def post(self, request, *args, **kwargs):
-        #Do something
-        return redirect("/lists/parties")
+        party_name = request.POST.get('group-name', False)
+        party_owner = UserProfile.objects.get(user=self.request.user)
 
+        if party_name =="":
+            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>ERROR: You must provide a name for the group.</span>")            
+            return redirect('/lists/parties')
+
+        if Party.objects.filter(name=party_name).exists():
+            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>ERROR: Group with that name already exists</span>")            
+            return redirect('/lists/parties')
+
+        try:
+            party_obj = Party(name=party_name, owner=party_owner)
+            party_obj.save()
+        except:
+            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>ERROR: Could not create party</span>")            
+        return redirect("/lists/party/" + str(party_obj.id))
 
 class AddPartyList(View):
     """
