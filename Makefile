@@ -1,4 +1,5 @@
-default: pip install -r requirements.txt
+default: 
+	pip install -r requirements.txt
 
 # Deletes DB, re-migrates, runs the gen_db script, and prompts the user to create a superuser 
 db:
