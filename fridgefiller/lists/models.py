@@ -42,6 +42,8 @@ class Party(models.Model):
     users = models.ManyToManyField('UserProfile')
     shoppinglists = models.ManyToManyField('ShoppingList')
 
+
+
     def __str__(self):
         return str(self.name)
 
@@ -49,7 +51,7 @@ class Party(models.Model):
         """
         Returns true if user is on the calling team, else false
         """
-        return self.members.filter(pk=user.pk).exists()
+        return self.users.filter(pk=user.pk).exists()
 
 def create_party_pantry(sender, instance, created, **kwargs):
     """

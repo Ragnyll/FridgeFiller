@@ -1,7 +1,13 @@
 {% extends "base_sidebar.html" %}
-{% load crispy_forms_tags%}
 
-{% block competition_content %}
+{% block title %}
+    Create Invitation
+{% endblock %}
+
+{% load crispy_forms_tags %}
+
+{% block content %}
+    <br>
   {% if not form.fields.party.queryset.exists %}
     <p> You cannot send invitations at the moment</p>
   {% endif %}

@@ -209,13 +209,15 @@ class InvitetoParty(View):
 
         return redirect("/lists/parties")
 
-class CreateParty(View):
+class CreateParty(CreateView):
     """
-    This view contains logic to create a new party
+    This view contains logic to create a new group
     """
+    template_name = 'lists/party/create.html'
     def post(self, request, *args, **kwargs):
-        #do something
+        #Do something
         return redirect("/lists/parties")
+
 
 class AddPartyList(View):
     """
@@ -324,7 +326,7 @@ class AddItemToPantryView(View):
 
 class InvitationListView(LoggedInMixin, TemplateView):
     """Lists all teams, provided that the user is logged in"""
-    #template_name = 'competition/invitation/invitation_list.html'
+    template_name = 'lists/invitation/invitation_list.html'
     paginate_by = 10
 
     def process_page(self, items, query_param):
@@ -340,7 +342,7 @@ class InvitationListView(LoggedInMixin, TemplateView):
 
     def get_context_data(self, **kwargs):
         context = super(InvitationListView, self).get_context_data(**kwargs)
-        user = self.request.user
+        user = UserProfile.objects.get(user=self.request.user)
         invitations = Invitation.objects.filter(Q(sender=user) | Q(receiver=user))
         received = self.process_page(invitations.filter(receiver=user),
                                      'received_page')
@@ -352,18 +354,18 @@ class InvitationListView(LoggedInMixin, TemplateView):
 
 class InvitationDetailView(LoggedInMixin, DetailView):
     """Show details about a particular team"""
-    #template_name = 'competition/invitation/invitation_detail.html'
+    template_name = 'lists/invitation/invitation_detail.html'
     context_object_name = 'invitation'
 
     def get_queryset(self):
         """Only show invitations for this user"""
-        user = self.request.user
+        user = UserProfile.objects.get(user=self.request.user)
         return Invitation.objects.filter(Q(sender=user) | Q(receiver=user))
 
     def get_object(self, queryset=None):
         """When we fetch the invitation, mark it as read"""
         obj = super(InvitationDetailView, self).get_object(queryset)
-        if self.request.user == obj.receiver:
+        if UserProfile.objects.get(user=self.request.user) == obj.receiver:
             obj.read = True
             obj.save()
         return obj
@@ -372,15 +374,15 @@ class InvitationDetailView(LoggedInMixin, DetailView):
 class InvitationCreateView(LoggedInMixin,
                            CreateView):
     """Allow users to create invitations"""
-   # template_name = 'competition/invitation/invitation_create.html'
+    template_name = 'lists/invitation/invitation_create.html'
     form_class = InvitationForm
 
     def get_available_teams(self):
         """Returns a list of competitions that are open for
         registration and team changes"""
 
-        #Should just list all parties but not person parties
-        parties = Party.objects.all()
+        #Should not list personal parties
+        parties = Party.objects.filter(users=UserProfile.objects.get(user=self.request.user))
         
         if not parties.exists():
             msg = "Can't send invites at this time. It looks"
@@ -391,6 +393,8 @@ class InvitationCreateView(LoggedInMixin,
 
     def get_available_invitees(self):
         """Returns a list of users who can be invited"""
+        #Should not return people who are already in party
+        
         return UserProfile.objects.all()
 
     def get_team(self):
@@ -401,7 +405,7 @@ class InvitationCreateView(LoggedInMixin,
             if party_id is not None:
                 party_id = int(party_id)
                 return self.get_available_teams().get(pk=party_id)
-            return self.get_available_teams().latest()
+            return self.get_available_teams()[1]
         except (Party.DoesNotExist, ValueError):
             return None
 
@@ -425,7 +429,7 @@ class InvitationCreateView(LoggedInMixin,
 
     def get_form_kwargs(self):
         # Set up keyword arguments for a new Invitation
-        invitation_kwargs = (('sender', self.request.user),
+        invitation_kwargs = (('sender', UserProfile.objects.get(user=self.request.user)),
                              ('receiver', self.get_invitee()),
                              ('party', self.get_team()))
 

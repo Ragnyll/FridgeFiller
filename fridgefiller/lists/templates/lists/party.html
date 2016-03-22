@@ -56,17 +56,14 @@
     </h5> 
   {% endfor %}
   <br>
-  <div class="text-center">
-    <form method="POST" id="invite-to-party" action="{% url 'invite-to-party' %}">
-      {% csrf_token %}
-      <input type="hidden" value="{{ party.id }}" name="party-id">
-      <button type="submit" data-toggle="popover" data-placement="top" data-content="Invite more People to Group" class="btn btn-lg btn-success">&nbsp;Invite People to Group</button>
-    </form>
-  </div>
-  <br>
+
   <div class="text-center">
     {% if cuser != party.owner %}
 
+      <div class="text-center">
+        <button type="submit" data-toggle="popover" data-placement="top" data-content="Invite more People to Group" class="btn btn-lg btn-success">&nbsp;<a href="{% url 'invitation_list' %}">Manage Invitations</a></button>
+      </div>
+      <br>
       <form method="POST" id="leave-party-form" action="{% url 'leave-party' %}">
         {% csrf_token %}
         <input type="hidden" value="{{ party.id }}" name="leave-group-id">
