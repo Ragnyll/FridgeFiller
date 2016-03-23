@@ -85,12 +85,6 @@
     </div>
   {% else %}
     {% for list in user_shopping_lists %}
-    <!-- print list form -->
-    <form class="form-inline" id="print-list-form" action="{% url 'print-list' %}" method="POST">
-      {% csrf_token %}
-      <input type="hidden" value="{{ list.id }}" name="list-id">
-      <input type="submit" class="btn btn-sm btn-primary" value="Print list">
-    </form>
       <div class="panel panel-success">
         <div class="panel-heading" id="panel-heading-{{ list.id }}" data-listid="{{ list.id }}" data-toggle="collapse" data-target="l-{{ list.id }}">
           <a class="anchor" id="{{ list.id }}"></a>
@@ -111,6 +105,12 @@
         </div>
         <div id="l-{{ list.id }}" class="panel-collapse">
           <div class="panel-body collapse" id="panel-body-{{ list.id }}">
+            <!-- print list form -->
+            <form class="form-inline" id="print-list-form" action="{% url 'print-list' %}" method="POST">
+              {% csrf_token %}
+              <input type="hidden" value="{{ list.id }}" name="list-id">
+              <input type="submit" class="btn btn-sm btn-primary" value="Print list">
+            </form>
             {% if messages %}
               {% for message in messages %}
                 <!-- Only show messages that pertain to the list the operation was completed on -->
