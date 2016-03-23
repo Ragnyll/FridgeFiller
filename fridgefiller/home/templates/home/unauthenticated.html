@@ -1,0 +1,80 @@
+{% load staticfiles %}
+{% block link %}
+  <link rel="stylesheet" href="{% static 'css/parallax_styles.css' %}"/>
+{% endblock %}
+<body>
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="container-fluid">
+      <div class="navbar-header">
+        <a class="navbar-brand" href="#" style="color: #fff;">Fridge Filler </a>
+      </div>
+    </div>
+  </nav>
+ <div id="login-slide">
+    <h1> FridgeFiller </h1>
+    <div class="container">
+      <div class="row" style="padding-top: 10px;">
+        {% include "account/login_form.html" %}
+      </div>
+   </div>
+ </div>
+
+ <div id="basic-use">
+   <div class="container">
+     <div class="row">
+       <div class="col-md-6"><img src="{% static 'img/listpic.png' %}" align="left" alt="Manage dynamic lists!" style="width: 100%; height: auto;"/></div>
+       <div class="col-md-6">
+         <div class="row">
+           <h2 class="use-heading">Create Shopping Lists and share them with your friends and family! </h2>
+         </div>
+         <div class="row">
+           <p>Use FridgeFiller to create custom shopping lists for yourself. Use your to keep track of what you bought and what you still need to get. Once you've got it, add it to your pantry!</p>
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>
+ <div id="barcode-scanning">
+   <div class="container">
+     <div class="row">
+       <div class="col-md-8">
+         <div class="quotes_container">
+           <h3 class="quotes">“WE NEEED SOME SCREENSHOT OF THE BARCODE THING WORKING FOR HERE!” </h3>
+           <h4 class="author_name_white">Howard Duck </h4>
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>
+ <div id="GroupManagement">
+   <div class="container">
+     <div class="row">
+       <div class="col-md-8">
+         <div class="quotes_container">
+           <h2 class="use-heading">“WE NEEED SOME SCREENSHOT OF THE GROUPOS THING WORKING FOR HERE!” </h3>
+           <h4 style="color: #fff">Howard Chuck </h4>
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>
+ <div id="user-testimonials">
+   <div class="container">
+     <div class="row">
+       <div class="col-md-8">
+         <div class="quotes_container">
+           <h2 class="use-heading">“Yeah, I would use something like that.” </h3>
+           <h4 class="author_name_white">Matt Buechler </h4>
+         </div>
+       </div>
+     </div>
+   </div>
+ </div>
+ <div class="row" id="groupname">
+  <div id="col-md-2">
+   Created by Pepe(ight)
+  </div>
+</div>
+
+</body>
+</html>
