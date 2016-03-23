@@ -98,6 +98,14 @@
             <h4>
               {{ list.description }}
               <div class="pull-right">
+                <!-- print list form -->
+                <form class="form-inline" id="print-list-form" action="{% url 'print-list' %}" method="POST">
+                  {% csrf_token %}
+                  <input type="hidden" value="{{ list.id }}" name="list-id">
+                  <input type="submit" class="btn btn-sm btn-primary" value="Print list">
+                </form>
+                <!-- end print list form -->
+
                 <span id="item-count" class="label label-info">{{ list.items.count }} items</span>
               </div>
             </h4>
@@ -105,12 +113,6 @@
         </div>
         <div id="l-{{ list.id }}" class="panel-collapse">
           <div class="panel-body collapse" id="panel-body-{{ list.id }}">
-            <!-- print list form -->
-            <form class="form-inline" id="print-list-form" action="{% url 'print-list' %}" method="POST">
-              {% csrf_token %}
-              <input type="hidden" value="{{ list.id }}" name="list-id">
-              <input type="submit" class="btn btn-sm btn-primary" value="Print list">
-            </form>
             {% if messages %}
               {% for message in messages %}
                 <!-- Only show messages that pertain to the list the operation was completed on -->
