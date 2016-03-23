@@ -1,3 +1,5 @@
+{% load active_tags %}
+
 <!doctype html>
 <html lang="en">
   <head>
@@ -6,35 +8,38 @@
     {% block head %}
       {% include "_head.html" %}
     {% endblock %}
-    
+
     {% block meta %}{% endblock %}
     {% block style %}{% endblock %}
     {% block link %}{% endblock %}
   </head>
   <body>
     {% include "_navbar.html" %}
-    
+
     <!-- Page Content -->
     <div class="container-fluid">
       <div class="row">
         {% block messages-nav %}{% endblock %}
         <div id="sidebar" class="col-md-2 col-xs-2 hidden-xs sidebar">
           <ul class="sidebar-nav">
-            <li>
+            <li class="{% active_re '^/pantry' %}">
               <a href="{% url 'pantry' %}">
                 My Pantry
               </a>
             </li>
-            <li>
+            <hr>
+            <li class="{% active 'lists' %}" >
               <a href="{% url 'lists' %}">
                 My Lists <span class="fa fa-arrow-right"></span>
               </a>
             </li>
+            <hr>
             <li>
               <a href="">
                 My Groups <span class="fa fa-arrow-right"></span>
               </a>
             </li>
+            <hr>
             <li>
               <a href="">
                 Suggested Lists
@@ -51,12 +56,12 @@
     </div>
 
     {% block modal %}{% endblock %}
-    
+
     <!-- Scripts -->
     {% include "_scripts.html" %}
-    
 
-    <!-- responsive sidebar --> 
+
+    <!-- responsive sidebar -->
     <script>
       /*
       $('.navbar-toggle').click(function() {
@@ -68,15 +73,15 @@
 
               $('#content').removeClass('col-xs
           }
-           
+
           // if sidebar isnt hidden
-           
+
       });*/
     </script>
 
 
     <!-- Extra scripts -->
     {% block script %}{% endblock %}
-    
+
   </body>
 </html>

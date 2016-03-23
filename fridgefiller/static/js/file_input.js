@@ -6,12 +6,15 @@ $(function() {
     attachListeners: function() {
       var self = this;
 
-      $(".fa-barcode button").on("click", function(e) {
-        var input = {};
-        $(this).find("input").click();
-        input = $(this).find("input").val();
-        if (input.files && input.files.length) {
-          App.decode(URL.createObjectURL(input.files[0]));
+      $(".fa-barcode").on("click", function(e) {
+        var input = $(this).find('input[type=file]')[0];
+        input.click();
+      });
+
+      $('.scan-barcode-input').change(function(e) {
+        App.ids = $(this).attr('id').split(" ");
+        if (e.target.files && e.target.files.length) {
+          App.decode(URL.createObjectURL(e.target.files[0]));
         }
       });
     },
@@ -33,9 +36,8 @@ $(function() {
       });
     },
     detachListeners: function() {
-      $(". input[type=file]").off("change");
-      $(".controls .reader-config-group").off("change", "input, select");
-      $(".controls button").off("click");
+      $(".scan-barcode-input input[type=file]").off("change");
+      $(".fa-barcode button").off("click");
     },
     decode: function(src) {
       var self = this,
@@ -52,8 +54,8 @@ $(function() {
 
       self._accessByPath(self.state, path, value);
 
-      console.log(JSON.stringify(self.state));
       App.detachListeners();
+      App.ids = {};
       App.init();
     },
     inputMapper: {},
@@ -72,16 +74,22 @@ $(function() {
       },
       locate: true,
       src: null
-    }
+    },
+    ids: {}
   };
   
   App.init();
 
   Quagga.onDetected(function(result) {
     var code = result.codeResult.code,
-        $node,
-        canvas = Quagga.canvas.dom.image;
-
-    $("")
+        $node;
+    $.get("walapi2", {'upc': code})
+      .done(function(data) {
+        var well = $('#scan-barcode-button-' + App.ids[0] + '-' + App.ids[1]).parents().find(".item-well");
+        $(well).find("div.col-md-4 h4").html(data.items[0].name);
+      })
+      .fail(function(data) {
+        alert("Borked");
+      });
   });
 });

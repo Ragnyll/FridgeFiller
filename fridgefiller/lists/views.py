@@ -34,7 +34,7 @@ class ListsView(TemplateView):
         Ensures that only authenticated users can access the view.
         """
         return super(ListsView, self).dispatch(request, *args, **kwargs)
-    
+
 
     def get_context_data(self, **kwargs):
         context = super(ListsView, self).get_context_data(**kwargs)
@@ -42,16 +42,16 @@ class ListsView(TemplateView):
         user = UserProfile.objects.get(user=self.request.user)
         user_party = Party.objects.get(owner=user)
         user_pantry = Pantry.objects.get(party=user_party)
-        
+
         user_pantry_item_names = [x.name for x in user_pantry.items.all()]
 
         context['user_pantry_item_names'] = user_pantry_item_names
         context['user_pantry'] = user_pantry
         context['user_shopping_lists'] = ShoppingList.objects.filter(owners__in=[user])
-        
+
         return context
-    
-    
+
+
 class ListView(TemplateView):
     """
     This view displays a singular list with id <list_id> and the items in that list
@@ -79,7 +79,7 @@ class PantryView(TemplateView):
         context = super(PantryView, self).get_context_data(**kwargs)
 
         user = UserProfile.objects.get(user=self.request.user)
-        
+
         party = Party.objects.filter(owner=user)[0]
         pantry = Pantry.objects.filter(party=party)[0]
 
@@ -96,15 +96,15 @@ class NewItemView(View):
     def post(self, request, *args, **kwargs):
         item_name = request.POST.get('new-item-name', False).title()
         item_desc = request.POST.get('new-item-description', False).capitalize()
-        
+
         list_id = request.POST.get('list-id', False)
         list_obj = ShoppingList.objects.get(id=list_id)
 
         # Don't make empty items!
         if item_name == "":
-            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>ERROR: You must provide a name for the item.</span>", extra_tags=int(list_id))            
+            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>ERROR: You must provide a name for the item.</span>", extra_tags=int(list_id))
             return redirect('/lists/#' + list_id)
-        
+
         # Get or create item in database
         try:
             new_item, created = Item.objects.get_or_create(name=item_name, description=item_desc)
@@ -140,19 +140,19 @@ class NewListView(View):
         shoppinglist_desc = request.POST.get('new-shoppinglist-desc', False)
 
         user_obj = UserProfile.objects.get(name=request.user.username)
-        
+
         if shoppinglist_name == "":
             messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Error you must provide a name for your new shopping list.</span>", extra_tags=int(-1))
             return redirect('/lists/#new-list-error')
-        
+
         try:
             new_list = ShoppingList.objects.create(name=shoppinglist_name, description=shoppinglist_desc)
-	    new_list.owners.add(user_obj)
+            new_list.owners.add(user_obj)
             print list_id
             list_id = new_list.id
         except:
             messages.add_message(request, messages.ERROR,"<span class='alert alert-danger'>Error: can't create or get that item.</span>", extra_tags=int(1))
-     
+
         return redirect('/lists/#')
 
 class RemoveItemFromListView(View):
@@ -167,7 +167,7 @@ class RemoveItemFromListView(View):
 
         item_obj = Item.objects.get(name=item_name, description=item_desc)
         list_obj = ShoppingList.objects.get(id=list_id)
-        
+
         # Remove the item from the list
         try:
             list_obj.items.remove(item_obj)
@@ -208,13 +208,13 @@ class AddItemToPantryView(View):
             cost = float(0)
         else:
             cost = float(cost)
-        
+
 
         # Don't let user supply zero amount
         if amount == float(0):
             messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>You must fill out the amount field to add " + item_name + " to your pantry.  Try again!</span>", extra_tags=int(list_id))
             return redirect("/lists/#" + list_id)
-        
+
 
         # If last_purchased and expiration_date are proper dates, make datetime objects for them
         # else, create minimum datetime objects
@@ -248,7 +248,7 @@ class AddItemToPantryView(View):
             pantry_obj = Pantry.objects.get(party=user_party)
 
             pantry_obj.items.add(item_detail_obj)
-            
+
             # successful, return to lists page with success message
             messages.add_message(request, messages.SUCCESS, "<span class='alert alert-success'>" + str(amount) + " " + str(units) + " of " + str(item_name) + " has been added to your pantry!</span>", extra_tags=int(list_id))
             return redirect("/lists/#" + list_id)
@@ -256,6 +256,26 @@ class AddItemToPantryView(View):
         # Something went wront creating the Item Detail, give them an error
         except:
             messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Unable to create ItemDetail for that item.  Please let a developer know!</span>", extra_tags=int(list_id))
+            return redirect("/lists/#" + list_id)
+
+    
+class DeleteListView(View):
+    def post(self, request, *args, **kwargs):
+        list_id = request.POST.get('list_id', False)
+        # Get the Shopping List object
+        try:
+            list_obj = ShoppingList.objects.get(id=list_id)
+
+            # Delete the object
+            try:
+                list_obj.delete()
+                messages.add_message(request, messages.SUCCESS, "<span class='alert alert-success'>Successfully deleted your " + list_obj.name + " list for you.", extra_tags=int(-1))
+                return redirect("/lists/#new-list-error")
+            except:
+                messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Unable to delete that list for you, sorry!  Please let a developer know!</span>", extra_tags=int(list_id))
+                return redirect("/lists/#" + list_id)
+        except:
+            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Unable to delete that list for you, sorry!  Please let a developer know!</span>", extra_tags=int(list_id))
             return redirect("/lists/#" + list_id)
 
 
@@ -271,4 +291,3 @@ def upc(request, *args, **kwargs):
 
 class test(TemplateView):
     template_name = "lists/test.html"    
-        

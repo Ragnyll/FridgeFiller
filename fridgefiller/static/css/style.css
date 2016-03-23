@@ -5,7 +5,7 @@
 
 .table-bordered, .table-bordered thead tr th, .table-bordered tbody tr td {
     border: 3px solid #34495E;
-    
+
 }
 
 .shopping-list h1, .shopping-list h4, .shopping-list-h6{
@@ -30,7 +30,11 @@
     padding-right: 0;
     position: fixed;
     height: 100%;
-    margin-top: 22px;
+    margin-top: 53px;
+}
+
+#content {
+    margin-top: 53px;
 }
 
 .content {
@@ -46,7 +50,6 @@
 .sidebar-nav li {
     text-indent: 20px;
     line-height: 60px;
-    border-bottom: 3px solid white;
 }
 
 .sidebar-nav li a {
@@ -85,8 +88,8 @@ hr {
     height: 1px;
     border: 0;
     border-top: 1px solid #169E83;
-    margin: 1em 0;
-    padding: 0; 
+    margin: .5em 0;
+    padding: 0;
 }
 
 .shopping-list-row {
@@ -97,5 +100,7 @@ hr {
     margin: 10px 5px 5px 5px;
 }
 
-
-
+li.active {
+    background-color: #34495E;
+    border: 3px dashed #169E83 ;
+}

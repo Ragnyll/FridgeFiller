@@ -14,4 +14,5 @@ urlpatterns = [
     url(r'^walapi1', item_detail, name="item_detail"),
     url(r'^walapi2', upc, name="upc_search"),
     url(r'^test$', test.as_view(), name="test"),
+    url(r'^delete/list/', DeleteListView.as_view(), name="delete-list"),
 ]
