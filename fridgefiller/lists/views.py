@@ -280,13 +280,13 @@ class DeleteListView(View):
 
 
 def item_detail(request, *args, **kwargs):
-    items = wapi.item_search(request.GET.get('item-name', False))
-    return JsonResponse({'items': items})
+    item = wapi.item_search(request.GET.get('item-name', False))
+    return JsonResponse(item)
 
 
 def upc(request, *args, **kwargs):
-    items = wapi.upc_search(request.GET.get('upc', False))
-    return JsonResponse({'items': items})
+    item = wapi.upc_search(request.GET.get('upc', False))
+    return JsonResponse(item)
 
 
 class test(TemplateView):
