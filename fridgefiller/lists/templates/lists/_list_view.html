@@ -12,7 +12,7 @@
         {{ list.description }}
         <div class="pull-right">
           <!-- print list form -->
-          <form class="form-inline" id="print-list-form" action="{% url 'print-list' %}" method="POST">
+          <form class="form-inline" id="print-button" action="{% url 'print-list' %}" method="POST">
             {% csrf_token %}
             <input type="hidden" value="{{ list.id }}" name="list-id">
             <input type="submit" class="btn btn-sm btn-primary" value="Print list">
