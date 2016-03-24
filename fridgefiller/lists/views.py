@@ -198,17 +198,17 @@ class LeavePartyView(View):
             messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'> Error in leaving " + party_obj.name + "</span>")
        
         return redirect("/lists/parties")
-
+"""
 class InvitetoParty(View):
-    """
-    This view contains logic to invite a person to a party
-    """
+"""
+#This view contains logic to invite a person to a party
+"""
     def post(self, request, *args, **kwargs):
         party_id = request.POST.get('party-id', False)
         party_obj = Party.objects.get(id=party_id)
 
         return redirect("/lists/parties")
-
+"""
 class CreateParty(View):
     """
     This view contains logic to create a new group
@@ -218,7 +218,7 @@ class CreateParty(View):
         party_name = request.POST.get('group-name', False)
         party_owner = UserProfile.objects.get(user=self.request.user)
 
-        if party_name =="":
+        if party_name == "":
             messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>ERROR: You must provide a name for the group.</span>")            
             return redirect('/lists/parties')
 
@@ -230,7 +230,8 @@ class CreateParty(View):
             party_obj = Party(name=party_name, owner=party_owner)
             party_obj.save()
         except:
-            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>ERROR: Could not create party</span>")            
+            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>ERROR: Could not create party</span>") 
+            return redirect("lists/parties/")           
         return redirect("/lists/party/" + str(party_obj.id))
 
 class AddPartyList(View):
@@ -535,10 +536,10 @@ class InvitationAcceptView(InvitationResponseView):
 
         msg = "Successfully joined %s" % self.invitation.party.name
         messages.success(self.request, msg)
-        return redirect(self.invitation.party)
+        return redirect("/lists/parties/")
 
     def disagreed(self):
-        return redirect(self.invitation.party.competition)
+        return redirect("/lists/parties")
 
 
 class InvitationDeclineView(InvitationResponseView):

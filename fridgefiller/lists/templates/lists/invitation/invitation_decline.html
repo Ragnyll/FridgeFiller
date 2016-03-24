@@ -1,6 +1,6 @@
 {% extends "base_sidebar.html" %}
 
-{% block competition_content %}
+{% block content %}
   {% url 'invitation_accept' competition.slug as form_action %}
   <form action="{{ form_action }}" class="form-horizontal" method="post">
     {% csrf_token %}

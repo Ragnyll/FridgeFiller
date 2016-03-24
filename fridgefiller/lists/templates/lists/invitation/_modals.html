@@ -1,0 +1,15 @@
+{% if invitation %}
+  {% with team=invitation.team.name %}
+    {# Accept modal #}
+    {% url "invitation_accept" pk=invitation.pk as accept_invite%}
+    {% with body="Are you sure you want to join?" %}
+      {% include "lists/invitation/_invitation_modal.html" with id="acceptInviteModal" title="Accept Invitation?" body=body warning=warning action=accept_invite %}
+    {% endwith %}
+
+    {# Decline modal #}
+    {% url "invitation_decline" pk=invitation.pk as decline_invite%}
+    {% with body="Are you sure you want to decline your invitation to join?" %}
+      {% include "lists/invitation/_invitation_modal.html" with id="declineInviteModal" title="Decline Invitation?" body=body action=decline_invite %}
+    {% endwith %}
+  {% endwith %}
+{% endif %}

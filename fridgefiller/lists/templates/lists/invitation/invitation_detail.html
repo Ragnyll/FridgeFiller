@@ -33,9 +33,10 @@
         Declined
       </a>
     {% endif %}
+    <p>{{ invitation.receiver }}</p>
+    <p>{{ user }} </p>
 
-    {% if invitation.receiver == user  and not invitation.response %}
-      <p>Inside text</p>
+    {% if not invitation.response and invitation.receiver in user %}
     
       <a data-toggle="modal" data-target="#acceptInviteModal" class="btn btn-success" href="#">
         Accept Invitation
@@ -47,3 +48,7 @@
     {% endif %}
   </div>
 {% endblock %}
+
+{% block modal %}
+  {% include "lists/invitation/_modals.html" %}
+{% endblock modal %}
