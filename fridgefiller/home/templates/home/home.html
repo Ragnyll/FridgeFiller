@@ -12,8 +12,6 @@
     
     <br><br>
   {% else %}
-    <h1 class="text-center">Welcome to FridgeFiller!</h1>
-    <br><br>
-    {% include "account/login_form.html" %}
+    {% include "home/unauthenticated.html" %}
   {% endif %}
 {% endblock %}
