@@ -8,7 +8,7 @@ class PartyAdmin(admin.ModelAdmin):
 	list_display = ('name', 'owner')
 
 class ListAdmin(admin.ModelAdmin):
-	list_display = ('name', 'description')
+	list_display = ('name', 'description', 'created', 'updated')
 
 class ItemAdmin(admin.ModelAdmin):
 	list_display = ('name', 'description')
