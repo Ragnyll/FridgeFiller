@@ -56,10 +56,8 @@
     </h5> 
   {% endfor %}
   <br>
-
   <div class="text-center">
-    {% if cuser != party.owner %}
-
+    {% if personal_party != party %}
       <div class="text-center">
         <button type="submit" data-toggle="popover" data-placement="top" data-content="Invite more People to Group" class="btn btn-lg btn-success">&nbsp;<a href="{% url 'invitation_list' %}">Manage Invitations</a></button>
       </div>
@@ -69,9 +67,8 @@
         <input type="hidden" value="{{ party.id }}" name="leave-group-id">
         <button type="submit" data-toggle="popover" data-placement="top" data-content="Leave this Group" class="btn btn-lg btn-danger">&nbsp;Leave Group</button>
       </form>
-
     {% else %}
-      <button data-toggle="popover" data-placement="top" data-content="Cannot Leave Person Group" class="btn btn-lg btn-primary">&nbsp;Can't Leave</button>
+      <button data-toggle="popover" data-placement="top" data-content="Cannot Leave Personal Party" class="btn btn-lg btn-primary" disabled>&nbsp;Can't Leave</button>
     {% endif %}
   </div>
   <br>

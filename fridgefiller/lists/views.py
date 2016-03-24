@@ -176,6 +176,7 @@ class PartyView(TemplateView):
         context['users'] = party.users.all()
         context['party_lists'] = party.shoppinglists.all()
         context['party_pantry'] = Pantry.objects.filter(party__in=[party])
+        context['personal_party'] = Party.objects.filter(name__contains='Personal Party').get(owner = user)
         return context
         
 class LeavePartyView(View):
@@ -198,17 +199,8 @@ class LeavePartyView(View):
             messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'> Error in leaving " + party_obj.name + "</span>")
        
         return redirect("/lists/parties")
-"""
-class InvitetoParty(View):
-"""
-#This view contains logic to invite a person to a party
-"""
-    def post(self, request, *args, **kwargs):
-        party_id = request.POST.get('party-id', False)
-        party_obj = Party.objects.get(id=party_id)
 
-        return redirect("/lists/parties")
-"""
+
 class CreateParty(View):
     """
     This view contains logic to create a new group
