@@ -61,7 +61,7 @@
 .sidebar-nav li a:hover {
     text-decoration: none;
     color: #fff;
-    background: rgba(255,255,255,0.2);
+    background: rgba(52,73,94,0.2);
 }
 
 .sidebar-nav li a:active,
@@ -102,5 +102,5 @@ hr {
 
 li.active {
     background-color: #34495E;
-    border: 3px dashed #169E83 ;
+    border: 3px #169E83 ;
 }

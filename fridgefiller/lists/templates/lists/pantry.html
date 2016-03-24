@@ -5,7 +5,7 @@
 {% endblock %}
 
 {% block style %}
-  <style>
+  <style type="text/css">
     h4 {
         display: inline;
         vertical-align: middle;
@@ -14,73 +14,138 @@
         border: 3px solid;
         border-collapse: collapse;
     }
+    #edit-item-in-pantry-cost, #edit-item-in-pantry-stock, #edit-item-in-pantry-unit {
+        width: 10%;
+    }
+    .btn {
+        vertical-align: middle;
+    }
+    h4, h6, h2 {
+        display: inline;
+        vertical-align: middle;
+    }
+    #add-item-to-pantry-name, #add-item-to-pantry-description {
+        width: 40%;
+    }
+    #add-item-to-pantry-button {
+        width: 19%;
+    }
+    .alert {
+        display: flex;
+    }
+    .pantry-item:hover {
+        border: 1px solid #169E83;
+    }
   </style>
 {% endblock %}
 
-
-
 {% block content %}
-  <h1 class="text-center">My Pantry</h1>
+  <h1 class="text-center">My Pantry
+    {% ifequal pantry_items.count 1 %}
+      <span class="label label-info">{{ pantry_items.count }} item</span>
+    {% else %}
+      {% ifequal pantry_items.count 0 %}
+        <span class="label label-danger">{{ pantry_items.count }} items</span>
+      {% else %}
+        <span class="label label-info">{{ pantry_items.count }} items</span>
+      {% endifequal %}
+    {% endifequal %}
+  </h1>
 
-  <div class="well">
-    <table class="table table-borderless">
-      <thead>
-        <tr class="pantry-table-header">
-          <td>
-            <h6>Stock</h6>
-          </td>
-          <td>
-            <h6>Name</h6>
-          </td>
-          <td>
+  {% if messages %}
+      {% for message in messages %}
+        <span>{{ message|safe }}</span>
+      {% endfor %}
+    {% endif %}
+
+  {% if pantry_items.all %}
+    {% for item in pantry_items %}
+      {% if forloop.first %}
+        <div class="row">
+          <div class="col-md-2"></div>
+          <div class="col-md-3"></div>
+          <div class="col-md-1">
             <h6>Cost</h6>
-          </td>
-          <td>
+          </div>
+          <div class="col-md-2">
             <h6>Last Purchased</h6>
-          </td>
-          <td>
+          </div>
+          <div class="col-md-2">
             <h6>Location Purchased</h6>
-          </td>
-          <td>
+          </div>
+          <div class="col-md-2">
             <h6>Expiration Date</h6>
-          </td>
-        </tr>
-      </thead>
-      <tbody>
-        {% for item in pantry_items %}
-          <tr class="shopping-list-row">
-            <td>
-              <h6>{{ item.get_amount }} {{ item.unit }}</h6>
-            </td>
-            <td>
-              <h6><strong>{{ item.name }}</strong></h6>
-            </td>
-            <td>
-              <h6>${{ item.get_cost }}</h6>
-            </td>
-            <td>
-              <h6>{{ item.get_last_purchased }}</h6>
-            </td>
-            <td>
-              <h6>{{ item.get_location_purchased }}</h6>
-            </td>
-            <td>
-              <h6>{{ item.get_expiration_date }}</h6>
-            </td>
-          </tr>
-          {% endfor %}
-      </tbody>
-    </table>
+          </div>
+        </div>
+      {% endif %}
+      <div class="well pantry-item">
+        <div class="row">
+          <div class="col-md-2">
+            <button data-itemid="{{ item.id }}" class="fa fa-pencil-square btn btn-info" id="edit-item-in-pantry-button">&nbsp;Edit</button>
+            <form method="POST" action="{% url 'remove-item-from-pantry' %}">
+              {% csrf_token %}
+              <input type="hidden" name="item_id" value="{{ item.id }}">
+              <input type="hidden" name="from_url" value="/pantry/">
+              <button type="submit" class="fa fa-minus-square btn btn-danger">&nbsp;Remove</button>
+            </form>
+          </div>
+          <div class="col-md-3">
+            <h6>{% ifnotequal item.get_amount 0 %}{{ item.get_amount }}{% else %}---{% endifnotequal %}&nbsp;
+              {% ifnotequal item.unit '0' %}{{ item.unit }}{% else %} units{% endifnotequal %}
+              of <strong>{{ item.name }}</strong></h6>
+          </div>
+          <div class="col-md-1">
+            <h6>${{ item.get_cost }}</h6>
+          </div>
+          <div class="col-md-2">
+            <h6>{{ item.get_pretty_last_purchased }}</h6>
+          </div>
+          <div class="col-md-2">
+            <h6>{{ item.get_location_purchased }}</h6>
+          </div>
+          <div class="col-md-2">
+            <h6>{{ item.get_pretty_expiration_date }}</h6>
+          </div>
+        </div>
+        <div class="row">
+          {% include 'lists/_edit_item_in_pantry_form.html' with user_pantry_items=pantry_items from_url='/pantry/' %}
+        </div>
+      </div>
+    {% endfor %}
+  {% else %}
+    <h3 class="text-center">Looks like you don&apos;t have any items in your pantry.  Consider adding some below!</h3>
+  {% endif %}
+  <!-- Add item to pantry form -->
+  {% include 'lists/_add_item_to_pantry_form.html' %}
 
+  <hr>
+
+  <!-- Recipes you can make with the items in your pantry -->
+  <div class="text-center">
+    <h3>COMING SOON: Recipes that you can make with items in your pantry!</h3>
   </div>
-
 {% endblock %}
 
-
 {% block script %}
-  <script>
+  <script type="text/javascript">
     $(document).ready(function(){
-      $('[data-toggle="popover"]').popover({ trigger: "hover" }); 
+        $('[data-toggle="popover"]').popover({ trigger: "hover" });
+    });
+
+    $('#edit-item-in-pantry-button').click(function() {
+        var item_id = this.dataset.itemid;
+        $("#edit-item-in-pantry-form-" + item_id).removeClass("hidden");
+
+        // init datepicker for last_purchased
+        var picker1 = new Pikaday({
+            field: $('#edit-item-in-pantry-form-' + item_id + ' #datepicker-last-purchased')[0],
+            format: 'MM/DD/YYYY',
+        });
+        // init datepicker for expiration_date
+        var picker2 = new Pikaday({
+            field: $('#edit-item-in-pantry-form-' + item_id + ' #datepicker-exp-date')[0],
+            format: 'MM/DD/YYYY',
+        });
     });
   </script>
 {% endblock %}
