@@ -3,8 +3,8 @@
 
 <input type="button" onclick="printDiv('printableArea')" value="Print List" />
 <div id="printableArea">
-  {% for item_entry in data %}
-  {{ item_entry }} <br>
+  {% for item_name, item_description in data %}
+  {{ item_name }} - {{ item_description }} <br>
   {% endfor %}
 </div>
 
