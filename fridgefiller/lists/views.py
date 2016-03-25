@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, HttpResponseNotFound
 from django.views.generic import TemplateView, UpdateView, View
 from django.core.urlresolvers import reverse
 from django.contrib import messages
@@ -12,6 +12,7 @@ from statuses import *
 from datetime import datetime
 
 import re
+from HTMLParser import HTMLParser as parser
 
 from .models import *
 import walmart_api as wapi
@@ -356,12 +357,12 @@ class DeleteListView(View):
 
 def item_detail(request, *args, **kwargs):
     item = wapi.item_search(request.GET.get('item-name', False))
-    return JsonResponse(item)
+    return HttpResponseNotFound if item == {} else JsonResponse(wapi.relevant_attributes(item))
 
 
 def upc(request, *args, **kwargs):
     item = wapi.upc_search(request.GET.get('upc', False))
-    return JsonResponse(item)
+    return HttpResponseNotFound if item == {} else JsonResponse(wapi.relevant_attributes(item))
 
 
 class test(TemplateView):

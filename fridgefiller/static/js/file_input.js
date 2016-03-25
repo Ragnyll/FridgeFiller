@@ -7,8 +7,10 @@ $(function() {
       var self = this;
 
       $(".fa-barcode").on("click", function(e) {
-        var input = $(this).find('input[type=file]')[0];
-        input.click();
+        var input = $(this).find('input[type=file]')[0],
+            value = $(input).context.files;
+        $(input).context.click();
+        $(this).removeClass('btn-danger btn-success').addClass('btn-warning');
       });
 
       $('.scan-barcode-input').change(function(e) {
@@ -16,6 +18,7 @@ $(function() {
         if (e.target.files && e.target.files.length) {
           App.decode(URL.createObjectURL(e.target.files[0]));
         }
+        $(this).val("");
       });
     },
     _accessByPath: function(obj, path, val) {
@@ -43,7 +46,15 @@ $(function() {
       var self = this,
           config = $.extend({}, self.state, {src: src});
 
-      Quagga.decodeSingle(config, function(result) {});
+      Quagga.decodeSingle(config, function(result) {
+        if(!result || !result.codeResult) {
+          $('#scan-barcode-button-' + App.ids[0]).removeClass("btn-warning", 1000).addClass("btn-danger");
+          // Flashes on and off, not sure if especially useful
+          // setTimeout(function() {
+            // $('#scan-barcode-button-' + App.ids[0]).removeClass("btn-danger").addClass("btn-warning");
+          // }, 1000);
+        }
+      });
     },
     setState: function(path, value) {
       var self = this;
@@ -83,15 +94,25 @@ $(function() {
   Quagga.onDetected(function(result) {
     var code = result.codeResult.code,
         $node;
+
     $.get("walapi2", {'upc': code})
       .done(function(data) {
+        $('#scan-barcode-button-' + App.ids[0]).removeClass("btn-warning", 1000).addClass("btn-success");
         var node= $('#scan-barcode-button-' + App.ids[0]).siblings("#new-item-name");
         $(node).val(data.item_name);
         node = $('#scan-barcode-button-' + App.ids[0]).siblings("#new-item-desc");
         $(node).val(data.item_desc);
+        // Flashes on and off, not sure if especially useful
+        // setTimeout(function() {
+          // $('#scan-barcode-button-' + App.ids[0]).removeClass("btn-success").addClass("btn-warning");
+        // }, 1000);
       })
       .fail(function(data) {
-        alert("Borked");
+        $('#scan-barcode-button-' + App.ids[0]).removeClass("btn-warning", 1000).addClass("btn-danger");
+        // Flashes on and off, not sure if especially useful
+        // setTimeout(function() {
+          // $('#scan-barcode-button-' + App.ids[0]).removeClass("btn-danger").addClass("btn-warning");
+        // }, 1000);
       });
   });
 });
