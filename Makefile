@@ -1,8 +1,11 @@
 default: 
 	pip install -r requirements.txt
 
+run: 
+	python fridgefiller/manage.py runserver
+
 # Deletes DB, re-migrates, runs the gen_db script, and prompts the user to create a superuser 
-db:
+db: migrations 
 	rm -f db.sqlite3
 	python fridgefiller/manage.py makemigrations
 	python fridgefiller/manage.py migrate
