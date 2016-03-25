@@ -90,7 +90,7 @@
       <div class="well pantry-item">
         <div class="row">
           <div class="col-md-2">
-            <button data-itemid="{{ item.id }}" class="fa fa-pencil-square btn btn-info" id="edit-item-in-pantry-button">&nbsp;Edit</button>
+            <button data-itemid="{{ item.id }}" class="fa fa-pencil-square btn btn-info edit-item-in-pantry-button">&nbsp;Edit</button>
             <form method="POST" action="{% url 'remove-item-from-pantry' %}">
               {% csrf_token %}
               <input type="hidden" name="item_id" value="{{ item.id }}">
@@ -141,7 +141,7 @@
         $('[data-toggle="popover"]').popover({ trigger: "hover" });
     });
 
-    $('#edit-item-in-pantry-button').click(function() {
+    $('.edit-item-in-pantry-button').click(function() {
         var item_id = this.dataset.itemid;
         $("#edit-item-in-pantry-form-" + item_id).removeClass("hidden");
 
