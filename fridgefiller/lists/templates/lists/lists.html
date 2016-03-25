@@ -133,6 +133,7 @@
           // Only try to open panels if the hash is a number
           if(!isNaN(hash)) {
               $('#panel-heading-' + hash).click()
+              $('#l-' + hash + ' #new-item-name').focus();
           }
       }
     });
