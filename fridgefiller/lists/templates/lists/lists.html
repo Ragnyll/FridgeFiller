@@ -165,7 +165,9 @@
       var picker1 = new Pikaday({
         field: $('#edit-item-in-pantry-form-' + item_id + '-' + list_id + ' #datepicker-last-purchased')[0],
         format: 'MM/DD/YYYY',
-      });
+    });
+
+      $('#add-item-to-pantry-form-' + item_id + ' #datepicker-last-purchased').val($.datepicker.formatDate('mm/dd/yy', new Date()));
 
       // init datepicker for expiration_date
       var picker2 = new Pikaday({
