@@ -1,5 +1,5 @@
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.http import HttpResponse, Http404, HttpResponseRedirect
 from django.views.generic import TemplateView, UpdateView, View
 from django.core.urlresolvers import reverse
 from django.contrib import messages
@@ -78,7 +78,6 @@ class PantryView(TemplateView):
     """
     template_name = "lists/pantry.html"
 
-
     def get_context_data(self, **kwargs):
         context = super(PantryView, self).get_context_data(**kwargs)
 
@@ -140,7 +139,6 @@ class NewListView(View):
     """
     This view lets a user add new items to a list, and submit that tentative list as a new list object
     """
-
     def post(self, request, *args, **kwargs):
         list_id = -1
 
@@ -158,6 +156,8 @@ class NewListView(View):
             new_list.owners.add(user_obj)
             print list_id
             list_id = new_list.id
+
+            user_obj.lists.add(new_list)
         except:
             messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;: Can't create or get that item.  Please let a developer know!" + ALERT_CLOSE, extra_tags=int(1))
 
@@ -185,6 +185,39 @@ class RemoveItemFromListView(View):
 
         return redirect("/lists/#" + list_id)
 
+class PrintListMiniView(TemplateView):
+    template_name = "lists/print.html"
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        """
+        Ensures that only authenticated users can access the view.
+        """
+        return super(PrintListMiniView, self).dispatch(request, *args, **kwargs)
+
+    def get_context_data(self, **kwargs):
+        context = super(PrintListMiniView, self).get_context_data(**kwargs)
+        user = UserProfile.objects.get(user=self.request.user)
+
+        try:
+            item_list = user.lists.get(pk=kwargs["list_id"])
+        except :
+            raise Http404
+
+        context["id"] = kwargs["list_id"]
+        context["data"] = [(i.name, i.description) for i in item_list.items.all()]
+        return context
+
+class PrintListView(View):
+    """
+    This view presents a list in a minimalisitic way for printing
+    """
+    def get(self, request, *args, **kwargs):
+        raise Http404
+
+    def post(self, request, *args, **kwargs):
+        list_id = request.POST.get('list-id', False)
+        return redirect("print-m-list", list_id=list_id)
 
 class AddItemToPantryView(View):
     """
