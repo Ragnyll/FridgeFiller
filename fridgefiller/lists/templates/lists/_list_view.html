@@ -1,0 +1,81 @@
+<div class="panel panel-success">
+  <div class="panel-heading" id="panel-heading-{{ list.id }}" data-listid="{{ list.id }}" data-toggle="collapse" data-target="l-{{ list.id }}">
+    <a class="anchor" id="{{ list.id }}"></a>
+    <div class="shopping-list">
+      <h2>
+        <span id="{{ list.id }}-collapse-indicator" class="fa fa-plus "></span>&nbsp;
+        <a>
+          {{ list }}&nbsp;&nbsp;&nbsp;
+        </a>
+      </h2>
+      <h4>
+        {{ list.description }}
+        <div class="pull-right">
+          <span id="item-count" class="label label-info">{{ list.items.count }} items</span>
+        </div>
+      </h4>
+    </div>
+  </div>
+  <div id="l-{{ list.id }}" class="panel-collapse">
+    <div class="panel-body collapse" id="panel-body-{{ list.id }}">
+      {% if messages %}
+        {% for message in messages %}
+          <!-- Only show messages that pertain to the list the operation was completed on -->
+          {% ifequal message.extra_tags list.id %}
+            <span>{{ message|safe }}</span>
+          {% endifequal %}
+        {% endfor %}
+      {% endif %}
+
+      {% if list.items.all %}
+        <div class="row">
+          <div class="col-md-3"></div>
+          <div class="col-md-4">
+            Item Name
+          </div>
+          <div class="col-md-5">
+            Item Description
+          </div>
+        </div>
+
+        {% for item in list.items.all %}
+          <div class="item-well well">
+            <div class="row">
+              <div class="col-md-3">
+                <!-- Remove item from list button -->
+                {% include 'lists/_remove_item_form.html' %}
+                <!-- Add item to pantry button -->
+                {% include 'lists/_add_or_edit_item_to_pantry_form.html' %}
+              </div>
+              <div class="col-md-4">
+                <h4>{{ item.name }}</h4>
+              </div>
+              <div class="col-md-5">
+                <h6>{{ item.description }}</h6>
+              </div>
+            </div>
+
+            <!-- Edit in pantry form -->
+            {% if item.name in user_pantry_item_names %}
+              {% include 'lists/_edit_item_in_pantry_form.html' with from_url='/lists/' %}
+            {% endif %}
+          </div>
+        {% endfor %}
+      {% else %}
+        <h3 class="text-center">Looks like this list doesn't contain any items, consider adding some below!</h3>
+
+        {% include 'lists/_delete_list_form.html' %}
+      {% endif %}
+
+      <div class="well">
+        <!-- add item form -->
+        {% include 'lists/_add_item_to_list_form.html' %}
+      </div>
+
+      <!-- Only show delete form down here if there are items in the list -->
+      {% ifnotequal list.items.count 0 %}
+        {% include 'lists/_delete_list_form_bottom.html' %}
+      {% endifnotequal %}
+    </div>
+  </div>
+</div>
