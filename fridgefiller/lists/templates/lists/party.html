@@ -43,8 +43,16 @@
   <div class="text-center">
     <form method="POST" id="add-group-list" action="{% url 'add-group-list' %}">
       {% csrf_token %}
+      <select name="add-list-select">
+        <option selected="selected">
+        {% for list in user_lists %}
+          <option value="{{ list.name }}">{{ list.name }}</option>
+        {% endfor %}
+      </select>
+      
       <input type="hidden" value="{{ party.id }}" name="party-id">
-      <button type="submit" data-toggle="popover" data-placement="top" data-content="Add Another Shooping List to this Group" class="btn btn-large btn-success">&nbsp;Add Shopping List</button>
+      
+      <button type="submit" data-toggle="popover" data-placement="top" data-content="Add Existing Shooping List to this Group" class="btn btn-large btn-success">&nbsp;Add Shopping List</button>
     </form>
   </div>
 
@@ -57,16 +65,28 @@
   {% endfor %}
   <br>
   <div class="text-center">
+
     {% if personal_party != party %}
       <div class="text-center">
         <button type="submit" data-toggle="popover" data-placement="top" data-content="Invite more People to Group" class="btn btn-lg btn-success">&nbsp;<a href="{% url 'invitation_list' %}">Manage Invitations</a></button>
       </div>
       <br>
-      <form method="POST" id="leave-party-form" action="{% url 'leave-party' %}">
-        {% csrf_token %}
-        <input type="hidden" value="{{ party.id }}" name="leave-group-id">
-        <button type="submit" data-toggle="popover" data-placement="top" data-content="Leave this Group" class="btn btn-lg btn-danger">&nbsp;Leave Group</button>
-      </form>
+      
+      {% if personal_party.owner == cuser and personal_party.users.count == 1 %}
+        <form method="POST" id="remove-party-form" action="{% url 'remove-party' %}">
+          {% csrf_token %}
+          <input type="hidden" value="{{ party.id }}" name="remove-group-id">
+          <button type="submit" data-toggle="popover" data-placement="top" data-content="Remove this Group" class="btn btn-lg btn-danger">&nbsp;Remove Group</button>
+        </form>
+      {% else %}
+
+        <form method="POST" id="leave-party-form" action="{% url 'leave-party' %}">
+          {% csrf_token %}
+          <input type="hidden" value="{{ party.id }}" name="leave-group-id">
+          <button type="submit" data-toggle="popover" data-placement="top" data-content="Leave this Group" class="btn btn-lg btn-danger">&nbsp;Leave Group</button>
+        </form>
+
+      {% endif %}
     {% else %}
       <button data-toggle="popover" data-placement="top" data-content="Cannot Leave Personal Party" class="btn btn-lg btn-primary" disabled>&nbsp;Can't Leave</button>
     {% endif %}

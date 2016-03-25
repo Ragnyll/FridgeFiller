@@ -171,10 +171,13 @@ class PartyView(TemplateView):
 
         party = Party.objects.get(id=kwargs['party_id'])
         user = UserProfile.objects.get(user=self.request.user)
+        partylists = party.shoppinglists.all()
+
         context['party'] = party
         context['cuser'] = user
         context['users'] = party.users.all()
-        context['party_lists'] = party.shoppinglists.all()
+        context['party_lists'] = partylists
+        context['user_lists'] = ShoppingList.objects.filter(owners__in=[user]).exclude(id__in=partylists.values_list('id'))
         context['party_pantry'] = Pantry.objects.filter(party__in=[party])
         context['personal_party'] = Party.objects.filter(name__contains='Personal Party').get(owner = user)
         return context
@@ -192,6 +195,10 @@ class LeavePartyView(View):
         
         # Shouldn't be able to leave party if you are the owner
         # Remove user from party
+        if user == party_obj.owner:
+            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>ERROR: You cannot leave a group you are the owner of.</span>")            
+            return redirect("/lists/party/" + str(party_obj.id))
+
         try:
             party_obj.users.remove(user)
             messages.add_message(request, messages.SUCCESS, "<span class='alert alert-success'>Successfully left " + party_obj.name + "</span>")
@@ -228,12 +235,28 @@ class CreateParty(View):
 
 class AddPartyList(View):
     """
-    This view contains logic to add a shopping list to a party
+    This view contains logic to add an existing shopping list to a party
     """
 
     def post(self, request, *args, **kwargs):
-        #do something?
-        return redirect("/lists/parties")
+        party_id = request.POST.get('party-id', False)
+        party_obj = Party.objects.get(id=party_id)
+        list_name = request.POST.get('add-list-select', False)
+        
+        list_obj = ShoppingList.objects.get(name=list_name)
+
+        messages.add_message(request, messages.SUCCESS, "<span class='alert alert-success'>" + list_name + " " + list_obj.name + " " + party_obj.name + "</span>")
+
+
+        try:
+            party_obj.shoppinglists.add(list_obj)
+            messages.add_message(request, messages.SUCCESS, "<span class='alert alert-success'>Successfully added list " + list_obj.name + " to group " + party_obj.name + "</span>")
+
+        except:
+            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>ERROR: Could not add list to group" + list_obj.name + "</span>")
+            return redirect("/lists/party/" + str(party_id))
+
+        return redirect("/lists/party/" + str(party_id))
 
 class PartiesView(TemplateView):
     """
@@ -250,6 +273,27 @@ class PartiesView(TemplateView):
         context['user_parties'] = Party.objects.filter(users__in=[user])
 
         return context
+
+class RemovePartyView(View):
+    """
+    This view contains logic to remove a group from existence.
+    """
+    template_name = 'lists/party/remove.html'
+
+    def post(self, request, *args, **kwargs):
+
+        party_id = request.POST.get('remove-group-id', False)
+        party_obj = Party.objects.get(id=party_id)
+
+        try:
+            Party.objects.filter(id=party_id).delete()
+            messages.add_message(request, messages.SUCCESS, "<span class='alert alert-success'>Successfully removed " + party_obj.name + "</span>")
+        
+        except:
+            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Unable to remove group " + party_obj.name + " from database.</span>")
+            return redirect("/lists/party/" + str(party_obj.id))
+
+        return redirect("/lists/parties")
 
 class AddItemToPantryView(View):
     """
@@ -401,7 +445,8 @@ class InvitationCreateView(LoggedInMixin,
     def get_available_invitees(self):
         """Returns a list of users who can be invited"""
         #Should not return people who are already in party
-        
+        #user = UserProfile.objects.filter(user=self.request.user)
+        #users = UserProfile.objects.exclude(user)
         return UserProfile.objects.all()
 
     def get_team(self):

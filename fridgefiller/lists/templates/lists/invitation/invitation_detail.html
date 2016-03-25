@@ -36,7 +36,7 @@
     <p>{{ invitation.receiver }}</p>
     <p>{{ user }} </p>
 
-    {% if not invitation.response %}
+    {% if not invitation.response and invitation.receiver == user %}
     
       <a data-toggle="modal" data-target="#acceptInviteModal" class="btn btn-success" href="#">
         Accept Invitation
