@@ -57,7 +57,7 @@
 
             <!-- Edit in pantry form -->
             {% if item.name in user_pantry_item_names %}
-              {% include 'lists/_edit_item_in_pantry_form.html' with from_url='/lists/' %}
+              {% include 'lists/_edit_item_in_pantry_form.html' %}
             {% endif %}
           </div>
         {% endfor %}

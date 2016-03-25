@@ -86,7 +86,7 @@
     </div>
   {% else %}
     {% for list in user_shopping_lists %}
-      {% include 'lists/_list_view.html' %}
+      {% include 'lists/_list_view.html' with from_url="/lists/" %}
 
     {% endfor %}
   {% endif %}
