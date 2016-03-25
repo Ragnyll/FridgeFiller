@@ -85,8 +85,10 @@ $(function() {
         $node;
     $.get("walapi2", {'upc': code})
       .done(function(data) {
-        var well = $('#scan-barcode-button-' + App.ids[0] + '-' + App.ids[1]).parent().siblings("div.col-md-4").find("h4");
-        $(well).html(data.item_name);
+        var node= $('#scan-barcode-button-' + App.ids[0]).siblings("#new-item-name");
+        $(node).val(data.item_name);
+        node = $('#scan-barcode-button-' + App.ids[0]).siblings("#new-item-desc");
+        $(node).val(data.item_desc);
       })
       .fail(function(data) {
         alert("Borked");

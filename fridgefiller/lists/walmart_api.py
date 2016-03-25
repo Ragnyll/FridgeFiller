@@ -27,5 +27,6 @@ def upc_search(upc):
 def relevant_attributes(parsed):
     item = {}
     item['item_name'] = parsed[0].get('name',"")
-    item['item_desc'] = parsed[0].get('shortDescription',"")
+    item['item_desc'] = parsed[0].get('shortDescription', False)
+    item['item_desc'] = item['item_desc'] if item['item_desc'] else parsed[0].get('longDescription', "No description available.")
     return item
