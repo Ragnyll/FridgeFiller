@@ -99,7 +99,8 @@
 
     $('.edit-item-in-pantry-button').click(function() {
         var item_id = this.dataset.itemid;
-        $("#edit-item-in-pantry-form-" + item_id).removeClass("hidden");
+
+        $("#edit-item-in-pantry-form-" + item_id).toggleClass("hidden");
 
         // init datepicker for last_purchased
         var picker1 = new Pikaday({
