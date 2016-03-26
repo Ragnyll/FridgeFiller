@@ -4,50 +4,6 @@
   Your Pantry
 {% endblock %}
 
-{% block style %}
-  <style type="text/css">
-    label, input {
-        display: block;
-    }
-    .form-field {
-        float: left;
-    }
-    .form-field input {
-        width: inherit !important
-    }
-    h4 {
-        display: inline;
-        vertical-align: middle;
-    }
-    .pantry-table-header, .pantry-table-header td {
-        border: 3px solid;
-        border-collapse: collapse;
-    }
-    #edit-item-in-pantry-cost, #edit-item-in-pantry-stock, #edit-item-in-pantry-unit {
-        width: 10%;
-    }
-    .btn {
-        vertical-align: middle;
-    }
-    h4, h6, h2 {
-        display: inline;
-        vertical-align: middle;
-    }
-    #add-item-to-pantry-name, #add-item-to-pantry-description {
-        width: 40%;
-    }
-    #add-item-to-pantry-button {
-        width: 19%;
-    }
-    .alert {
-        display: flex;
-    }
-    .pantry-item:hover {
-        border: 1px solid #169E83;
-    }
-  </style>
-{% endblock %}
-
 {% block content %}
   <h1 class="text-center">My Pantry
     {% ifequal pantry_items.count 1 %}
@@ -157,4 +113,48 @@
         });
     });
   </script>
+{% endblock %}
+
+{% block style %}
+  <style type="text/css">
+    label, input {
+        display: block;
+    }
+    .form-field {
+        float: left;
+    }
+    .form-field input {
+        width: inherit !important
+    }
+    h4 {
+        display: inline;
+        vertical-align: middle;
+    }
+    .pantry-table-header, .pantry-table-header td {
+        border: 3px solid;
+        border-collapse: collapse;
+    }
+    #edit-item-in-pantry-cost, #edit-item-in-pantry-stock, #edit-item-in-pantry-unit {
+        width: 10%;
+    }
+    .btn {
+        vertical-align: middle;
+    }
+    h4, h6, h2 {
+        display: inline;
+        vertical-align: middle;
+    }
+    #add-item-to-pantry-name, #add-item-to-pantry-description {
+        width: 40%;
+    }
+    #add-item-to-pantry-button {
+        width: 19%;
+    }
+    .alert {
+        display: flex;
+    }
+    .pantry-item:hover {
+        border: 1px solid #169E83;
+    }
+  </style>
 {% endblock %}
