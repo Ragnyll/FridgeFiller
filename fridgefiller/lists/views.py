@@ -233,6 +233,11 @@ class AddItemToPantryView(View):
         if from_url == "/pantry/":
             list_id = str(-1)
 
+        # Don't allow blank item names
+        if item_name == "":
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;:  You must supply a name to add an item to your pantry!" + ALERT_CLOSE, extra_tags=int(list_id))
+            return redirect(from_url + "#" + list_id)
+
         try:
             item_detail_obj, c = ItemDetail.objects.get_or_create(name=item_name,
                                                                   description=item_description)
@@ -243,7 +248,7 @@ class AddItemToPantryView(View):
             pantry_obj = Pantry.objects.get(party=user_party)
 
             # don't add duplicate items
-            if item_detail_obj in pantry_obj.items.all():
+            if item_detail_obj.name in [x.name for x in pantry_obj.items.all()]:
                 messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;:  That item already exists in your pantry!" + ALERT_CLOSE, extra_tags=int(list_id))
                 return redirect(from_url + "#" + list_id)
 
