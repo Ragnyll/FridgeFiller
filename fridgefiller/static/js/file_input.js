@@ -6,6 +6,7 @@ $(function() {
     attachListeners: function() {
       var self = this;
 
+      // Click file selection input field and clear any previous result classes
       $(".fa-barcode").on("click", function(e) {
         var input = $(this).find('input[type=file]')[0],
             value = $(input).context.files;
@@ -13,6 +14,7 @@ $(function() {
         $(this).removeClass('btn-danger btn-success').addClass('btn-warning');
       });
 
+      // Call Quagga decode function using selected file.
       $('.scan-barcode-input').change(function(e) {
         App.ids = $(this).attr('id').split(" ");
         if (e.target.files && e.target.files.length) {

@@ -12,7 +12,6 @@ from statuses import *
 from datetime import datetime
 
 import re
-from HTMLParser import HTMLParser as parser
 
 from .models import *
 import walmart_api as wapi
