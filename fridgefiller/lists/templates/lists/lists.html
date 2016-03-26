@@ -9,6 +9,16 @@
 
 {% block style %}
   <style type="text/css">
+    label, input {
+        display: block;
+    }
+    .form-field {
+        float: left;
+    }
+    .form-field input {
+        width: inherit !important;
+        padding-right: 0;
+    }
     #item-count {
         vertical-align: -webkit-baseline-middle;
     }
@@ -134,6 +144,10 @@
           // Only try to open panels if the hash is a number
           if(!isNaN(hash)) {
               $('#panel-heading-' + hash).click()
+              setTimeout(function(){
+              $('#l-' + hash + ' #new-item-name').focus();
+            }, 1);
+
           }
       }
     });
@@ -152,7 +166,9 @@
       var picker1 = new Pikaday({
         field: $('#edit-item-in-pantry-form-' + item_id + '-' + list_id + ' #datepicker-last-purchased')[0],
         format: 'MM/DD/YYYY',
-      });
+    });
+
+      $('#edit-item-in-pantry-form-' + item_id + ' #datepicker-last-purchased').val($.datepicker.formatDate('mm/dd/yy', new Date()));
 
       // init datepicker for expiration_date
       var picker2 = new Pikaday({
@@ -164,6 +180,7 @@
         var list_id = this.dataset.listid;
         var item_id = this.dataset.itemid;
 
+        console.log("CLICKED ITEM "+item_id+" LIST "+list_id)
         $('#edit-item-in-pantry-form-' + item_id + '-' + list_id).removeClass('hidden')
     });
     $('.panel-heading').click(function() {

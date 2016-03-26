@@ -1,0 +1,24 @@
+<html>
+<title>Print List</title>
+
+<input type="button" onclick="printDiv('printableArea')" value="Print List" />
+<div id="printableArea">
+  {% for item_name, item_description in data %}
+  {{ item_name }} - {{ item_description }} <br>
+  {% endfor %}
+</div>
+
+<script>
+  function printDiv(divName) {
+  var printContents = document.getElementById(divName).innerHTML;
+  var originalContents = document.body.innerHTML;
+
+  document.body.innerHTML = printContents;
+
+  window.print();
+
+  document.body.innerHTML = originalContents;
+  }
+  </script>
+
+</html>
