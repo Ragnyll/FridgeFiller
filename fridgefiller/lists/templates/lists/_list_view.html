@@ -25,14 +25,16 @@
   </div>
   <div id="l-{{ list.id }}" class="panel-collapse">
     <div class="panel-body collapse" id="panel-body-{{ list.id }}">
-      {% if messages %}
-        {% for message in messages %}
-          <!-- Only show messages that pertain to the list the operation was completed on -->
-          {% ifequal message.extra_tags list.id %}
-            <span>{{ message|safe }}</span>
-          {% endifequal %}
-        {% endfor %}
-      {% endif %}
+      <span id="message-{{ list.id }}">
+        {% if messages %}
+          {% for message in messages %}
+        <!-- Only show messages that pertain to the list the operation was completed on -->
+            {% ifequal message.extra_tags list.id %}
+              {{ message|safe }}
+            {% endifequal %}
+          {% endfor %}
+        {% endif %}
+      </span>
 
       {% if list.items.all %}
         <div class="row">

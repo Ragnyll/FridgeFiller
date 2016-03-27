@@ -6,6 +6,9 @@
     <input type="hidden" name="from_url" value="/pantry/">
     <input type="text" class="form-control" id="add-item-to-pantry-name" name="add-item-to-pantry-name" placeholder="Item Name">
     <input type="text" class="form-control" id="add-item-to-pantry-description" name="add-item-to-pantry-desc" placeholder="Item Description">
+    <span id="scan-barcode-button-{{ list.id }}" class="btn btn-warning btn-xs fa fa-barcode">
+      <input id="{{ list.id }}" class="scan-barcode-input" style="display:none;" type="file" capture/>
+    </span>
     <input type="submit" class="btn btn-primary" id="add-item-to-pantry-button" value="Add Item to Pantry">
   </form>
 </div>
