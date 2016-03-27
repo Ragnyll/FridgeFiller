@@ -3,42 +3,18 @@
     #expired-well {
       background-color: rgba(231, 76, 60, .3);
     }
-    #expired-item { 
+    #expired-item {
       background-color: rgba(231, 76, 60, .8);
     }
-    
+
     #warning-well {
       background-color: rgba(241, 196, 15, .3);
     }
-    #warning-item {    
+    #warning-item {
       background-color: rgba(241, 196, 15, .8);
-    }
-    #item-count {
-        vertical-align: -webkit-baseline-middle;
-    }
-    #remove-item-form, #add-item-to-pantry-form {
-        display: inline;
-    }
-    #new-item-save {
-        float: right;
-    }
-    #new-item-name {
-        width: 43%;
-    }
-    #new-item-desc {
-        width: 43%;
-    }
-    #new-item-save {
-        width: 10%;
     }
     .message {
         width: 100%;
-    }
-    .item-well:hover {
-        border: 1px solid #169E83;
-    }
-    .alert {
-        display: flex;
     }
     a.anchor {
         display: block;
@@ -46,37 +22,13 @@
         top: -77px;
         visibility: hidden;
     }
-    .popover-content {
-        background-color: #34495E;
-        color: white;
-    }
-    .popover.top .arrow:after {
-        border-top-color: #34495E;
-    }
-    #add-item-to-pantry-cost, #edit-item-in-pantry-cost {
-        width: 10%;
-    }
-    #add-item-to-pantry-stock, #edit-item-in-pantry-stock {
-        width: 10%;
-    }
-    #add-item-to-pantry-unit, #edit-item-in-pantry-unit {
-        width: 10%;
-    }
-    .panel-heading {
-        padding: 1em;
-    }
-    .fa .fa-minus, .fa .fa-plus {
-        text-size: 32px;
-        vertical-align: middle;
-    }
   </style>
 {% endblock %}
 
 
 {% if not most_recent_list %}
-  <h1 class="text-center">Looks like you don't have any lists created.</h1>
-
-{% else %} 
+  <h1 class="text-center">Looks like you don&apos;t have any lists created.</h1>
+{% else %}
   <h2 class="text-center">Most Recent Shopping List</h2>
 
   {% include 'lists/_list_view.html' with list=most_recent_list from_url='/' %}
@@ -93,7 +45,7 @@
         <div class="col-md-6"><h6>Name</h6></div>
         <div class="col-md-6"><h6>Expiration Date</h6></div>
       </div>
-    
+
       {% for item in expired_items %}
         <div class="well">
           <div class="col-md-6">
@@ -117,16 +69,16 @@
     </div>
   </div>
 
-  <div class="col-md-6">    
+  <div class="col-md-6">
     <div class="well" id="expired-well">
       <h3 class="text-center">Group Expired Items</h3>
-      <p class="text-center"> These Items in your group's pantry are expired! </p> 
+      <p class="text-center"> These Items in your group's pantry are expired! </p>
       <div class="row">
         <div class="col-md-6"><h6>Name</h6></div>
         <div class="col-md-6"><h6>Expiration Date</h6></div>
       </div>
     </div>
-    
+
     <div class="well" id="warning-well">
       <h3 class="text-center">Group Warning Items</h3>
       <p class="text-center"> These Items in your group's pantry will expire in less than a week! </p>
@@ -140,86 +92,3 @@
   </div>
   </div>
 </div>
-{% block script %}
-  <script type="text/javascript">
-    $(document).ready(function(){
-      $('[data-toggle="popover"]').popover({ trigger: "hover" });
-
-      // if list_id in url, click the panel-header to un-collapse it and change the plus to minus
-      if(window.location.hash) {
-          var hash = window.location.hash.substring(1)
-
-          // Only try to open panels if the hash is a number
-          if(!isNaN(hash)) {
-              $('#panel-heading-' + hash).click()
-          }
-      }
-    });
-
-    $('.edit-item-in-pantry-button').click(function(e){
-      var item_id = this.dataset.itemid;
-      var list_id = this.dataset.listid;
-
-      // hide pantry button
-      $('#add-item-to-pantry-button-' + item_id + '-' + list_id).hide();
-
-      // show scan barcode button
-      $('#scan-barcode-button-' + item_id + '-' + list_id).removeClass('hidden');
-
-      // init datepicker for last_purchased
-      var picker1 = new Pikaday({
-        field: $('#edit-item-in-pantry-form-' + item_id + '-' + list_id + ' #datepicker-last-purchased')[0],
-        format: 'MM/DD/YYYY',
-      });
-
-      // init datepicker for expiration_date
-      var picker2 = new Pikaday({
-        field: $('#edit-item-in-pantry-form-' + item_id + '-' + list_id + ' #datepicker-exp-date')[0],
-        format: 'MM/DD/YYYY',
-      });
-    });
-    $('.edit-item-in-pantry-button').click(function() {
-        var list_id = this.dataset.listid;
-        var item_id = this.dataset.itemid;
-
-        $('#edit-item-in-pantry-form-' + item_id + '-' + list_id).removeClass('hidden')
-    });
-    $('.panel-heading').click(function() {
-        var list_id = this.dataset.listid;
-
-        // If collapsed, change plus to minus
-        if($('#panel-body-' + list_id).hasClass('collapse')) {
-            $('#' + list_id + '-collapse-indicator').removeClass('fa-plus')
-            $('#' + list_id + '-collapse-indicator').addClass('fa-minus')
-        }
-        // change minus to plus
-        else {
-            $('#' + list_id + '-collapse-indicator').removeClass('fa-minus')
-            $('#' + list_id + '-collapse-indicator').addClass('fa-plus')
-        }
-
-        $('#panel-body-' + list_id).toggleClass('collapse in');
-    });
-
-    // Show the user a confirmation form so they don't accidentally delete their lists
-    $('.delete-list-button').click(function() {
-        var list_id = this.dataset.listid;
-
-        // Hide the initial delete button
-        $('#delete-list-' + list_id).addClass('hidden');
-        // Show confirmation form
-        $('#delete-list-confirmation-form-' + list_id).removeClass('hidden');
-    });
-
-    // Hide the confirmation form when the user presses the don't delete button
-    $('.delete-list-cancel-button').click(function() {
-        var list_id = this.dataset.listid;
-
-        // Hide confirmation form
-        $('#delete-list-confirmation-form-' + list_id).addClass('hidden');
-        // Show initial delete button
-        $('#delete-list-' + list_id).removeClass('hidden');
-    });
-
-  </script>
-{% endblock %}
