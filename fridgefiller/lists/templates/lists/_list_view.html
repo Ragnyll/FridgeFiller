@@ -62,7 +62,7 @@
           </div>
         {% endfor %}
       {% else %}
-        <h3 class="text-center">Looks like this list doesn't contain any items, consider adding some below!</h3>
+        <h3 class="text-center">Looks like this list doesn&apos;t contain any items, consider adding some below!</h3>
 
         {% include 'lists/_delete_list_form.html' %}
       {% endif %}
@@ -79,3 +79,59 @@
     </div>
   </div>
 </div>
+
+{% block style %}
+  <style type="text/css">
+    .popover-content {
+      background-color: #34495E;
+      color: white;
+    }
+    .popover.top .arrow:after {
+      border-top-color: #34495E;
+    }
+    #add-item-to-pantry-cost, #edit-item-in-pantry-cost {
+        width: 10%;
+    }
+    #add-item-to-pantry-stock, #edit-item-in-pantry-stock {
+        width: 10%;
+    }
+    #add-item-to-pantry-unit, #edit-item-in-pantry-unit {
+        width: 10%;
+    }
+    .panel-heading {
+        padding: 1em;
+    }
+    .fa .fa-minus, .fa .fa-plus {
+        text-size: 32px;
+        vertical-align: middle;
+    }
+    h4, h6, h2 {
+        display: inline;
+        vertical-align: middle;
+    }
+    h4 {
+        margin-right: .5em;
+    }
+    .item-well:hover {
+        border: 1px solid #169E83;
+    }
+    #item-count {
+        vertical-align: -webkit-baseline-middle;
+    }
+    #remove-item-form, #add-item-to-pantry-form {
+        display: inline;
+    }
+    #new-item-save {
+        float: right;
+    }
+    #new-item-name {
+        width: 43%;
+    }
+    #new-item-desc {
+        width: 43%;
+    }
+    #new-item-save {
+        width: 10%;
+    }
+  </style>
+{% endblock %}
