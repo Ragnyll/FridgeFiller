@@ -100,7 +100,15 @@
     $('.edit-item-in-pantry-button').click(function() {
         var item_id = this.dataset.itemid;
 
-        $("#edit-item-in-pantry-form-" + item_id).toggleClass("hidden");
+        // if the form for the button you clicked on is shown, hide it
+        if (!$("#edit-item-in-pantry-form-" + item_id).hasClass('hidden')) {
+            $("#edit-item-in-pantry-form-" + item_id).addClass('hidden')
+        }
+        // otherwise, it is hidden, so hide all others, then show the one you clicked on
+        else {
+            $('div[id^="edit-item-in-pantry-form-"]').addClass('hidden');
+            $("#edit-item-in-pantry-form-" + item_id).removeClass("hidden");
+        }
 
         // init datepicker for last_purchased
         var picker1 = new Pikaday({
