@@ -205,7 +205,7 @@ class PartyView(TemplateView):
 
         context['party'] = party
         context['cuser'] = user
-        context['users'] = party.users.all()
+        context['party_users'] = party.users.all()
         context['party_lists'] = partylists
         context['user_lists'] = ShoppingList.objects.filter(owners__in=[user]).exclude(id__in=partylists.values_list('id'))
         context['party_pantry'] = Pantry.objects.filter(party__in=[party])

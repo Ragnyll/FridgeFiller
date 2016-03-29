@@ -4,95 +4,86 @@
   {{ party.name }}
 {% endblock %}
 
-{% block style %}
-<style>
-    .popover-content {
-        background-color: #34495E;
-        color: white;
-    }
-    .popover.top .arrow:after {
-        border-top-color: #34495E;
-    }
-  </style>
-{% endblock %}
 
 {% block content %}
-  <h1 class="text-center">{{ party }}</h1>
-  <br>
-  
-  <h2 class="text-center">{{party.name}}'s Pantry</h2>
+  <h1 class="text-center">Group: {{ party }}</h1>
 
-  <h2 class="text-center">Party Shopping Lists:</h2>
-  <table class="table table-bordered">
-    <tbody>
-      {% for list in party_lists %}
-        <tr class="shopping-list-row">
-          <td>
-            <a href="/lists/{{ list.id }}/">
-              <h4>{{ list.name}}</h4>
-            </a>
-          </td>
-          <td>
-            <h5>{{ list.description }}</h5>
-          </td>
-        </tr>
-      {% endfor %}
-    </tbody>
-  </table>
-  <br>
-  <div class="text-center">
-    <form method="POST" id="add-group-list" action="{% url 'add-group-list' %}">
-      {% csrf_token %}
-      <select name="add-list-select">
-        <option selected="selected">
-        {% for list in user_lists %}
-          <option value="{{ list.name }}">{{ list.name }}</option>
-        {% endfor %}
-      </select>
-      
-      <input type="hidden" value="{{ party.id }}" name="party-id">
-      
-      <button type="submit" data-toggle="popover" data-placement="top" data-content="Add Existing Shooping List to this Group" class="btn btn-large btn-success">&nbsp;Add Shopping List</button>
-    </form>
+  <!-- Error / Success messages -->
+  {% include "lists/_messages.html" %}
+
+  <!-- Lists for party -->
+  <h2 class="text-center">Shopping Lists:</h2>
+  {% for list in party_lists %}
+    {% include "lists/_list_view.html" with from_url="/lists/party/{{party.id}}" %}
+  {% endfor %}
+
+  <!-- Add existing shopping list to group -->
+  {% if user_lists %}
+    <div class="text-center">
+      <form method="POST" id="add-group-list" action="{% url 'add-group-list' %}">
+        {% csrf_token %}
+        <select name="add-list-select">
+          <option selected="selected">
+            {% for list in user_lists %}
+              <option value="{{ list.name }}">{{ list.name }}</option>
+            {% endfor %}
+        </select>
+
+        <input type="hidden" value="{{ party.id }}" name="party-id">
+
+        <button type="submit" data-toggle="popover" data-placement="top" data-content="Add Existing Shooping List to this Group" class="btn btn-large btn-success">&nbsp;Add Existing Shopping List to {{ party }}</button>
+      </form>
+    </div>
+  {% endif %}
+
+  <!-- Add new list to group -->
+  <!-- -->
+  <!-- -->
+
+  <!-- Group Members -->
+  <div id="group-members" class="well">
+    <h2 class="text-center">Members:</h2>
+    {% for user in party_users %}
+      {% if forloop.first %}
+        &nbsp;&nbsp;
+      {% endif %}
+      <h4>
+        <span class="label label-info">{{ user }}</span>
+      </h4>
+      {% if not forloop.last %}
+        &nbsp;&nbsp;
+      {% endif %}
+    {% endfor %}
   </div>
 
+  <!-- Invite / Leave Group / Delete Group buttons -->
+  <div class="text-center well">
+    <h4>Group Options</h4>
+    <br>
+    <!-- Only let owner invite people to the group -->
+    {% if user.profile == party.owner %}
+      <form id="invite-button" action="{% url 'invitation_list' %}" method="GET">
+        <button type="submit" data-toggle="popover" data-placement="top" data-content="Invite more People to Group" class="btn btn-lg btn-success" href="{% url 'invitation_list' %}">Invite more people to {{ party }}</button>
+      </form>
+    {% endif %}
 
-  <h2 class="text-center">Group Members:</h2>
-  {% for user in users %}
-    <h5 class="text-center">
-      {{user}} <!-- When user page exists, link user names to user pages -->
-    </h5> 
-  {% endfor %}
-  <br>
-  <div class="text-center">
+    <!-- If user is party owner, let them delete the group -->
+    {% if user.profile == party.owner %}
+      <form method="POST" id="remove-party-form" action="{% url 'remove-party' %}">
+        {% csrf_token %}
+        <input type="hidden" value="{{ party.id }}" name="remove-group-id">
+        <button type="submit" data-toggle="popover" data-placement="top" data-content="Remove this Group" class="btn btn-lg btn-danger">&nbsp;Delete this Group</button>
+      </form>
 
-    {% if personal_party != party %}
-      <div class="text-center">
-        <button type="submit" data-toggle="popover" data-placement="top" data-content="Invite more People to Group" class="btn btn-lg btn-success">&nbsp;<a href="{% url 'invitation_list' %}">Manage Invitations</a></button>
-      </div>
-      <br>
-      
-      {% if personal_party.owner == cuser and personal_party.users.count == 1 %}
-        <form method="POST" id="remove-party-form" action="{% url 'remove-party' %}">
-          {% csrf_token %}
-          <input type="hidden" value="{{ party.id }}" name="remove-group-id">
-          <button type="submit" data-toggle="popover" data-placement="top" data-content="Remove this Group" class="btn btn-lg btn-danger">&nbsp;Remove Group</button>
-        </form>
-      {% else %}
-
-        <form method="POST" id="leave-party-form" action="{% url 'leave-party' %}">
-          {% csrf_token %}
-          <input type="hidden" value="{{ party.id }}" name="leave-group-id">
-          <button type="submit" data-toggle="popover" data-placement="top" data-content="Leave this Group" class="btn btn-lg btn-danger">&nbsp;Leave Group</button>
-        </form>
-
-      {% endif %}
+    <!-- Otherwise, user is a group user, so let them leave the group -->
     {% else %}
-      <button data-toggle="popover" data-placement="top" data-content="Cannot Leave Personal Party" class="btn btn-lg btn-primary" disabled>&nbsp;Can't Leave</button>
+      <form method="POST" id="leave-party-form" action="{% url 'leave-party' %}">
+        {% csrf_token %}
+        <input type="hidden" value="{{ party.id }}" name="leave-group-id">
+        <button type="submit" data-toggle="popover" data-placement="top" data-content="Leave this Group" class="btn btn-lg btn-danger">&nbsp;Leave this Group</button>
+      </form>
     {% endif %}
   </div>
-  <br>
-
 {% endblock %}
 
 {% block script %}
@@ -101,4 +92,24 @@
       $('[data-toggle="popover"]').popover({ trigger: "hover" });
     });
   </script>
+{% endblock %}
+
+{% block style %}
+  <style type="text/css">
+    #group-members h2, #group-members h4 {
+        display: inline;
+        vertical-align: middle;
+    }
+    #invite-button, #remove-party-form, #leave-party-form {
+        display: inline;
+        vertical-align: middle;
+    }
+    .popover-content {
+        background-color: #34495E;
+        color: white;
+    }
+    .popover.top .arrow:after {
+        border-top-color: #34495E;
+    }
+  </style>
 {% endblock %}
