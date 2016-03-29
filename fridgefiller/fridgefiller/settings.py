@@ -2,6 +2,7 @@ import os
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+PROJECT_DIR = os.path.abspath(os.path.join(BASE_DIR, "../"))
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = 'olnitr_42%kkb91ae!j!#qkxyqs1dkuez!lskye@-00705ie$p'
@@ -94,7 +95,7 @@ if DEBUG:
     DATABASES = {
         'default': {
             'ENGINE': 'django.db.backends.sqlite3',
-            'NAME': 'db.sqlite3',
+            'NAME': os.path.join(PROJECT_DIR, 'db.sqlite3'),
         }
     }
 

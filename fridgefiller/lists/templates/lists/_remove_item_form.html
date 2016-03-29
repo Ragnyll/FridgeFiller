@@ -1,0 +1,8 @@
+<!-- Remove item form -->
+<form method="POST" id="remove-item-form" action="{% url 'remove-item' %}">
+  {% csrf_token %}
+  <input type="hidden" value="{{ item.name }}" name="remove-item-name">
+  <input type="hidden" value="{{ item.description }}" name="remove-item-description">
+  <input type="hidden" value="{{ list.id }}" name="list-id">
+  <button type="submit" data-toggle="popover" data-placement="top" data-content="Remove this item from your list" class="btn btn-lg btn-danger fa fa-minus-square">&nbsp;from List</button>
+</form>
