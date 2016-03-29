@@ -298,9 +298,16 @@ class PartiesView(TemplateView):
         context = super(PartiesView, self).get_context_data(**kwargs)
 
         user = UserProfile.objects.get(user=self.request.user)
+        user_personal_party = Party.objects.get(name=user.name+"'s Personal Party")
 
-        context['party_own'] = Party.objects.filter(owner__in=[user])
-        context['user_parties'] = Party.objects.filter(users__in=[user])
+        # All parties where the user is an owner, except their personal party
+        user_owned_parties = Party.objects.filter(owner__in=[user]).exclude(id=user_personal_party.id)
+        context['owned_parties'] = user_owned_parties
+
+        # Parties where the user is a 'user' of the party
+        #  -> user is in Party.users but not Party.owner
+        user_parties = Party.objects.filter(users__in=[user]).exclude(owner__in=[user])
+        context['user_parties'] = user_parties
 
         return context
 
@@ -311,19 +318,17 @@ class RemovePartyView(View):
     template_name = 'lists/party/remove.html'
 
     def post(self, request, *args, **kwargs):
-
         party_id = request.POST.get('remove-group-id', False)
         party_obj = Party.objects.get(id=party_id)
 
         try:
             Party.objects.filter(id=party_id).delete()
             messages.add_message(request, messages.SUCCESS, "<span class='alert alert-success'>Successfully removed " + party_obj.name + "</span>")
+            return redirect("/lists/parties/")
 
         except:
-            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Unable to remove group " + party_obj.name + " from database.</span>")
+            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Unable to remove group " + party_obj.name + " from database. " + str(e) + "</span>")
             return redirect("/lists/party/" + str(party_obj.id))
-
-        return redirect("/lists/parties")
 
 
 class PrintListMiniView(TemplateView):
