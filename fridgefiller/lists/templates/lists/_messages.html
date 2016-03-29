@@ -1,0 +1,13 @@
+{% if messages %}
+  {% for message in messages %}
+    <span>{{ message|safe }}</span>
+  {% endfor %}
+{% endif %}
+
+{% block style %}
+  <style type="text/css">
+    .alert {
+        display: flex;
+    }
+  </style>
+{% endblock %}
