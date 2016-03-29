@@ -4,50 +4,6 @@
   Your Pantry
 {% endblock %}
 
-{% block style %}
-  <style type="text/css">
-    label, input {
-        display: block;
-    }
-    .form-field {
-        float: left;
-    }
-    .form-field input {
-        width: inherit !important
-    }
-    h4 {
-        display: inline;
-        vertical-align: middle;
-    }
-    .pantry-table-header, .pantry-table-header td {
-        border: 3px solid;
-        border-collapse: collapse;
-    }
-    #edit-item-in-pantry-cost, #edit-item-in-pantry-stock, #edit-item-in-pantry-unit {
-        width: 10%;
-    }
-    .btn {
-        vertical-align: middle;
-    }
-    h4, h6, h2 {
-        display: inline;
-        vertical-align: middle;
-    }
-    #add-item-to-pantry-name, #add-item-to-pantry-description {
-        width: 40%;
-    }
-    #add-item-to-pantry-button {
-        width: 19%;
-    }
-    .alert {
-        display: flex;
-    }
-    .pantry-item:hover {
-        border: 1px solid #169E83;
-    }
-  </style>
-{% endblock %}
-
 {% block content %}
   <h1 class="text-center">My Pantry
     {% ifequal pantry_items.count 1 %}
@@ -60,6 +16,8 @@
       {% endifequal %}
     {% endifequal %}
   </h1>
+
+  <br>
 
   {% if messages %}
       {% for message in messages %}
@@ -90,12 +48,16 @@
       <div class="well pantry-item">
         <div class="row">
           <div class="col-md-2">
-            <button data-itemid="{{ item.id }}" class="fa fa-pencil-square btn btn-info edit-item-in-pantry-button">&nbsp;Edit</button>
-            <form method="POST" action="{% url 'remove-item-from-pantry' %}">
+            <button data-itemid="{{ item.id }}" id="edit-item-in-pantry-button" class="btn btn-info edit-item-in-pantry-button">
+              <i class="fa fa-pencil-square"></i>&nbsp;&nbsp;Edit
+            </button>
+            <form method="POST" id="remove-item-from-pantry-button" action="{% url 'remove-item-from-pantry' %}">
               {% csrf_token %}
               <input type="hidden" name="item_id" value="{{ item.id }}">
               <input type="hidden" name="from_url" value="/pantry/">
-              <button type="submit" class="fa fa-minus-square btn btn-danger">&nbsp;Remove</button>
+              <button type="submit" class="btn btn-danger">
+                <i class="fa fa-minus-square"></i>&nbsp;&nbsp;Remove
+              </button>
             </form>
           </div>
           <div class="col-md-3">
@@ -143,7 +105,16 @@
 
     $('.edit-item-in-pantry-button').click(function() {
         var item_id = this.dataset.itemid;
-        $("#edit-item-in-pantry-form-" + item_id).removeClass("hidden");
+
+        // if the form for the button you clicked on is shown, hide it
+        if (!$("#edit-item-in-pantry-form-" + item_id).hasClass('hidden')) {
+            $("#edit-item-in-pantry-form-" + item_id).addClass('hidden')
+        }
+        // otherwise, it is hidden, so hide all others, then show the one you clicked on
+        else {
+            $('div[id^="edit-item-in-pantry-form-"]').addClass('hidden');
+            $("#edit-item-in-pantry-form-" + item_id).removeClass("hidden");
+        }
 
         // init datepicker for last_purchased
         var picker1 = new Pikaday({
@@ -157,4 +128,51 @@
         });
     });
   </script>
+{% endblock %}
+
+{% block style %}
+  <style type="text/css">
+    label, input {
+        display: block;
+    }
+    .form-field {
+        float: left;
+    }
+    .form-field input {
+        width: inherit !important
+    }
+    h4 {
+        display: inline;
+        vertical-align: middle;
+    }
+    .pantry-table-header, .pantry-table-header td {
+        border: 3px solid;
+        border-collapse: collapse;
+    }
+    #edit-item-in-pantry-cost, #edit-item-in-pantry-stock, #edit-item-in-pantry-unit {
+        width: 10%;
+    }
+    .btn {
+        vertical-align: middle;
+    }
+    h4, h6, h2 {
+        display: inline;
+        vertical-align: middle;
+    }
+    #add-item-to-pantry-name, #add-item-to-pantry-description {
+        width: 40%;
+    }
+    #add-item-to-pantry-button {
+        width: 19%;
+    }
+    .alert {
+        display: flex;
+    }
+    .pantry-item:hover {
+        border: 1px solid #169E83;
+    }
+    #edit-item-in-pantry-button, #remove-item-from-pantry-button {
+        display: inline;
+    }
+  </style>
 {% endblock %}
