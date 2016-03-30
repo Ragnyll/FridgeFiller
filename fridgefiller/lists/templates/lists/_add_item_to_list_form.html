@@ -4,7 +4,7 @@
   <input type="text" class="form-control" name="new-item-description" id="new-item-desc" placeholder="Item Description" />
     <!-- Scan Barcode button -->
   <span id="scan-barcode-button-new-item-{{ list.id }}" class="btn btn-warning btn-xs fa fa-barcode">
-    <input id="{{ list.id }}" class="scan-barcode-input" style="display:none;" type="file" capture/>
+    <input id="{{ list.id }}" class="scan-barcode-input" style="display:none;" type="file" accept="image/*" capture/>
   </span>
   <input type="submit" class="btn btn-primary" value="Add Item" id="new-item-save" />
   <input type="hidden" value="{{list.id}}" name="list-id">
