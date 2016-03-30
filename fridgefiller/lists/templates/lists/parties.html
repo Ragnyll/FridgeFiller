@@ -15,7 +15,7 @@
     {% for party in owned_parties %}
       <div id="{{ party.id }}" class="party well">
         <h2>
-          <a href="/lists/party/{{ party.id }}/">
+          <a href="{% url 'party' party.id %}">
             {{ party.name }}&nbsp;&nbsp;&nbsp;
           </a>
         </h2>
@@ -32,7 +32,7 @@
       {% if party not in party_own %}
         <div id="{{ party.id }}" class="party well">
           <h2>
-            <a href="/lists/party/{{party.id }}/">
+            <a href="{% url 'party' party.id %}">
               {{ party }}
             </a>
           </h2>

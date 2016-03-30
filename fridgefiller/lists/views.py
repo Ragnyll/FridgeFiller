@@ -227,7 +227,7 @@ class LeavePartyView(View):
         # Remove user from party
         if user == party_obj.owner:
             messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>ERROR: You cannot leave a group you are the owner of.</span>")
-            return redirect("/lists/party/" + str(party_obj.id))
+            return redirect("/party/" + str(party_obj.id))
 
         try:
             party_obj.users.remove(user)
@@ -235,7 +235,7 @@ class LeavePartyView(View):
         except:
             messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'> Error in leaving " + party_obj.name + "</span>")
 
-        return redirect("/lists/parties")
+        return redirect("/parties")
 
 
 class CreateParty(View):
@@ -249,19 +249,19 @@ class CreateParty(View):
 
         if party_name == "":
             messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>ERROR: You must provide a name for the group.</span>")
-            return redirect('/lists/parties')
+            return redirect('/parties')
 
         if Party.objects.filter(name=party_name).exists():
             messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>ERROR: Group with that name already exists</span>")
-            return redirect('/lists/parties')
+            return redirect('/parties')
 
         try:
             party_obj = Party(name=party_name, owner=party_owner)
             party_obj.save()
         except:
             messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>ERROR: Could not create party</span>")
-            return redirect("lists/parties/")
-        return redirect("/lists/party/" + str(party_obj.id))
+            return redirect("/parties/")
+        return redirect("/party/" + str(party_obj.id))
 
 class AddPartyList(View):
     """
@@ -284,9 +284,9 @@ class AddPartyList(View):
 
         except:
             messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>ERROR: Could not add list to group" + list_obj.name + "</span>")
-            return redirect("/lists/party/" + str(party_id))
+            return redirect("/party/" + str(party_id))
 
-        return redirect("/lists/party/" + str(party_id))
+        return redirect("/party/" + str(party_id))
 
 class PartiesView(TemplateView):
     """
@@ -324,11 +324,11 @@ class RemovePartyView(View):
         try:
             Party.objects.filter(id=party_id).delete()
             messages.add_message(request, messages.SUCCESS, "<span class='alert alert-success'>Successfully removed " + party_obj.name + "</span>")
-            return redirect("/lists/parties/")
+            return redirect("/parties/")
 
         except:
             messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Unable to remove group " + party_obj.name + " from database. " + str(e) + "</span>")
-            return redirect("/lists/party/" + str(party_obj.id))
+            return redirect("/party/" + str(party_obj.id))
 
 
 class PrintListMiniView(TemplateView):

@@ -12,10 +12,16 @@
   {% include "lists/_messages.html" %}
 
   <!-- Lists for party -->
-  <h2 class="text-center">Shopping Lists:</h2>
-  {% for list in party_lists %}
-    {% include "lists/_list_view.html" with from_url="/lists/party/{{party.id}}" %}
-  {% endfor %}
+  {% if party_lists %}
+    <h2 class="text-center">Shopping Lists:</h2>
+    {% for list in party_lists %}
+      {% include "lists/_list_view.html" with from_url="/lists/party/{{party.id}}" %}
+    {% endfor %}
+  {% else %}
+    <div class="text-center">
+      <h3>Looks like this group doesn&apos;t have any lists.  Add some below!</h3>
+    </div>
+  {% endif %}
 
   <!-- Add existing shopping list to group -->
   {% if user_lists %}
