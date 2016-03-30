@@ -246,14 +246,14 @@ class LeavePartyView(View):
         # Shouldn't be able to leave party if you are the owner
         # Remove user from party
         if user == party_obj.owner:
-            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>ERROR: You cannot leave a group you are the owner of.</span>")
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>:&nbsp;&nbsp;You cannot leave a group that you own." + ALERT_CLOSE)
             return redirect("/party/" + str(party_obj.id))
 
         try:
             party_obj.users.remove(user)
-            messages.add_message(request, messages.SUCCESS, "<span class='alert alert-success'>Successfully left " + party_obj.name + "</span>")
+            messages.add_message(request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS</strong>:&nbsp;&nbsp;Left&nbsp;<strong>" + party_obj.name + "</strong>" + ALERT_CLOSE)
         except:
-            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'> Error in leaving " + party_obj.name + "</span>")
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>:&nbsp;&nbsp;Unable to leave&nbsp;<strong>" + party_obj.name +"</strong>" + ALERT_CLOSE)
 
         return redirect("/parties")
 
@@ -268,18 +268,18 @@ class CreateParty(View):
         party_owner = UserProfile.objects.get(user=self.request.user)
 
         if party_name == "":
-            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>ERROR: You must provide a name for the group.</span>")
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>:&nbsp;&nbsp;You must provide a name for the group." + ALERT_CLOSE)
             return redirect('/parties')
 
         if Party.objects.filter(name=party_name).exists():
-            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>ERROR: Group with that name already exists</span>")
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>:&nbsp;&nbsp;A group with that name already exists." + ALERT_CLOSE)
             return redirect('/parties')
 
         try:
             party_obj = Party(name=party_name, owner=party_owner)
             party_obj.save()
         except:
-            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>ERROR: Could not create party</span>")
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>:&nbsp;&nbsp;Could not create party." + ALERT_CLOSE)
             return redirect("/parties/")
         return redirect("/party/" + str(party_obj.id))
 
@@ -293,17 +293,20 @@ class AddPartyList(View):
         party_obj = Party.objects.get(id=party_id)
         list_name = request.POST.get('add-list-select', False)
 
-        list_obj = ShoppingList.objects.get(name=list_name)
+        # If user didn't select a list to add, yell at them
+        if not list_name:
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>:&nbsp;&nbsp;You must select a list to add!" + ALERT_CLOSE)
+            return redirect('/party/' + party_id)
 
-        messages.add_message(request, messages.SUCCESS, "<span class='alert alert-success'>" + list_name + " " + list_obj.name + " " + party_obj.name + "</span>")
+        list_obj = ShoppingList.objects.get(name=list_name)
 
 
         try:
             party_obj.shoppinglists.add(list_obj)
-            messages.add_message(request, messages.SUCCESS, "<span class='alert alert-success'>Successfully added list " + list_obj.name + " to group " + party_obj.name + "</span>")
+            messages.add_message(request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS</strong>:&nbsp;&nbsp;added list&nbsp;<strong>" + list_obj.name + "</strong>&nbsp;to group&nbsp;<strong>" + party_obj.name + "</strong>" + ALERT_CLOSE)
 
         except:
-            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>ERROR: Could not add list to group" + list_obj.name + "</span>")
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>:&nbsp;&nbsp;Could not add list to group&nbsp;<strong>" + list_obj.name + "</strong>" + ALERT_CLOSE)
             return redirect("/party/" + str(party_id))
 
         return redirect("/party/" + str(party_id))
@@ -343,11 +346,11 @@ class RemovePartyView(View):
 
         try:
             Party.objects.filter(id=party_id).delete()
-            messages.add_message(request, messages.SUCCESS, "<span class='alert alert-success'>Successfully removed " + party_obj.name + "</span>")
+            messages.add_message(request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS</strong>:&nbsp;&nbsp;deleted&nbsp;<strong>" + party_obj.name + "</strong>" + ALERT_CLOSE)
             return redirect("/parties/")
 
         except:
-            messages.add_message(request, messages.ERROR, "<span class='alert alert-danger'>Unable to remove group " + party_obj.name + " from database. " + str(e) + "</span>")
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>:&nbsp;&nbsp;Unable to delete <strong>" + party_obj.name + "</strong>." + ALERT_CLOSE)
             return redirect("/party/" + str(party_obj.id))
 
 
