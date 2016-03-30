@@ -580,6 +580,22 @@ class InvitationCreateView(LoggedInMixin,
     template_name = 'lists/invitation/invitation_create.html'
     form_class = InvitationForm
 
+    def get_context_data(self, **kwargs):
+        context = super(InvitationCreateView, self).get_context_data(**kwargs)
+
+        try:
+            party_id = self.request.GET.urlencode().split("=")[1]
+        except:
+            party_id = None
+
+
+        if party_id:
+            party = Party.objects.get(id=party_id)
+
+            context['party'] = party
+
+        return context
+
     def get_available_parties(self):
         """Returns a list of parties that the user can invite people to"""
 

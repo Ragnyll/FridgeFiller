@@ -69,9 +69,7 @@
     <br>
     <!-- Only let owner invite people to the group -->
     {% if user.profile == party.owner %}
-      <form id="invite-button" action="{% url 'invitation_list' %}" method="GET">
-        <button type="submit" data-toggle="popover" data-placement="top" data-content="Invite more People to Group" class="btn btn-lg btn-success" href="{% url 'invitation_list' %}">Invite more people to {{ party }}</button>
-      </form>
+      <a class="btn btn-lg btn-success" href="{% url 'invitation_create' %}?group={{ party.id }}">Invite more people to {{ party }}</a>
     {% endif %}
 
     <!-- If user is party owner, let them delete the group -->

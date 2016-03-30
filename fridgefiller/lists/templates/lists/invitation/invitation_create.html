@@ -39,3 +39,17 @@
       }
   </style>
 {% endblock %}
+
+{% block script %}
+  <script type="text/javascript">
+    $(document).ready(function() {
+        {% if party %}
+          // Append party name to invite header
+          $('#invite-header').append(' to <span class="text-primary">{{ party.name }}</span>')
+
+          // Select Party Name in dropdown for the user
+          $('.select2-container option:contains({{ party.name }})').prop({selected: true});
+        {% endif %}
+    });
+  </script>
+{% endblock %}

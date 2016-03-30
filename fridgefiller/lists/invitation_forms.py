@@ -24,7 +24,7 @@ class InvitationForm(forms.ModelForm):
         self.helper.form_class = 'form-horizontal'
         self.helper.layout = Layout(
             Fieldset(
-                '<h1 class="text-center">Send an Invitation</h1>',
+                '<h1 id="invite-header" class="text-center">Send an Invitation</h1>',
                 Div(
                     Field('party', css_class="select2-container"),
                     Field('receiver', css_class="select2-container"),
