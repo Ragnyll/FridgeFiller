@@ -7,21 +7,29 @@
 {% endblock %}
 
 {% block content %}
+  <h2 class="text-center">Invitation to <a href="{{ invitation.party.get_absolute_url }}"><i>{{ invitation.party.name }}</i></a></h2>
   <div class="well">
-    <h2>Invitation to <a href="{{ invitation.team.get_absolute_url }}"><i>{{ invitation.party.name }}</i></a></h2>
     <p>
-      <span><strong>To:</strong> {{ invitation.receiver }}</span><br>
-      <span><strong>From:</strong> {{ invitation.sender }}</span><br>
+      <h3>
+        <span>
+          <strong>To:</strong> <span class="label label-inverse">{{ invitation.receiver }}</span>
+        </span>
+      </h3>
+      &nbsp;&nbsp;&nbsp;
+      <h3>
+        <span>
+          <strong>From:</strong> <span class="label label-primary">{{ invitation.sender }}</span>
+        </span>
+      </h3>
+      <br><br>
       <span><strong>Sent:</strong> {{ invitation.sent }}</span><br>
     </p>
-
     <hr>
-
-    <p>
+    <h4>
       {{ invitation.message }}
-    </p>
+    </h4>
     <br>
-    
+
     {% if invitation.response == 'A' %} {# Accepted #}
       <a href="#" class="btn btn-success disabled">
         Accepted
@@ -33,18 +41,17 @@
         Declined
       </a>
     {% endif %}
-    <p>{{ invitation.receiver }}</p>
-    <p>{{ user }} </p>
 
-    {% if not invitation.response and invitation.receiver == user %}
-    
-      <a data-toggle="modal" data-target="#acceptInviteModal" class="btn btn-success" href="#">
-        Accept Invitation
-      </a>
-      <a data-toggle="modal" data-target="#declineInviteModal" class="btn btn-danger" href="#">
-        Decline Invitation
-      </a>
-    
+    {% if not invitation.response and invitation.receiver == user.profile %}
+      <div class="text-center">
+        <h5>Respond to this Invitation:</h5>
+        <a data-toggle="modal" data-target="#acceptInviteModal" class="btn btn-success" href="#">
+          Accept Invitation
+        </a>
+        <a data-toggle="modal" data-target="#declineInviteModal" class="btn btn-danger" href="#">
+          Decline Invitation
+        </a>
+      </div>
     {% endif %}
   </div>
 {% endblock %}
@@ -52,3 +59,11 @@
 {% block modal %}
   {% include "lists/invitation/_modals.html" %}
 {% endblock modal %}
+
+{% block style %}
+  <style type="text/css">
+    h3 {
+      display: inline;
+    }
+  </style>
+{% endblock %}
