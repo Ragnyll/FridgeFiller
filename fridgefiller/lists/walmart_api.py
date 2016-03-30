@@ -3,6 +3,12 @@ import requests
 import secret
 
 
+name_mapping = {
+    'price': 'salePrice',
+    'unit': 'size',
+    }
+    
+
 class Parser(HTMLParser):
 
     """
@@ -56,7 +62,7 @@ def upc_search(upc):
     return json.get('items', {})
 
 
-def relevant_attributes(json):
+def relevant_attributes(json, attrs):
     
     """
     Pulls item name and description from the first item available.
@@ -72,4 +78,10 @@ def relevant_attributes(json):
     desc = parser.unescape(item['item_desc'])
     parser.feed(desc)
     item['item_desc'] = parser.desc if parser.desc != "" else desc
+    parser.desc = ""
+    for attr in attrs:
+        desc = parser.unescape(str(json[0].get(name_mapping[attr], "")))
+        parser.feed(desc)
+        item[attr] = parser.desc if parser.desc != "" else desc
+        parser.desc = ""
     return item

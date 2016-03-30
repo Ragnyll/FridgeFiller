@@ -8,15 +8,9 @@ $(function() {
 
       // Click file selection input field and clear any previous result classes
       $(".fa-barcode").on("click", function(e) {
-        var input = $(this).find('input[type=file]')[0],
-            value = $(input).context.files;
+        var input = $(this).find('input[type=file]')[0];
         App.ids = $(input).attr('id').split(" ");
-
-        $(this).siblings("input[id*='name']").val("");
-        $(this).siblings("input[id*='desc']").val("");
-        $(input).context.click();
-        $(this).removeClass('btn-danger btn-success').addClass('btn-warning');
-        $("span[id*='message-" + App.ids[0] + "']").removeClass("alert alert-danger alert-success").html("");
+        $("span[id*='message']").removeClass("alert alert-danger alert-success").html("");
       });
 
       // Call Quagga decode function using selected file.
@@ -52,17 +46,8 @@ $(function() {
       var self = this,
           config = $.extend({}, self.state, {src: src});
 
-      Quagga.decodeSingle(config, function(result) {
-        if(!result || !result.codeResult) {
-          $('#scan-barcode-button-' + App.ids[0]).removeClass("btn-warning", 1000).addClass("btn-danger");
-          $("span[id*='message-" + App.ids[0] + "']").removeClass("alert-danger alert-success")
-            .addClass("alert alert-danger")
-            .html("<strong>ERROR</strong>&nbsp;: Barcode scan failed. Unable to determine barcode value. Please try again.");
-          // Flashes on and off, not sure if especially useful
-          // setTimeout(function() {
-            // $('#scan-barcode-button-' + App.ids[0]).removeClass("btn-danger").addClass("btn-warning");
-          // }, 1000);
-        }
+      Quagga.decodeSingle(config, function(result) { //misread
+        misread(App.ids, result);
       });
     },
     setState: function(path, value) {
@@ -101,33 +86,6 @@ $(function() {
   App.init();
 
   Quagga.onDetected(function(result) {
-    var code = result.codeResult.code,
-        $node;
-
-    $.get("/lists/walapi2", {'upc': code})
-      .done(function(data) {
-        $('#scan-barcode-button-' + App.ids[0]).removeClass("btn-warning", 1000).addClass("btn-success");
-        var node= $('#scan-barcode-button-' + App.ids[0]).siblings("input[id*='name']");
-        $(node).val(data.item_name);
-        node = $('#scan-barcode-button-' + App.ids[0]).siblings("input[id*='desc']");
-        $(node).val(data.item_desc);
-        $("span[id*='message-" + App.ids[0] + "']").removeClass("alert-danger alert-success")
-          .addClass("alert alert-success")
-          .html("<strong>SUCCESS</strong>&nbsp;: Barcode scan found item information.");
-        // Flashes on and off, not sure if especially useful
-        // setTimeout(function() {
-          // $('#scan-barcode-button-' + App.ids[0]).removeClass("btn-success").addClass("btn-warning");
-        // }, 1000);
-      })
-      .fail(function(data) {
-        $('#scan-barcode-button-' + App.ids[0]).removeClass("btn-warning", 1000).addClass("btn-danger");
-        $("span[id*='message-" + App.ids[0] + "']").removeClass("alert-danger alert-success")
-          .addClass("alert alert-danger")
-          .html("<strong>ERROR</strong>&nbsp;: Barcode scan did not find item information.");
-        // Flashes on and off, not sure if especially useful
-        // setTimeout(function() {
-          // $('#scan-barcode-button-' + App.ids[0]).removeClass("btn-danger").addClass("btn-warning");
-        // }, 1000);
-      });
+    query_api(App.ids, result.codeResult.code);
   });
 });

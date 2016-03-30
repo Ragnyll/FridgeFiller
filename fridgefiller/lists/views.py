@@ -12,6 +12,7 @@ from statuses import *
 from datetime import datetime
 
 import re
+import json
 
 from .models import *
 import walmart_api as wapi
@@ -388,14 +389,14 @@ class DeleteListView(View):
 
 
 def item_detail(request, *args, **kwargs):
-    item = wapi.item_search(request.GET.get('item-name', False))
-    return HttpResponseNotFound if item == {} else JsonResponse(wapi.relevant_attributes(item))
+    item_name = request.GET.get('item-name', False)
+    attrs = json.loads(request.GET.get('attrs', "[]"))
+    item = wapi.item_search(item_name)
+    return HttpResponseNotFound if item == {} else JsonResponse(wapi.relevant_attributes(item, attrs))
 
 
 def upc(request, *args, **kwargs):
-    item = wapi.upc_search(request.GET.get('upc', False))
-    return HttpResponseNotFound if item == {} else JsonResponse(wapi.relevant_attributes(item))
-
-
-class test(TemplateView):
-    template_name = "lists/test.html"    
+    UPC = request.GET.get('upc', False)
+    attrs = json.loads(request.GET.get('attrs', "[]"))
+    item = wapi.upc_search(UPC)
+    return HttpResponseNotFound if item == {} else JsonResponse(wapi.relevant_attributes(item, attrs))

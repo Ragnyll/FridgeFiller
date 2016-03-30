@@ -3,7 +3,7 @@
   <input type="text" class="form-control" name="new-item-name" id="new-item-name" placeholder="Item Name">
   <input type="text" class="form-control" name="new-item-description" id="new-item-desc" placeholder="Item Description" />
     <!-- Scan Barcode button -->
-  <span id="scan-barcode-button-{{ list.id }}" class="btn btn-warning btn-xs fa fa-barcode">
+  <span id="scan-barcode-button-new-item-{{ list.id }}" class="btn btn-warning btn-xs fa fa-barcode">
     <input id="{{ list.id }}" class="scan-barcode-input" style="display:none;" type="file" capture/>
   </span>
   <input type="submit" class="btn btn-primary" value="Add Item" id="new-item-save" />
