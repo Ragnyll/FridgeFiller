@@ -190,11 +190,31 @@ class RemoveItemFromListView(View):
 
         return redirect("/lists")
 
+
 class PartyView(TemplateView):
     """
     This view displays a party with <party-id> and the party's users
     """
     template_name = "lists/party.html"
+
+    def dispatch(self, *args, **kwargs):
+        user = self.request.user.profile
+        party_id = kwargs['party_id']
+
+        # Get party object
+        try:
+            party_obj = Party.objects.get(id=party_id)
+            party_users = party_obj.users.all()
+            party_owner = party_obj.owner
+        except :
+            return redirect("/parties/")
+
+        # Only allow access to page if user is owner or user of party
+        if party_owner == user or user in party_users:
+            return super(PartyView, self).dispatch(*args, **kwargs)
+        else:
+            return redirect("/parties/")
+
 
     def get_context_data(self, **kwargs):
         context = super(PartyView, self).get_context_data(**kwargs)
