@@ -40,6 +40,7 @@
         <button type="submit" data-toggle="popover" data-placement="top" data-content="Add Existing Shooping List to this Group" class="btn btn-large btn-success">&nbsp;Add Existing Shopping List to {{ party }}</button>
       </form>
     </div>
+    <br>
   {% endif %}
 
   <!-- Add new list to group -->
@@ -75,28 +76,70 @@
 
     <!-- If user is party owner, let them delete the group -->
     {% if user.profile == party.owner %}
-      <form method="POST" id="remove-party-form" action="{% url 'remove-party' %}">
-        {% csrf_token %}
-        <input type="hidden" value="{{ party.id }}" name="remove-group-id">
-        <button type="submit" data-toggle="popover" data-placement="top" data-content="Remove this Group" class="btn btn-lg btn-danger">&nbsp;Delete this Group</button>
-      </form>
+      <button class="btn btn-lg btn-danger delete-group-button" id="delete-group-button-{{ party.id }}" data-partyid="{{ party.id }}">Delete Group</button>
 
     <!-- Otherwise, user is a group user, so let them leave the group -->
     {% else %}
+      <button class="btn btn-lg btn-danger leave-group-button" id="leave-group-button-{{ party.id }}" data-partyid="{{ party.id }}">Leave Group</button>
+    {% endif %}
+  </div>
+
+  <!-- Delete / Leave group confirmation forms -->
+  {% if user.profile == party.owner %}
+    <div class="text-center well hidden" id="delete-group-confirmation-form-{{ party.id }}">
+      <h3>Are you sure you want to delete <span class="text-primary">{{ party.name }}</span>?</h3>
+      <br>
+      <form method="POST" id="remove-party-form" action="{% url 'remove-party' %}">
+        {% csrf_token %}
+        <input type="hidden" value="{{ party.id }}" name="remove-group-id">
+        <button type="submit" data-toggle="popover" data-placement="top" data-content="Remove this Group" class="btn btn-lg btn-primary">&nbsp;Delete this Group</button>
+        <span class="btn btn-danger btn-lg delete-group-cancel-button" data-partyid="{{ party.id }}">No, do not delete the Group!</span>
+      </form>
+    </div>
+  {% else %}
+    <div class="text-center well hidden" id="leave-group-confirmation-form-{{ party.id }}">
+      <h3>Are you sure you want to leave <span class="text-primary">{{ party.name }}</span>?</h3>
+      <br>
       <form method="POST" id="leave-party-form" action="{% url 'leave-party' %}">
         {% csrf_token %}
         <input type="hidden" value="{{ party.id }}" name="leave-group-id">
-        <button type="submit" data-toggle="popover" data-placement="top" data-content="Leave this Group" class="btn btn-lg btn-danger">&nbsp;Leave this Group</button>
+        <button type="submit" data-toggle="popover" data-placement="top" data-content="Leave this Group" class="btn btn-lg btn-primary">&nbsp;Leave this Group</button>
+        <span class="btn btn-danger btn-lg leave-group-cancel-button" data-partyid="{{ party.id }}">No, do not leave the group!</span>
       </form>
-    {% endif %}
-  </div>
+    </div>
+  {% endif %}
+
 {% endblock %}
 
 {% block script %}
-  <script>
-    $(document).ready(function(){
-      $('[data-toggle="popover"]').popover({ trigger: "hover" });
-    });
+  <script type="text/javascript">
+      $(document).ready(function(){
+          $('[data-toggle="popover"]').popover({ trigger: "hover" });
+      });
+      $('.delete-group-button').click(function() {
+          var party_id = this.dataset.partyid;
+
+          $('#delete-group-button-' + party_id).addClass('hidden');
+          $('#delete-group-confirmation-form-' + party_id).removeClass('hidden');
+      });
+      $('.delete-group-cancel-button').click(function() {
+          var party_id = this.dataset.partyid;
+          console.log("CLICKED")
+          $('#delete-group-button-' + party_id).removeClass('hidden');
+          $('#delete-group-confirmation-form-' + party_id).addClass('hidden');
+      });
+      $('.leave-group-button').click(function() {
+          var party_id = this.dataset.partyid;
+
+          $('#leave-group-button-' + party_id).addClass('hidden');
+          $('#leave-group-confirmation-form-' + party_id).removeClass('hidden');
+      });
+      $('.leave-group-cancel-button').click(function() {
+          var party_id = this.dataset.partyid;
+          console.log("CLICKED")
+          $('#leave-group-button-' + party_id).removeClass('hidden');
+          $('#leave-group-confirmation-form-' + party_id).addClass('hidden');
+      });
   </script>
 {% endblock %}
 
