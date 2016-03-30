@@ -46,7 +46,7 @@ class ListsView(TemplateView):
         context = super(ListsView, self).get_context_data(**kwargs)
 
         user = UserProfile.objects.get(user=self.request.user)
-        user_party = Party.objects.get(owner=user)
+        user_party = Party.objects.get(name=user.name+"'s Personal Party")
         user_pantry = Pantry.objects.get(party=user_party)
 
         user_pantry_items = user_pantry.items.all()
@@ -560,25 +560,30 @@ class InvitationCreateView(LoggedInMixin,
     template_name = 'lists/invitation/invitation_create.html'
     form_class = InvitationForm
 
-    def get_available_teams(self):
-        """Returns a list of competitions that are open for
-        registration and team changes"""
+    def get_available_parties(self):
+        """Returns a list of parties that the user can invite people to"""
 
-        #Should not list personal parties
-        parties = Party.objects.filter(users=UserProfile.objects.get(user=self.request.user))
+        user = self.request.user.profile
 
+        # Only return parties which:
+        #    - User owns
+        #    - Is not user's Personal Party
+        parties = Party.objects.filter(owner__in=[user]).exclude(name=user.name+"'s Personal Party")
+
+        # If the query returned None, give the user an error page
+        # TODO: put a `msg` variable in our 404 template
         if not parties.exists():
-            msg = "Can't send invites at this time. It looks"
-            msg += " like there are no groups"
+            msg = "Can't send invites at this time. It looks like you don't own any groups.  You must create a group before you can invite users to it."
             messages.error(self.request, msg)
             raise Http404(msg)
         return parties
 
     def get_available_invitees(self):
         """Returns a list of users who can be invited"""
-        #Should not return people who are already in party
-        #user = UserProfile.objects.filter(user=self.request.user)
-        #users = UserProfile.objects.exclude(user)
+
+        # All users can be invited to any party
+        #   -> Logic that says 'user is already in that party' will be handled
+        #      in accept invite view
         return UserProfile.objects.all()
 
     def get_team(self):
@@ -607,7 +612,7 @@ class InvitationCreateView(LoggedInMixin,
         that they are a member of"""
         form = super(InvitationCreateView, self).get_form(form_class)
         form.fields["receiver"].queryset = self.get_available_invitees()
-        form.fields["party"].queryset = self.get_available_teams()
+        form.fields["party"].queryset = self.get_available_parties()
         form.fields["party"].empty_label = None
         return form
 
@@ -615,7 +620,7 @@ class InvitationCreateView(LoggedInMixin,
         # Set up keyword arguments for a new Invitation
         invitation_kwargs = (('sender', UserProfile.objects.get(user=self.request.user)),
                              ('receiver', self.get_invitee()),
-                             ('party', self.get_team()))
+                             )#('party', self.get_team()))
 
         # Filter out the values that are None (e.g., if the 'team'
         # query parameter wasn't set, self.get_team() will be None, so
