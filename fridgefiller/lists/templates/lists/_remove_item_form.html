@@ -4,5 +4,7 @@
   <input type="hidden" value="{{ item.name }}" name="remove-item-name">
   <input type="hidden" value="{{ item.description }}" name="remove-item-description">
   <input type="hidden" value="{{ list.id }}" name="list-id">
-  <button type="submit" data-toggle="popover" data-placement="top" data-content="Remove this item from your list" class="btn btn-lg btn-danger fa fa-minus-square">&nbsp;from List</button>
+  <button type="submit" data-toggle="popover" data-placement="top" data-content="Remove this item from your list" class="btn btn-lg btn-danger">
+    <i class="fa fa-minus-square"></i>&nbsp;&nbsp;from List
+  </button>
 </form>
