@@ -15,7 +15,7 @@ urlpatterns = [
 
     # Party URLs
     url(r'^parties/', PartiesView.as_view(), name="parties"),
-    url(r'^party/(?P<party_id>\d+)', PartyView.as_view()),
+    url(r'^party/(?P<party_id>\d+)', PartyView.as_view(), name="party"),
     url(r'^party/leave', LeavePartyView.as_view(), name="leave-party"),
     url(r'^party/remove', RemovePartyView.as_view(), name="remove-party"),
     #url(r'^party/invite', InvitetoParty.as_view(), name="invite-to-party"),
