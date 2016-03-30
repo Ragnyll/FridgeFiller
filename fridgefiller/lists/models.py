@@ -52,6 +52,9 @@ class Party(models.Model):
         """
         return self.users.filter(pk=user.pk).exists()
 
+    @models.permalink
+    def get_absolute_url(self):
+        return ('party', (), {'party_id': self.id})
 def create_party_pantry(sender, instance, created, **kwargs):
     """
     Creates a Pantry object when a Party is saved
