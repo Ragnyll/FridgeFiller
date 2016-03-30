@@ -47,7 +47,7 @@ class Party(models.Model):
     def __str__(self):
         return str(self.name)
 
-    def is_user_on_team(self, user):
+    def is_user_in_party(self, user):
         """
         Returns true if user is on the calling team, else false
         """

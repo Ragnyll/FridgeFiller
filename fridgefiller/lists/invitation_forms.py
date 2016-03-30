@@ -51,7 +51,7 @@ class InvitationForm(forms.ModelForm):
         # Make sure the user isn't already on the team they're being
         # invited to.
         if party is not None:
-            if party.is_user_on_team(receiver):
+            if party.is_user_in_party(receiver):
                 msg = "%s is already in your group"
                 raise ValidationError(msg % receiver)
 
