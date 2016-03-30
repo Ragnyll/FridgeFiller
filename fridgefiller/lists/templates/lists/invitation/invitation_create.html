@@ -7,9 +7,10 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <br>
+  <br>
   {% if not form.fields.party.queryset.exists %}
-    <p> You cannot send invitations at the moment</p>
+    <span class="alert alert-danger"><strong>ERROR</strong>:&nbsp;&nbsp;You must&nbsp;<a href="{% url 'parties' %}">create a party</a>&nbsp;before you can send an invitation.</span>
+    <br>
   {% endif %}
 
   {% crispy form %}
@@ -36,6 +37,9 @@
       label  {
           padding-right: 20px;
           float: left;
+      }
+      .alert {
+          display: flex;
       }
   </style>
 {% endblock %}

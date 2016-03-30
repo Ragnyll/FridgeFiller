@@ -609,12 +609,6 @@ class InvitationCreateView(LoggedInMixin,
         #    - Is not user's Personal Party
         parties = Party.objects.filter(owner__in=[user]).exclude(name=user.name+"'s Personal Party")
 
-        # If the query returned None, give the user an error page
-        # TODO: put a `msg` variable in our 404 template
-        if not parties.exists():
-            msg = "Can't send invites at this time. It looks like you don't own any groups.  You must create a group before you can invite users to it."
-            messages.error(self.request, msg)
-            raise Http404(msg)
         return parties
 
     def get_available_invitees(self):
