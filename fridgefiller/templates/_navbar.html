@@ -1,3 +1,6 @@
+{% load active_tags %}
+{% load invitation_tags %}
+
 <div class="navbar navbar-inverse navbar-fixed-top">
   <div class="navbar-header">
     <a href="/" class="navbar-brand" rel="home">
@@ -14,6 +17,14 @@
   <div class="navbar-collapse collapse">
     <ul class="nav pull-left navbar-nav">
       <!-- List Items for left navbar here -->
+      <li class="{% active_re '/lists/invitations' %}" id="invitation-tab">
+        <a href="{% url 'invitation_list' %}">
+          Group Invitations
+          {% if user|has_unread_invitations %}
+            &nbsp;&nbsp;<span class="badge badge-primary">{% unread_invitation_count %}</span>
+          {% endif %}
+        </a>
+      </li>
     </ul>
     <ul class="nav pull-right navbar-nav">
       {% if user.is_authenticated %}
@@ -38,3 +49,19 @@
     </ul>
   </div>
 </div>
+
+{% block style %}
+  <style type="text/css">
+    ul.navbar-nav li {
+        margin-left: 41px;
+    }
+    #invitation-tab span {
+        vertical-align: middle;
+    }
+    span.badge.badge-primary {
+        background-color: #169E83;
+        color: #fff;
+        font-weight: bold;
+    }
+  </style>
+{% endblock %}
