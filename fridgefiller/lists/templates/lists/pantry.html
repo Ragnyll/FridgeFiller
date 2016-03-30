@@ -194,11 +194,11 @@
           var node= $(form).find("input[id*='name']");
           $(node).val(data.item_name);
           node = $(form).find("input[id*='desc']");
-          $(node).val(data.item_desc);
+          if(data.desc && data.desc != "") $(node).val(data.item_desc);
           node = $(form).find("input[id*='unit']");
-          $(node).val(data.unit);
+          if(data.unit && data.unit != "") $(node).val(data.unit);
           node = $(form).find("input[id*='cost']");
-          $(node).val(data.price);
+          if(data.price && data.price != "") $(node).val(data.price);
           $("span[id*='message']").removeClass("alert-danger alert-success")
             .addClass("alert alert-success")
             .html("<strong>SUCCESS</strong>&nbsp;: Barcode scan found item information.");
