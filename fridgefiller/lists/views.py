@@ -581,10 +581,12 @@ class InvitationCreateView(LoggedInMixin,
     def get_available_invitees(self):
         """Returns a list of users who can be invited"""
 
-        # All users can be invited to any party
+        user = self.request.user.profile
+
+        # All users can be invited to any party, except yourself.
         #   -> Logic that says 'user is already in that party' will be handled
         #      in accept invite view
-        return UserProfile.objects.all()
+        return UserProfile.objects.all().exclude(name=user)
 
     def get_team(self):
         """If the user provided a 'party' query parameter, look up the
