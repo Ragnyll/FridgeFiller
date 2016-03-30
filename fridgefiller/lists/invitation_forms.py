@@ -2,7 +2,7 @@ from django import forms
 from django.core.exceptions import ValidationError
 
 from crispy_forms.helper import FormHelper
-from crispy_forms.layout import Layout, Fieldset, Submit, HTML, Field
+from crispy_forms.layout import Layout, Fieldset, Submit, HTML, Field, Div
 from crispy_forms.bootstrap import FormActions
 
 from .models import Invitation, Party, UserProfile
@@ -25,9 +25,12 @@ class InvitationForm(forms.ModelForm):
         self.helper.layout = Layout(
             Fieldset(
                 '<h1 class="text-center">Send an Invitation</h1>',
-                Field('party', css_class="select2-container"),
-                Field('receiver', css_class="select2-container"),
-                'message'
+                Div(
+                    Field('party', css_class="select2-container"),
+                    Field('receiver', css_class="select2-container"),
+                    'message',
+                    css_class="well",
+                ),
             ),
             FormActions (
                 Submit('submit', 'Send Invitation'),
