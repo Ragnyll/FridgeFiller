@@ -43,7 +43,6 @@ class Party(models.Model):
     shoppinglists = models.ManyToManyField('ShoppingList')
 
 
-
     def __str__(self):
         return str(self.name)
 
