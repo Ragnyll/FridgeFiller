@@ -40,6 +40,25 @@ class PartyPantryView(TemplateView):
 
     template_name = "lists/pantry.html"
 
+    def dispatch(self, *args, **kwargs):
+        user = self.request.user.profile
+        party_id = kwargs['party_id']
+
+        try:
+            party_obj = Party.objects.get(id=party_id)
+            party_users = party_obj.users.all()
+            party_owner = party_obj.owner
+        except :
+            return redirect("/")
+
+        # Only allow access to page if user is owner or user of party
+        if party_owner == user or user in party_users:
+            return super(PartyPantryView, self).dispatch(*args, **kwargs)
+        else:
+            messages.add_message(self.request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>:&nbsp;&nbsp;Sorry, you aren't allowed to access that pantry." + ALERT_CLOSE)
+            return redirect("/")
+
+
     def get_context_data(self, **kwargs):
         context = super(PartyPantryView, self).get_context_data(**kwargs)
 
