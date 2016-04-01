@@ -1,8 +1,12 @@
+#navbar-padding{
+  padding-top: 10px;
+}
+#brand{
+  color: #fff;
+}
+
 body{
   overflow-x: hidden;
-  margin: 0;
-  padding: 0;
-  width: 100%;
 }
 
 h1{
@@ -14,7 +18,7 @@ h1{
   margin: 0;
   padding: 0;
 }
-  
+
 h2{
   font-family:"Lato";
   color: #fff;
@@ -24,17 +28,15 @@ h2{
   padding-bottom: 32px;
   margin: 0;
 }
-h4{
-  color:#2f4154;
+h5{
+  color:#fff;
 }
-.center {margin: 0 auto;}
-.content{margin: 0 auto; width 100%;}
-.clear{clear:both;}
 
 p{
-  color: #fff;
-  font-family:"Lato";
   font-size:18px;
+}
+.even-row{
+  color: #fff;
 }
 .quotes{
   font-family: "Lato";
@@ -43,11 +45,8 @@ p{
   text-align: left;
   margin: 50px auto;
 }
-#login-slide, #basic-use{ width: 100%; overflow-x: hidden; }
 #login-slide{
-  overflow-x: hidden;
   background: url('../img/empty1.jpg');
-  color:#fff;
   height: 900px;
   margin: 0;
   padding: 200px 0 260px 0;
