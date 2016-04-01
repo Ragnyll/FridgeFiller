@@ -48,13 +48,20 @@ class Party(models.Model):
 
     def is_user_in_party(self, user):
         """
-        Returns true if user is on the calling team, else false
+        Returns true if user is in the calling party, else false
         """
         return self.users.filter(pk=user.pk).exists()
+
+    def add_party_member(self, receiver):
+        try:
+            self.users.add(receiver)
+        except:
+            return Http404("COULDN'T ADD " + receiver.name + " TO " + self.name)
 
     @models.permalink
     def get_absolute_url(self):
         return ('party', (), {'party_id': self.id})
+
 def create_party_pantry(sender, instance, created, **kwargs):
     """
     Creates a Pantry object when a Party is saved
@@ -191,10 +198,11 @@ class Invitation(models.Model):
         """Accepts an invitation to join a team.
         Adds the invitation's recipient to the team. If the team is
         already full, throws an instance of TeamException """
+
         # If the user's already responded, don't let them respond again
         if self.has_response():
             return
-        self.team.add_team_member(self.receiver)
+        self.party.add_party_member(self.receiver)
         self.read = True
         self.response = 'A'     # Accepted
         self.save()

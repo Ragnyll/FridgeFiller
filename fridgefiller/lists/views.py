@@ -528,6 +528,16 @@ class RemoveItemFromPantryView(View):
         pantry_obj = Pantry.objects.get(party=party_obj)
         item_obj = pantry_obj.items.get(id=item_id)
 
+        # remove the item from the pantry
+        try:
+            pantry_obj.items.remove(item_obj)
+
+            messages.add_message(request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS</strong>&nbsp;:  Removed <strong>&nbsp;" + item_obj.name + "</strong>&nbsp; from " + pantry_obj.party.owner.name + "'s pantry." + ALERT_CLOSE, extra_tags=int(item_id))
+            return redirect(from_url + "#" + item_id)
+        except:
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;:  Unable to remove <strong>&nbsp;" + item_obj.name + "</strong>&nbsp; from " + pantry_obj.party.owner.name + "'s pantry.  Please let a developer know!" + ALERT_CLOSE, extra_tags=int(item_id))
+            return redirect(from_url + "#" + item_id)
+
 
 class InvitationListView(LoggedInMixin, TemplateView):
     """Lists all teams, provided that the user is logged in"""
@@ -685,10 +695,6 @@ class InvitationResponseView(LoggedInMixin,
         return parent.dispatch(request, *args, **kwargs)
 
     def check_if_allowed(self, request):
-        # Competition has to be open
-        #if not self.invitation.team.competition.is_open:
-         #   logger.debug("Can't change invite. Competition closed")
-          #  return False
         # They can't accept or decline again if they've already
         # responded
         if self.invitation.has_response():
@@ -696,7 +702,7 @@ class InvitationResponseView(LoggedInMixin,
             return False
         # They can't accept or decline if the message wasn't meant for
         # them.
-        if request.user != self.invitation.receiver:
+        if request.user.profile != self.invitation.receiver:
             logger.debug("Can't change invite. Not yours.")
             return False
 
@@ -719,41 +725,21 @@ class InvitationResponseView(LoggedInMixin,
 
 class InvitationAcceptView(InvitationResponseView):
     """Allows a user to accept an invitation"""
-    #template_name = 'competition/invitation/invitation_accept.html'
-
-    #def get_question(self):
-    #    msg = "Are you sure you want to accept your invitation to join %s?"
-    #    msg += " Joining another team will cause you to automatically leave"
-    #    msg += " any teams that you're on right now."
-    #    return msg % self.invitation.party.name
-
     def agreed(self):
-        #competition = self.invitation.party.competition
         invitee = self.invitation.receiver
-        #if not competition.is_user_registered(invitee):
-            # If the user isn't registered, make them register
-         #   msg = "You need to register for %s before you can join a team"
-          #  messages.error(self.request, msg % competition.name)
-           # url = reverse('register_for',
-            #              kwargs={'comp_slug': competition.slug})
-            #query = urllib.urlencode(
-            #    {'next': self.invitation.get_absolute_url()}
-            #)
-            #return redirect(url + '?' + query)
 
         self.invitation.accept()
 
-        msg = "Successfully joined %s" % self.invitation.party.name
-        messages.success(self.request, msg)
-        return redirect("/lists/parties/")
+        messages.add_message(self.request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS</strong>&nbsp;: Joined&nbsp;<strong>" + self.invitation.party.name + "</strong>." + ALERT_CLOSE)
+
+        return redirect("/parties/")
 
     def disagreed(self):
-        return redirect("/lists/parties")
+        return redirect("/parties")
 
 
 class InvitationDeclineView(InvitationResponseView):
     """Allows a user to decline an invitation"""
-    #template_name = 'competition/invitation/invitation_decline.html'
 
     def get_question(self):
         msg = "Are you sure you want to decline your invitation to join %s?"
@@ -762,22 +748,12 @@ class InvitationDeclineView(InvitationResponseView):
     def agreed(self):
         self.invitation.decline()
 
-        msg = "Successfully declined to join %s" % self.invitation.party.name
-        messages.success(self.request, msg)
+        messages.add_message(self.request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS</strong>&nbsp;: Declined invitation to&nbsp;<strong>" + self.invitation.party.name + "</strong>." + ALERT_CLOSE)
+
         return redirect(self.invitation.party)
 
     def disagreed(self):
         return redirect(self.invitation.party)
-        # remove the item from the pantry
-        try:
-            pantry_obj.items.remove(item_obj)
-
-            messages.add_message(request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS</strong>&nbsp;:  Removed <strong>&nbsp;" + item_obj.name + "</strong>&nbsp; from " + pantry_obj.party.owner.name + "'s pantry." + ALERT_CLOSE, extra_tags=int(item_id))
-            return redirect(from_url + "#" + item_id)
-        except:
-            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;:  Unable to remove <strong>&nbsp;" + item_obj.name + "</strong>&nbsp; from " + pantry_obj.party.owner.name + "'s pantry.  Please let a developer know!" + ALERT_CLOSE, extra_tags=int(item_id))
-            return redirect(from_url + "#" + item_id)
-
 
 
 class DeleteListView(View):
