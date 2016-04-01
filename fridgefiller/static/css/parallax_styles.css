@@ -38,6 +38,9 @@ p{
 .even-row{
   color: #fff;
 }
+.odd-row-text{
+  color: #2f4154;
+}
 .quotes{
   font-family: "Lato";
   font-weight: normal;
