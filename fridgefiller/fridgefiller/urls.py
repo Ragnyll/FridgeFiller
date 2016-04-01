@@ -3,6 +3,9 @@ from django.contrib import admin
 from django.contrib.auth.views import logout_then_login
 
 from lists.views import *
+from lists.invitation_views import *
+from lists.pantry_views import *
+from lists.party_views import *
 
 urlpatterns = [
     url(r'^admin/', admin.site.urls),
