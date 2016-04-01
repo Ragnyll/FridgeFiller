@@ -15,6 +15,15 @@
          {% endif %}
 
          to join <strong>{{ invitation.party.name }}</strong>
+
+         {% if invitation.response %}
+           {% ifequal invitation.response 'A' %}
+             <span class="pull-right label label-primary">Accepted</span>
+           {% endifequal %}
+           {% ifequal invitation.response 'D' %}
+             <span class="pull-right label label-danger">Declined</span>
+           {% endifequal %}
+         {% endif %}
          {% if not invitation.read %}
            <span id="unread-invite" class="label label-primary pull-right">Unread</span>
          {% endif %}
