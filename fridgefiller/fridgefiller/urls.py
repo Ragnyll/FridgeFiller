@@ -35,6 +35,7 @@ urlpatterns = [
     url(r'^party/create', CreateParty.as_view(), name="create-party"),
     url(r'^party/addlist', AddPartyList.as_view(), name="add-group-list"),
     url(r'^party/removeList', RemoveListFromPartyView.as_view(), name="remove-list-from-party"),
+    url(r'^party/addNewList', CreateNewListForPartyView.as_view(), name="create-list-for-party"),
     url(r'^invitations/$', InvitationListView.as_view(), name='invitation_list'),
     url(r'^invitations/invite/$', InvitationCreateView.as_view(), name='invitation_create'),
     url(r'^invitations/(?P<pk>\d+)/$', InvitationDetailView.as_view(), name='invitation_detail'),

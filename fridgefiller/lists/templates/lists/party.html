@@ -29,26 +29,35 @@
     </div>
   {% endif %}
 
-  <!-- Add existing shopping list to group -->
-  {% if user_lists %}
-    <div class="text-center">
+  <div class="well text-center">
+    <!-- Add existing shopping list to group -->
+    {% if user_lists %}
+      <h3>Add One of Your Personal Lists</h3>
+      <br>
       <form method="POST" id="add-group-list" action="{% url 'add-group-list' %}">
         {% csrf_token %}
         <select id="add-existing-list-select" name="add-list-select">
-          <option selected="selected">
-            {% for list in user_lists %}
-              <option value="{{ list.name }}">{{ list.name }}</option>
-            {% endfor %}
+          {% for list in user_lists %}
+            <option {% if forloop.first %}selected="selected" {% endif %}value="{{ list.name }}">{{ list.name }}</option>
+          {% endfor %}
         </select>
-
         <input type="hidden" value="{{ party.id }}" name="party-id">
-
-        <button type="submit" data-toggle="popover" data-placement="top" data-content="Add Existing Shooping List to this Group" class="btn btn-large btn-success">&nbsp;Add Existing Shopping List to {{ party }}</button>
+        <input type="submit" data-toggle="popover" data-placement="top" data-content="Add Existing Shooping List to this Group" class="btn btn-large btn-primary" value="Add List to {{ party }}">
       </form>
-    </div>
-    <br>
-  {% endif %}
+      <br>
+      <span class="text-center text-muted">OR</span>
+    {% endif %}
 
+    <h3>Create a New List</h3>
+    <br>
+    <form class="form-inline" method="POST" action="{% url 'create-list-for-party' %}">
+      {% csrf_token %}
+      <input type="hidden" name="new-list-party-id" value="{{ party.id }}">
+      <input class="form-control" type="text" name="new-list-name" placeholder="List Name">
+      <input class="form-control" type="text" name="new-list-description" placeholder="List Description">
+      <input type="submit" class="btn btn-primary" value="Create New List">
+    </form>
+  </div>
   <!-- Add new list to group -->
   <!-- -->
   <!-- -->
@@ -168,6 +177,8 @@
         color: #fff;
         background-color: #1abc9c;
         width: auto;
+        height: 41px;
+        vertical-align: middle;
         border: 1px #1abc9c solid;
         font-weight: bold;
     }

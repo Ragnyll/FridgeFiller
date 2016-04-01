@@ -201,3 +201,36 @@ class RemoveListFromPartyView(View):
         except:
             messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;: Unable to remove that list from your group.  Please let a developer know!" + ALERT_CLOSE, extra_tags=int(list_id))
             return redirect("/party/" + party_id)
+
+
+class CreateNewListForPartyView(View):
+    """
+    This view creates a new list, sets the owner to None and adds it to the
+    party's shoppinglists list
+    """
+
+    def post(self, request, *args, **kwargs):
+        party_id = request.POST.get('new-list-party-id', False)
+        list_name = request.POST.get('new-list-name', False)
+        list_desc = request.POST.get('new-list-desc', "")
+
+        try:
+            if not list_name:
+                messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;: You must provide a name for your new shopping list." + ALERT_CLOSE)
+                return redirect('/party/' + str(party_id))
+
+
+            party_obj = Party.objects.get(id=party_id)
+            new_list = ShoppingList.objects.create(name=list_name,
+                                                   description=list_desc)
+
+            party_obj.shoppinglists.add(new_list)
+
+            messages.add_message(request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS</strong>&nbsp;: Added&nbsp;<strong>" + new_list.name + "</strong>&nbsp; to&nbsp;<strong>" + party_obj.name + "</strong>" + ALERT_CLOSE, extra_tags=int(-1))
+
+            return redirect('/party/' + str(party_id))
+
+        except:
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;: Unable to add that list to your group.  Please let a developer know!" + ALERT_CLOSE, extra_tags=int(-1))
+
+            return redirect('/party/' + str(party_id))
