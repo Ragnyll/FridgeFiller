@@ -1,0 +1,15 @@
+{% if invitation %}
+  {% with party=invitation.party %}
+    {# Accept modal #}
+    {% url "invitation_accept" pk=invitation.pk as accept_invite %}
+
+    {% include "lists/invitation/_accept_invitation_modal.html" with id="acceptInviteModal" title="Accept Invitation?" warning=warning action=accept_invite %}
+
+
+    {# Decline modal #}
+    {% url "invitation_decline" pk=invitation.pk as decline_invite %}
+
+    {% include "lists/invitation/_decline_invitation_modal.html" with id="declineInviteModal" title="Decline Invitation?"  action=decline_invite %}
+
+  {% endwith %}
+{% endif %}
