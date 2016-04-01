@@ -15,6 +15,12 @@
   {% if party_lists %}
     <h2 class="text-center">Shopping Lists:</h2>
     {% for list in party_lists %}
+      <form action="{% url 'remove-list-from-party' %}" method="POST">
+        {% csrf_token %}
+        <input type="hidden" name="remove-list-list-id" value="{{ list.id }}">
+        <input type="hidden" name="remove-list-party-id" value="{{ party.id }}">
+        <input type="submit" class="btn btn-danger" value="Remove List from Group">
+      </form>
       {% include "lists/_list_view.html" with from_url="/lists/party/{{party.id}}" %}
     {% endfor %}
   {% else %}

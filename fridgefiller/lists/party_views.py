@@ -107,6 +107,7 @@ class CreateParty(View):
             return redirect("/parties/")
         return redirect("/party/" + str(party_obj.id))
 
+
 class AddPartyList(View):
     """
     This view contains logic to add an existing shopping list to a party
@@ -135,6 +136,7 @@ class AddPartyList(View):
 
         return redirect("/party/" + str(party_id))
 
+
 class PartiesView(TemplateView):
     """
     This view displays a list of partys a user belongs too
@@ -158,6 +160,7 @@ class PartiesView(TemplateView):
 
         return context
 
+
 class RemovePartyView(View):
     """
     This view contains logic to remove a group from existence.
@@ -176,3 +179,25 @@ class RemovePartyView(View):
         except:
             messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>:&nbsp;&nbsp;Unable to delete <strong>" + party_obj.name + "</strong>." + ALERT_CLOSE)
             return redirect("/party/" + str(party_obj.id))
+
+
+class RemoveListFromPartyView(View):
+    """
+    This view removes a ShoppingList by id from a party
+    """
+
+    def post(self, request, *args, **kwargs):
+        list_id = request.POST.get('remove-list-list-id', False)
+        party_id = request.POST.get('remove-list-party-id', False)
+
+        try:
+            list_obj = ShoppingList.objects.get(id=list_id)
+            party_obj = Party.objects.get(id=party_id)
+
+            party_obj.shoppinglists.remove(list_obj)
+
+            messages.add_message(request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS</strong>&nbsp;: Removed&nbsp;<strong>" + list_obj.name + "</strong>&nbsp from&nbsp;<strong>" + party_obj.name + "</strong>." + ALERT_CLOSE, extra_tags=int(list_id))
+            return redirect("/party/" + party_id)
+        except:
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;: Unable to remove that list from your group.  Please let a developer know!" + ALERT_CLOSE, extra_tags=int(list_id))
+            return redirect("/party/" + party_id)
