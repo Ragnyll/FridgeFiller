@@ -25,14 +25,32 @@ class PantryView(TemplateView):
 
         user = UserProfile.objects.get(user=self.request.user)
 
-        party = Party.objects.filter(owner=user)[0]
-        pantry = Pantry.objects.filter(party=party)[0]
+        party = Party.objects.get(name=user.name+"'s Personal Party")
+        pantry = Pantry.objects.get(party=party)
 
         context['party'] = party
         context['pantry'] = pantry
         context['pantry_items'] = pantry.items.all()
         return context
 
+class PartyPantryView(TemplateView):
+    """
+    This view displays the pantry for a party
+    """
+
+    template_name = "lists/pantry.html"
+
+    def get_context_data(self, **kwargs):
+        context = super(PartyPantryView, self).get_context_data(**kwargs)
+
+        party_id = kwargs['party_id']
+        party = Party.objects.get(id=party_id)
+        pantry = Pantry.objects.get(party=party)
+
+        context['party'] = party
+        context['pantry'] = pantry
+        context['pantry_items'] = pantry.items.all()
+        return context
 
 class AddItemToPantryView(View):
     """
@@ -44,8 +62,9 @@ class AddItemToPantryView(View):
         item_description = request.POST.get('add-item-to-pantry-desc', False).capitalize()
         list_id = request.POST.get('list_id', False)
         from_url = request.POST.get('from_url', False)
+        party_id = request.POST.get('party-id', False)
 
-        if from_url == "/pantry/":
+        if from_url == "/pantry/" or from_url == "/pantry/" + str(party_id) + "/":
             list_id = str(-1)
 
         # Don't allow blank item names
@@ -59,7 +78,7 @@ class AddItemToPantryView(View):
 
             # User's pantry object
             user_userprofile = UserProfile.objects.get(name=request.user.username)
-            user_party = Party.objects.get(name=user_userprofile.name+"'s Personal Party")
+            user_party = Party.objects.get(id=party_id)
             pantry_obj = Pantry.objects.get(party=user_party)
 
             # don't add duplicate items
@@ -89,6 +108,7 @@ class EditItemInPantryView(View):
         location_purchased = request.POST.get('edit-item-in-pantry-location-purchased', False)
         list_id = request.POST.get('list_id', False)
         from_url = request.POST.get('from_url', False)
+        party_id = request.POST.get('party-id', False)
 
         date_pattern = re.compile('(0[1-9]|1[012])[- \/.](0[1-9]|[12][0-9]|3[01])[- \/.](19|20)\d\d')
 
@@ -96,7 +116,7 @@ class EditItemInPantryView(View):
         expiration_date_str = request.POST.get('edit-item-in-pantry-expiration-date', False)
 
 
-        if from_url == "/pantry/":
+        if from_url == "/pantry/" or from_url == "/pantry/" + str(party_id) + "/":
             list_id = str(-1)
 
         # convert empty values to zero for non-required data
@@ -135,7 +155,7 @@ class EditItemInPantryView(View):
         try:
             # User's pantry object
             user_userprofile = UserProfile.objects.get(name=request.user.username)
-            user_party = Party.objects.get(name=user_userprofile.name+"'s Personal Party")
+            user_party = Party.objects.get(id=party_id)
             pantry_obj = Pantry.objects.get(party=user_party)
             pantry_items = pantry_obj.items.all()
 
@@ -166,9 +186,10 @@ class RemoveItemFromPantryView(View):
     def post(self, request, *args, **kwargs):
         item_id = request.POST.get('item_id', False)
         from_url = request.POST.get('from_url', False)
+        party_id = request.POST.get('party-id', False)
 
         # Get the user's pantry object
-        party_obj = Party.objects.get(name=self.request.user.profile.name+"'s Personal Party")
+        party_obj = Party.objects.get(id=party_id)
         pantry_obj = Pantry.objects.get(party=party_obj)
         item_obj = pantry_obj.items.get(id=item_id)
 
@@ -176,8 +197,15 @@ class RemoveItemFromPantryView(View):
         try:
             pantry_obj.items.remove(item_obj)
 
-            messages.add_message(request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS</strong>&nbsp;:  Removed <strong>&nbsp;" + item_obj.name + "</strong>&nbsp; from " + pantry_obj.party.owner.name + "'s pantry." + ALERT_CLOSE, extra_tags=int(item_id))
+            if 'Personal' in party_obj.name:
+                messages.add_message(request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS</strong>&nbsp;:  Removed <strong>&nbsp;" + item_obj.name + "</strong>&nbsp; from " + pantry_obj.party.owner.name + "'s pantry." + ALERT_CLOSE, extra_tags=int(item_id))
+            else:
+                messages.add_message(request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS</strong>&nbsp;:  Removed <strong>&nbsp;" + item_obj.name + "</strong>&nbsp; from " + pantry_obj.party.name + "'s pantry." + ALERT_CLOSE, extra_tags=int(item_id))
+
             return redirect(from_url + "#" + item_id)
         except:
-            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;:  Unable to remove <strong>&nbsp;" + item_obj.name + "</strong>&nbsp; from " + pantry_obj.party.owner.name + "'s pantry.  Please let a developer know!" + ALERT_CLOSE, extra_tags=int(item_id))
+            if 'Personal' in party_obj.name:
+                messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;:  Unable to remove <strong>&nbsp;" + item_obj.name + "</strong>&nbsp; from " + pantry_obj.party.owner.name + "'s pantry.  Please let a developer know!" + ALERT_CLOSE, extra_tags=int(item_id))
+            else:
+                messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;:  Unable to remove <strong>&nbsp;" + item_obj.name + "</strong>&nbsp; from " + pantry_obj.party.name + "'s pantry.  Please let a developer know!" + ALERT_CLOSE, extra_tags=int(item_id))
             return redirect(from_url + "#" + item_id)

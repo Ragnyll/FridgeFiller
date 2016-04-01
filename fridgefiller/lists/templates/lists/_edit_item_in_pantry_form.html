@@ -10,9 +10,10 @@
   <br>
   <form class="form-inline" id="edit-item-in-pantry-form-{{ item.id }}" action="{% url 'edit-item-in-pantry' %}" method="POST">
     {% csrf_token %}
-    <input type="hidden" name="from_url" value="{{ from_url }}">
+    <input type="hidden" name="from_url" value="{% if 'Personal' in party.name %}/pantry/{% else %}/pantry/{{ party.id }}/{% endif %}">
     <input type="hidden" class="form-control" name="edit-item-in-pantry-desc" id="edit-item-in-pantry-desc" value="{{ item_detail.description }}">
     <input type="hidden" class="form-control" name="list_id" value="{{ list.id }}">
+    <input type="hidden" name="party-id" value="{{ party.id }}">
 
     <div class="form-field">
       <label for="edit-item-in-pantry-name">Item Name</label>

@@ -6,8 +6,10 @@
 
 
 {% block content %}
-  <h1 class="text-center">Group: {{ party }}</h1>
-
+    <h1 class="text-center">
+      Group: {{ party }}
+      <a href="{% url 'party-pantry' party.id %}" id="go-to-pantry-button" class="btn btn-lg btn-primary">Go to {{ party.name }}&apos;s Pantry</a>
+    </h1>
   <!-- Error / Success messages -->
   {% include "lists/_messages.html" %}
 
@@ -37,7 +39,7 @@
         <input type="hidden" name="remove-list-party-id" value="{{ party.id }}">
         <input type="submit" class="btn btn-danger" value="Remove List from Group">
       </form>
-      {% include "lists/_list_view.html" with from_url="/lists/party/{{party.id}}" %}
+      {% include "lists/_list_view.html" with from_url="/party/{{party.id}}" %}
     {% endfor %}
   {% else %}
     <div class="text-center">
@@ -179,6 +181,9 @@
         vertical-align: middle;
         border: 1px #1abc9c solid;
         font-weight: bold;
+    }
+    #go-to-pantry-button {
+        vertical-align: middle;
     }
   </style>
 {% endblock %}
