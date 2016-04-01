@@ -34,7 +34,7 @@
     <div class="text-center">
       <form method="POST" id="add-group-list" action="{% url 'add-group-list' %}">
         {% csrf_token %}
-        <select name="add-list-select">
+        <select id="add-existing-list-select" name="add-list-select">
           <option selected="selected">
             {% for list in user_lists %}
               <option value="{{ list.name }}">{{ list.name }}</option>
@@ -163,6 +163,13 @@
     }
     .popover.top .arrow:after {
         border-top-color: #34495E;
+    }
+    #add-existing-list-select {
+        color: #fff;
+        background-color: #1abc9c;
+        width: auto;
+        border: 1px #1abc9c solid;
+        font-weight: bold;
     }
   </style>
 {% endblock %}
