@@ -11,6 +11,22 @@
   <!-- Error / Success messages -->
   {% include "lists/_messages.html" %}
 
+  <!-- Group Members -->
+  <div id="group-members" class="well">
+    <h2 class="text-center">Members:</h2>
+    {% for user in party_users %}
+      {% if forloop.first %}
+        &nbsp;&nbsp;
+      {% endif %}
+      <h4>
+        <span class="label label-info">{{ user }}</span>
+      </h4>
+      {% if not forloop.last %}
+        &nbsp;&nbsp;
+      {% endif %}
+    {% endfor %}
+  </div>
+
   <!-- Lists for party -->
   {% if party_lists %}
     <h2 class="text-center">Shopping Lists:</h2>
@@ -48,6 +64,7 @@
       <span class="text-center text-muted">OR</span>
     {% endif %}
 
+    <!-- Create new list for party -->
     <h3>Create a New List</h3>
     <br>
     <form class="form-inline" method="POST" action="{% url 'create-list-for-party' %}">
@@ -57,25 +74,6 @@
       <input class="form-control" type="text" name="new-list-description" placeholder="List Description">
       <input type="submit" class="btn btn-primary" value="Create New List">
     </form>
-  </div>
-  <!-- Add new list to group -->
-  <!-- -->
-  <!-- -->
-
-  <!-- Group Members -->
-  <div id="group-members" class="well">
-    <h2 class="text-center">Members:</h2>
-    {% for user in party_users %}
-      {% if forloop.first %}
-        &nbsp;&nbsp;
-      {% endif %}
-      <h4>
-        <span class="label label-info">{{ user }}</span>
-      </h4>
-      {% if not forloop.last %}
-        &nbsp;&nbsp;
-      {% endif %}
-    {% endfor %}
   </div>
 
   <!-- Invite / Leave Group / Delete Group buttons -->
