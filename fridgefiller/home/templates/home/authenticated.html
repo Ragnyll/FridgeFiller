@@ -3,8 +3,10 @@
     #expired-well {
       background-color: rgba(231, 76, 60, .3);
     }
-    #expired-item {
+    #expired-item-well {
       background-color: rgba(231, 76, 60, .8);
+      padding-top: 5px;
+      padding-bottom: 0px;
     }
 
     #warning-well {
@@ -12,6 +14,8 @@
     }
     #warning-item-well {
       background-color: rgba(241, 196, 15, .8);
+      padding-top: 5px;
+      padding-bottom: 0px;
     }
     .message {
         width: 100%;
@@ -48,12 +52,14 @@
 
       {% for item in expired_items %}
         <div class="row">
-          <div class="well" id="expired-item">
-            <div class="col-md-6">
-              <p>{{ item.name }}</p>
-            </div>
-            <div class="col-md-6">
-              {{ item.expiration_date }}
+          <div class="well" id="expired-item-well">
+            <div class="row">
+              <div class="col-md-6">
+                <p>{{ item.name }}</p>
+              </div>
+              <div class="col-md-6">
+                {{ item.expiration_date }}
+              </div>
             </div>
           </div>
         </div>
@@ -71,11 +77,13 @@
       {% for item in warning_items %}
         <div class="row">
           <div class="well" id="warning-item-well">
-            <div class="col-md-6">
-              <p>{{ item.name }}</p>
-            </div>
-            <div class="col-md-6">
-              {{ item.expiration_date }}
+            <div class="row">
+              <div class="col-md-6">
+                <p>{{ item.name }}</p>
+              </div>
+              <div class="col-md-6">
+                {{ item.expiration_date }}
+              </div>
             </div>
           </div>
         </div>
