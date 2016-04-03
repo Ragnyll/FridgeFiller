@@ -61,8 +61,9 @@ class HomePageView(TemplateView):
                 if datetime_delta.days <= 0:
                     expired_items.append(item_detail)
                 # see if item_detail will expire in less than a week
-                elif datetime_delta.days <= 7:
+                elif datetime_delta.days <= 7 and datetime_delta.days > 0:
                     warning_items.append(item_detail)
+                    print warning_items
 
             # stick the two lists into the context dictionary
             context['expired_items'] = expired_items
