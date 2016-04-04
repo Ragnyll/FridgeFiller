@@ -6,7 +6,8 @@
 {% endblock %}
 
 {% block content %}
-  <h1 class="text-center">My Pantry
+  <h1 class="text-center">
+    {% if "Personal" in party.name %}My {% else %}{{ party.name }}&apos;s{% endif %} Pantry
     {% ifequal pantry_items.count 1 %}
       <span class="label label-info">{{ pantry_items.count }} item</span>
     {% else %}
@@ -17,7 +18,9 @@
       {% endifequal %}
     {% endifequal %}
   </h1>
+  
   <br>
+  
   <span id="message">
     {% if messages %}
       {% for message in messages %}
@@ -55,7 +58,8 @@
             <form method="POST" id="remove-item-from-pantry-button" action="{% url 'remove-item-from-pantry' %}">
               {% csrf_token %}
               <input type="hidden" name="item_id" value="{{ item.id }}">
-              <input type="hidden" name="from_url" value="/pantry/">
+              <input type="hidden" name="from_url" value="{% if 'Personal' in party.name %}/pantry/{% else %}/pantry/{{ party.id }}/{% endif %}">
+              <input type="hidden" name="party-id" value="{{ party.id }}">
               <button type="submit" class="btn btn-danger">
                 <i class="fa fa-minus-square"></i>&nbsp;&nbsp;Remove
               </button>

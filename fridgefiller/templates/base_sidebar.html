@@ -27,13 +27,13 @@
                 My Pantry
               </a>
             </li>
-            <li class="{% active 'lists' %}" >
+            <li class="{% active_re '/lists/$' %}" >
               <a href="{% url 'lists' %}">
                 My Lists <span class="fa fa-arrow-right"></span>
               </a>
             </li>
-            <li>
-              <a href="">
+            <li class="{% active_re '/party/|/parties/' %}">
+              <a href="{% url 'parties' %}">
                 My Groups <span class="fa fa-arrow-right"></span>
               </a>
             </li>

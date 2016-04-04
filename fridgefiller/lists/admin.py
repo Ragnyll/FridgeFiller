@@ -25,5 +25,6 @@ admin.site.register(ShoppingList, ListAdmin)
 admin.site.register(Item, ItemAdmin)
 admin.site.register(Pantry, PantryAdmin)
 admin.site.register(ItemDetail, ItemDetAdmin)
+admin.site.register(Invitation)
 
 

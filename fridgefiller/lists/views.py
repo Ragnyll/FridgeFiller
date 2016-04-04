@@ -1,28 +1,20 @@
+from django.db.models import Q
 from django.shortcuts import render, redirect
 from django.http import HttpResponse, JsonResponse, HttpResponseNotFound, Http404, HttpResponseRedirect
-from django.views.generic import TemplateView, UpdateView, View
+from django.views.generic import TemplateView, UpdateView, View, DetailView, CreateView
 from django.core.urlresolvers import reverse
 from django.contrib import messages
-from django.shortcuts import redirect
+from django.shortcuts import redirect, get_object_or_404
+from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 from django.contrib.auth.decorators import login_required, user_passes_test
 from django.utils.decorators import method_decorator
 
 from statuses import *
-
 from datetime import datetime
-
 import re
 import json
-
 from .models import *
 import walmart_api as wapi
-
-def disp_info(request):
-    users = UserProfile.objects.all()
-    parties = Party.objects.all()
-    shoppinglists = ShoppingList.objects.all()
-
-    return render(request, 'lists/disp_info.html',{'users': users})
 
 
 class ListsView(TemplateView):
@@ -43,7 +35,7 @@ class ListsView(TemplateView):
         context = super(ListsView, self).get_context_data(**kwargs)
 
         user = UserProfile.objects.get(user=self.request.user)
-        user_party = Party.objects.get(owner=user)
+        user_party = Party.objects.get(name=user.name+"'s Personal Party")
         user_pantry = Pantry.objects.get(party=user_party)
 
         user_pantry_items = user_pantry.items.all()
@@ -72,26 +64,6 @@ class EditListView(TemplateView):
     Similar to NewListView, but it will show the items already in the list, and allow for more items to be added, whereas NewListView is blank
     """
     template_name = "lists/edit_list.html"
-
-
-class PantryView(TemplateView):
-    """
-    This view displays the user's pantry
-    """
-    template_name = "lists/pantry.html"
-
-    def get_context_data(self, **kwargs):
-        context = super(PantryView, self).get_context_data(**kwargs)
-
-        user = UserProfile.objects.get(user=self.request.user)
-
-        party = Party.objects.filter(owner=user)[0]
-        pantry = Pantry.objects.filter(party=party)[0]
-
-        context['party'] = party
-        context['pantry'] = pantry
-        context['pantry_items'] = pantry.items.all()
-        return context
 
 
 class NewItemView(View):
@@ -165,6 +137,7 @@ class NewListView(View):
 
         return redirect('/lists/#')
 
+
 class RemoveItemFromListView(View):
     """
     This view removes an item from a list and returns the user to their lists page
@@ -185,7 +158,8 @@ class RemoveItemFromListView(View):
         except:
             messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;: Unable to remove <strong>&nbsp;" + item_name + "</strong>&nbsp;&nbsp;from list.  Please let e developer know!" + ALERT_CLOSE, extra_tags=int(list_id))
 
-        return redirect("/lists/#" + list_id)
+        return redirect("/lists")
+
 
 class PrintListMiniView(TemplateView):
     template_name = "lists/print.html"
@@ -210,6 +184,7 @@ class PrintListMiniView(TemplateView):
         context["data"] = [(i.name, i.description) for i in item_list.items.all()]
         return context
 
+
 class PrintListView(View):
     """
     This view presents a list in a minimalisitic way for printing
@@ -221,6 +196,7 @@ class PrintListView(View):
         list_id = request.POST.get('list-id', False)
         return redirect("print-m-list", list_id=list_id)
 
+    
 class AddItemToPantryView(View):
     """
     This view adds an item from a shopping list to a user's Pantry
@@ -377,7 +353,6 @@ class RemoveItemFromPantryView(View):
             return redirect(from_url + "#" + item_id)
 
 
-    
 class DeleteListView(View):
     def post(self, request, *args, **kwargs):
         list_id = request.POST.get('list_id', False)
