@@ -45,6 +45,7 @@ class ListsView(TemplateView):
         context['user_pantry_items'] = user_pantry_items
         context['user_pantry_item_names'] = user_pantry_item_names
         context['user_pantry'] = user_pantry
+        context['party'] = user_party
         context['user_shopping_lists'] = ShoppingList.objects.filter(owners__in=[user])
 
         return context
