@@ -241,18 +241,23 @@ class AddItemToPantryView(View):
             return redirect(from_url + "#" + list_id)
 
         try:
-            item_detail_obj, c = ItemDetail.objects.get_or_create(name=item_name,
-                                                                  description=item_description)
-
             # User's pantry object
             user_userprofile = UserProfile.objects.get(name=request.user.username)
             user_party = Party.objects.get(owner=user_userprofile)
             pantry_obj = Pantry.objects.get(party=user_party)
-
+            
             # don't add duplicate items
-            if item_detail_obj.name in [x.name for x in pantry_obj.items.all()]:
+            if item_name in [x.name for x in pantry_obj.items.all()]:
                 messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;:  That item already exists in your pantry!" + ALERT_CLOSE, extra_tags=int(list_id))
                 return redirect(from_url + "#" + list_id)
+            
+            item_detail_obj, c = ItemDetail.objects.get_or_create(name=item_name,
+                                                                  description=item_description)
+            if from_url == "/pantry/":
+                item_detail_obj.unit = request.POST.get('unit', "")
+                item_detail_obj.cost = request.POST.get('cost', 0.0)
+                item_detail_obj.barcode = request.POST.get('barcode', -1)
+                item_detail_obj.save()
 
             pantry_obj.items.add(item_detail_obj)
 

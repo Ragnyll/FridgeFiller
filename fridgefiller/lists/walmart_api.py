@@ -4,7 +4,7 @@ import secret
 
 
 name_mapping = {
-    'price': 'salePrice',
+    'cost': 'salePrice',
     'unit': 'size',
     }
     
