@@ -54,7 +54,7 @@ p{
 }
 #login-slide{
   background: url('../img/empty1.jpg');
-  height: 850px;
+  height: 825px;
   margin: 0;
   padding: 200px 0 260px 0;
   background-size: cover;
@@ -67,26 +67,32 @@ p{
   padding: 75px 0;
   overflow-x: hidden;
 }
-#barcode-scanning{
+#pantrys{
   background: url('../img/withapple.jpg');
   color: #fff;
   height: 600px;
   padding: 150px 0 0 0;
   background-size: cover;
 }
-#GroupManagement{
+#barcode-scanning{
   background-color: #2f4154;
   color: #333333;
   height: 600px;
   padding: 100px 0;
 }
-#user-testimonials{
+#portable-lists{
   background: url('../img/withbread.jpg');
   height: 600px;
   margin: 0 auto;
   padding: 160px 0;
   color: #fff;
   background-size: cover;
+}
+#user-testimonials{
+  background-color: #2f4154;
+  color: #333333;
+  height: 600px;
+  padding: 100px 0;
 }
 #groupname{
   color: #2f4154;
