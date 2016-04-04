@@ -1,6 +1,7 @@
 from django.db import models
+from django.conf import settings
 from django.dispatch import receiver
-from django.db.models.signals import post_save
+from django.db.models.signals import post_save, pre_save, pre_delete
 from django.contrib.auth.models import User
 
 from datetime import datetime
@@ -41,8 +42,25 @@ class Party(models.Model):
     users = models.ManyToManyField('UserProfile')
     shoppinglists = models.ManyToManyField('ShoppingList')
 
+
     def __str__(self):
         return str(self.name)
+
+    def is_user_in_party(self, user):
+        """
+        Returns true if user is in the calling party, else false
+        """
+        return self.users.filter(pk=user.pk).exists()
+
+    def add_party_member(self, receiver):
+        try:
+            self.users.add(receiver)
+        except:
+            return Http404("COULDN'T ADD " + receiver.name + " TO " + self.name)
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('party', (), {'party_id': self.id})
 
 def create_party_pantry(sender, instance, created, **kwargs):
     """
@@ -135,7 +153,6 @@ class ItemDetail(models.Model):
 
         return ""
 
-
     def get_pretty_expiration_date(self):
         """
         Returns self.expiration_date as 'mm/dd/yyyy'
@@ -146,3 +163,58 @@ class ItemDetail(models.Model):
             return date_str
 
         return ""
+
+
+
+class Invitation(models.Model):
+    class Meta:
+        app_label = 'lists'
+        ordering = ['-sent']
+
+    RESPONSE_CHOICES = (('A', 'Accepted'),
+                        ('D', 'Declined'))
+
+    party = models.ForeignKey(Party)
+    sender = models.ForeignKey(UserProfile, related_name="sent_invitations")
+    receiver = models.ForeignKey(UserProfile, related_name="received_invitations")
+    message = models.TextField()
+    sent = models.DateTimeField(auto_now_add=True)
+    read = models.BooleanField(default=False)
+    response = models.CharField(blank=True, null=True, max_length=2,
+                                choices=RESPONSE_CHOICES)
+
+    @models.permalink
+    def get_absolute_url(self):
+        return ('invitation_detail', (), {'pk': self.pk})
+
+    def __str__(self):
+        return "%s invites %s to join %s" % (self.sender.name,
+                                             self.receiver.name,
+                                             self.party.name)
+
+    def has_response(self):
+        """Returns True if the receiver has responded, else False"""
+        return self.response is not None
+
+    def accept(self):
+        """Accepts an invitation to join a team.
+        Adds the invitation's recipient to the team. If the team is
+        already full, throws an instance of TeamException """
+
+        # If the user's already responded, don't let them respond again
+        if self.has_response():
+            return
+        self.party.add_party_member(self.receiver)
+        self.read = True
+        self.response = 'A'     # Accepted
+        self.save()
+
+    def decline(self):
+        """Declines an invitation to join a team.
+        Just marks the invitation as declined"""
+        # If the user's already responded, don't let them respond again
+        if self.has_response():
+            return
+        self.read = True
+        self.response = 'D'     # Declined
+        self.save()

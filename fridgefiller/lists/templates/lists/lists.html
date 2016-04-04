@@ -6,6 +6,84 @@
   Your Shopping Lists
 {% endblock %}
 
+{% block style %}
+  <style type="text/css">
+    label, input {
+        display: block;
+    }
+    .form-field {
+        float: left;
+    }
+    .form-field input {
+        width: inherit !important;
+        padding-right: 0;
+    }
+    #item-count {
+        vertical-align: -webkit-baseline-middle;
+    }
+    #remove-item-form, #add-item-to-pantry-form {
+        display: inline;
+    }
+    #new-item-save {
+        float: right;
+    }
+    #new-item-name {
+        width: 43%;
+    }
+    #new-item-desc {
+        width: 43%;
+    }
+    #new-item-save {
+        width: 10%;
+    }
+    .message {
+        width: 100%;
+    }
+    h4, h6, h2 {
+        display: inline;
+        vertical-align: middle;
+    }
+    h4 {
+        margin-right: .5em;
+    }
+    .item-well:hover {
+        border: 1px solid #169E83;
+    }
+    .alert {
+        display: flex;
+    }
+    a.anchor {
+        display: block;
+        position: relative;
+        top: -77px;
+        visibility: hidden;
+    }
+    .popover-content {
+        background-color: #34495E;
+        color: white;
+    }
+    .popover.top .arrow:after {
+        border-top-color: #34495E;
+    }
+    #add-item-to-pantry-cost, #edit-item-in-pantry-cost {
+        width: 10%;
+    }
+    #add-item-to-pantry-stock, #edit-item-in-pantry-stock {
+        width: 10%;
+    }
+    #add-item-to-pantry-unit, #edit-item-in-pantry-unit {
+        width: 10%;
+    }
+    .panel-heading {
+        padding: 1em;
+    }
+    .fa .fa-minus, .fa .fa-plus {
+        text-size: 32px;
+        vertical-align: middle;
+    }
+  </style>
+{% endblock %}
+
 {% block content %}
   <h1 class="text-center">Your Shopping Lists</h1>
 
@@ -19,7 +97,6 @@
   {% else %}
     {% for list in user_shopping_lists %}
       {% include 'lists/_list_view.html' with from_url="/lists/" %}
-
     {% endfor %}
   {% endif %}
 
@@ -52,4 +129,95 @@
     </form>
   </div>
   <br>
+{% endblock %}
+
+{% block script %}
+  <script type="text/javascript">
+    $(document).ready(function(){
+      $('[data-toggle="popover"]').popover({ trigger: "hover" });
+
+      // if list_id in url, click the panel-header to un-collapse it and change the plus to minus
+      if(window.location.hash) {
+          var hash = window.location.hash.substring(1)
+
+          // Only try to open panels if the hash is a number
+          if(!isNaN(hash)) {
+              $('#panel-heading-' + hash).click()
+              setTimeout(function(){
+              $('#l-' + hash + ' #new-item-name').focus();
+            }, 1);
+
+          }
+      }
+    });
+
+    $('.edit-item-in-pantry-button').click(function(e){
+      var item_id = this.dataset.itemid;
+      var list_id = this.dataset.listid;
+
+      // hide pantry button
+      $('#add-item-to-pantry-button-' + item_id + '-' + list_id).hide();
+
+      // show scan barcode button
+      $('#scan-barcode-button-' + item_id + '-' + list_id).removeClass('hidden');
+
+      // init datepicker for last_purchased
+      var picker1 = new Pikaday({
+        field: $('#edit-item-in-pantry-form-' + item_id + '-' + list_id + ' #datepicker-last-purchased')[0],
+        format: 'MM/DD/YYYY',
+    });
+
+      $('#edit-item-in-pantry-form-' + item_id + ' #datepicker-last-purchased').val($.datepicker.formatDate('mm/dd/yy', new Date()));
+
+      // init datepicker for expiration_date
+      var picker2 = new Pikaday({
+        field: $('#edit-item-in-pantry-form-' + item_id + '-' + list_id + ' #datepicker-exp-date')[0],
+        format: 'MM/DD/YYYY',
+      });
+    });
+    $('.edit-item-in-pantry-button').click(function() {
+        var list_id = this.dataset.listid;
+        var item_id = this.dataset.itemid;
+
+        console.log("CLICKED ITEM "+item_id+" LIST "+list_id)
+        $('#edit-item-in-pantry-form-' + item_id + '-' + list_id).removeClass('hidden')
+    });
+    $('.panel-heading').click(function() {
+        var list_id = this.dataset.listid;
+
+        // If collapsed, change plus to minus
+        if($('#panel-body-' + list_id).hasClass('collapse')) {
+            $('#' + list_id + '-collapse-indicator').removeClass('fa-plus')
+            $('#' + list_id + '-collapse-indicator').addClass('fa-minus')
+        }
+        // change minus to plus
+        else {
+            $('#' + list_id + '-collapse-indicator').removeClass('fa-minus')
+            $('#' + list_id + '-collapse-indicator').addClass('fa-plus')
+        }
+
+        $('#panel-body-' + list_id).toggleClass('collapse in');
+    });
+
+    // Show the user a confirmation form so they don't accidentally delete their lists
+    $('.delete-list-button').click(function() {
+        var list_id = this.dataset.listid;
+
+        // Hide the initial delete button
+        $('#delete-list-' + list_id).addClass('hidden');
+        // Show confirmation form
+        $('#delete-list-confirmation-form-' + list_id).removeClass('hidden');
+    });
+
+    // Hide the confirmation form when the user presses the don't delete button
+    $('.delete-list-cancel-button').click(function() {
+        var list_id = this.dataset.listid;
+
+        // Hide confirmation form
+        $('#delete-list-confirmation-form-' + list_id).addClass('hidden');
+        // Show initial delete button
+        $('#delete-list-' + list_id).removeClass('hidden');
+    });
+
+  </script>
 {% endblock %}

@@ -83,6 +83,12 @@
     background: none;
 }
 
+#print-button {
+    font-size: 16px;
+    display: inline;
+    vertical-align: -webkit-baseline-middle;
+}
+
 hr {
     display: block;
     height: 1px;
@@ -98,6 +104,12 @@ hr {
 
 .shopping-list-row span {
     margin: 10px 5px 5px 5px;
+}
+
+.party h2, .party h4{
+    display: inline;
+    vertical-align: middle;
+    margin-bottom: 0;
 }
 
 li.active {

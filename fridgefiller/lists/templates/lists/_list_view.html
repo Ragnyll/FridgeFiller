@@ -11,6 +11,13 @@
       <h4>
         {{ list.description }}
         <div class="pull-right">
+          <!-- print list form -->
+          <form id="print-button" action="{% url 'print-list' %}" method="POST">
+            {% csrf_token %}
+            <input type="hidden" value="{{ list.id }}" name="list-id">
+            <input type="submit" class="btn btn-sm btn-primary" value="Print list">
+          </form>
+          <!-- end print list form -->
           <span id="item-count" class="label label-info">{{ list.items.count }} items</span>
         </div>
       </h4>

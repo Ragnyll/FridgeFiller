@@ -6,11 +6,15 @@
     <input type="hidden" name="add-item-to-pantry-name" value="{{ item.name }}">
     <input type="hidden" name="add-item-to-pantry-desc" value="{{ item.description }}">
 
-    <button type="submit" data-itemid="{{ item.id }}" data-listid="{{ list.id }}" data-toggle="popover" data-placement="top" data-content="Add this item to your pantry" class="btn btn-lg  btn-primary fa fa-plus-square add-item-to-pantry-button" id="add-item-to-pantry-button-{{ item.id }}-{{ list.id }}">&nbsp;to Pantry</button>
+    <button type="submit" data-itemid="{{ item.id }}" data-listid="{{ list.id }}" data-toggle="popover" data-placement="top" data-content="Add this item to your pantry" class="btn btn-lg  btn-primary add-item-to-pantry-button" id="add-item-to-pantry-button-{{ item.id }}-{{ list.id }}">
+      <i class="fa fa-plus-square"></i>&nbsp;&nbsp;to Pantry
+    </button>
   </form>
   <!-- Scan Barcode button -->
   <span id="scan-barcode-button-{{ item.id }}-{{ list.id }}" class="btn btn-warning btn-sm fa fa-barcode hidden">&nbsp;Scan Barcode</span>
   <!-- Edit Pantry amount button -->
 {% else %}
-  <button data-itemid="{{ item.id }}" data-listid="{{ list.id }}" data-toggle="popover" data-placement="top" data-content="Edit amount of {{ item.name }} in your Pantry" class="btn btn-lg  btn-info fa fa-edit edit-item-in-pantry-button" id="edit-item-in-pantry-button-{{ item.id }}-{{ list.id }}">&nbsp;in Pantry</button>
+  <button data-itemid="{{ item.id }}" data-listid="{{ list.id }}" data-toggle="popover" data-placement="top" data-content="Edit amount of {{ item.name }} in your Pantry" class="btn btn-lg  btn-info edit-item-in-pantry-button" id="edit-item-in-pantry-button-{{ item.id }}-{{ list.id }}">
+    <i class="fa fa-edit"></i>&nbsp;&nbsp;in Pantry
+  </button>
 {% endif %}
