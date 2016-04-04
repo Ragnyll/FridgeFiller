@@ -7,11 +7,53 @@
 {% load crispy_forms_tags %}
 
 {% block content %}
-    <br>
+  <br>
   {% if not form.fields.party.queryset.exists %}
-    <p> You cannot send invitations at the moment</p>
+    <span class="alert alert-danger"><strong>ERROR</strong>:&nbsp;&nbsp;You must&nbsp;<a href="{% url 'parties' %}">create a party</a>&nbsp;before you can send an invitation.</span>
+    <br>
   {% endif %}
 
   {% crispy form %}
 
+{% endblock %}
+
+{% block style %}
+  <style type="text/css">
+      #id_receiver, #id_party {
+        color: #fff;
+        background-color: #1abc9c;
+        width: auto;
+        border: 1px #1abc9c solid;
+        font-weight: bold;
+      }
+      #div_id_party, #div_id_receiver, #div_id_message {
+          padding-left: 20px;
+          padding-right: 20px;
+      }
+      #submit-id-submit {
+          margin-left: 20px;
+      }
+
+      label  {
+          padding-right: 20px;
+          float: left;
+      }
+      .alert {
+          display: flex;
+      }
+  </style>
+{% endblock %}
+
+{% block script %}
+  <script type="text/javascript">
+    $(document).ready(function() {
+        {% if party %}
+          // Append party name to invite header
+          $('#invite-header').append(' to <span class="text-primary">{{ party.name }}</span>')
+
+          // Select Party Name in dropdown for the user
+          $('.select2-container option:contains({{ party.name }})').prop({selected: true});
+        {% endif %}
+    });
+  </script>
 {% endblock %}

@@ -1,0 +1,12 @@
+<div class="well">
+  <h3 class="text-center">Add {% if pantry_items.all %}Another{% else %}an{% endif %} Item to Your Pantry</h3>
+  <br>
+  <form class="form-inline" method="POST" action="{% url 'add-item-to-pantry' %}">
+    {% csrf_token %}
+    <input type="hidden" name="party-id" value="{{ party.id }}">
+    <input type="hidden" name="from_url" value="{% if 'Personal' in party.name %}/pantry/{% else %}/pantry/{{ party.id }}/{% endif %}">
+    <input type="text" class="form-control" id="add-item-to-pantry-name" name="add-item-to-pantry-name" placeholder="Item Name">
+    <input type="text" class="form-control" id="add-item-to-pantry-description" name="add-item-to-pantry-desc" placeholder="Item Description">
+    <input type="submit" class="btn btn-primary" id="add-item-to-pantry-button" value="Add Item to Pantry">
+  </form>
+</div>

@@ -13,61 +13,89 @@
 {% block content %}
   <div class="row">
     <div class="col-sm-6 col-md-6">
-      <h2>Received Invitations</h2>
+      <h2 class="text-center">Received Invitations</h2>
       {% include "lists/invitation/_invitation_list.html" with invitations=received name="received" %}
 
       <!-- Multiple pagers makes it hard to use the default pager :/ -->
-      <ul class="pager">
-        <li class="previous {% if not received.has_previous %}disabled{% endif%}">
-          {% if received.has_previous %}
-            <a href="?received_page={{ received.previous_page_number }}&amp;sent_page={{ sent.number }}">
-          {% else %}
-            </a><a href="#">
-          {% endif %}
-          &larr; Previous
-            </a>
-        </li>
-        <li class="next {% if not received.has_next %}disabled{% endif%}">
-          {% if received.has_next %}
-            <a href="?received_page={{ received.next_page_number }}&amp;sent_page={{ sent.number }}">
-          {% else %}
-            </a><a href="#">
-          {% endif %}
-          Next &rarr;
-            </a>
-        </li>
-      </ul>
-
+      <div class="text-center">
+        <div class="pagination text-center">
+          <ul>
+            <li class="previous {% if not received.has_previous %}disabled{% endif%}">
+              {% if received.has_previous %}
+                <a href="?received_page={{ received.previous_page_number }}&amp;sent_page={{ sent.number }}">
+              {% else %}
+                </a><a href="#">
+              {% endif %}
+              &larr; Previous
+              </a>
+            </li>
+            <li class="next {% if not received.has_next %}disabled{% endif%}">
+              {% if received.has_next %}
+                <a href="?received_page={{ received.next_page_number }}&amp;sent_page={{ sent.number }}">
+              {% else %}
+                </a><a href="#">
+              {% endif %}
+              Next &rarr;
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
     <div class="col-sm-6 col-md-6">
-      <h2>Sent Invitations</h2>
+      <h2 class="text-center">Sent Invitations</h2>
       {% include "lists/invitation/_invitation_list.html" with invitations=sent name="sent" %}
 
-     <ul class="pager">
-        <li class="previous {% if not sent.has_previous %}disabled{% endif%}">
-          {% if sent.has_previous %}
-            <a href="?sent_page={{ sent.previous_page_number }}&amp;received_page={{ received.number }}">
-          {% else %}
-            </a><a href="#">
-          {% endif %}
-          &larr; Previous
-            </a>
-        </li>
-        <li class="next {% if not sent.has_next %}disabled{% endif%}">
-          {% if sent.has_next %}
-            <a href="?sent_page={{ sent.next_page_number }}&amp;received_page={{ received.number }}">
-          {% else %}
-            </a><a href="#">
-          {% endif %}
-          Next &rarr;
-            </a>
-        </li>
-      </ul>
+      <div class="text-center">
+        <div class="pagination">
+          <ul class="pager">
+            <li class="previous {% if not sent.has_previous %}disabled{% endif%}">
+              {% if sent.has_previous %}
+                <a href="?sent_page={{ sent.previous_page_number }}&amp;received_page={{ received.number }}">
+              {% else %}
+                </a><a href="#">
+              {% endif %}
+              &larr; Previous
+              </a>
+            </li>
+            <li class="next {% if not sent.has_next %}disabled{% endif%}">
+              {% if sent.has_next %}
+                <a href="?sent_page={{ sent.next_page_number }}&amp;received_page={{ received.number }}">
+              {% else %}
+                </a><a href="#">
+              {% endif %}
+              Next &rarr;
+              </a>
+            </li>
+          </ul>
+        </div>
+      </div>
     </div>
   </div>
   <br>
   <div class="text-center">
-    <button type="submit" data-toggle="popover" data-placement="top" data-content="Create Invitations" class="btn btn-lg btn-success">&nbsp;<a href="{% url 'invitation_create' %}">Create Invitations</a></button>
+    <a type="submit" data-toggle="popover" data-placement="top" data-content="Create Invitations" class="btn btn-lg btn-primary" href="{% url 'invitation_create' %}">Invite User(s) to your Groups</a>
 
   </div>
+{% endblock %}
+
+{% block script %}
+  <script type="text/javascript">
+    $('.panel-heading').click(function() {
+        var name = this.dataset.name;
+        var counter = this.dataset.counter;
+
+        // If collapsed, change plus to minus
+        if($('#panel-body-' + name + '-' + counter).hasClass('collapse')) {
+            $('#' + name + '-' + counter + '-collapse-indicator').removeClass('fa-plus')
+            $('#' + name + '-' + counter + '-collapse-indicator').addClass('fa-minus')
+        }
+        // change minus to plus
+        else {
+            $('#' + name + '-' + counter + '-collapse-indicator').removeClass('fa-minus')
+            $('#' + name + '-' + counter + '-collapse-indicator').addClass('fa-plus')
+        }
+        $('#panel-body-' + name + '-' + counter).toggleClass('collapse in')
+    });
+  </script>
 {% endblock %}

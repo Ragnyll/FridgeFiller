@@ -3,28 +3,40 @@
     <div class="accordion" id="invite-accordion">
   {% endif %}
 
-  <div class="accordion-group">
-    <div class="accordion-heading">
-      <a class="accordion-toggle" data-toggle="collapse"
-         data-parent="#invite-accordion" href="#{{ name }}Collapse{{ forloop.counter }}">
-         {% if invitation.receiver == user %}
+  <div class="panel panel-success">
+    <div class="panel-heading" data-name="{{ name }}" id="panel-heading-{{ name }}-{{ counter }}"
+         data-counter="{{ forloop.counter }}" data-toggle="collapse" data-target="{{ name }}Collapse{{ forloop.counter }}">
+      <span id="{{ name }}-{{ forloop.counter }}-collapse-indicator" class="fa fa-plus primary"></span>&nbsp;&nbsp;
+      <a>
+         {% if invitation.receiver == user.profile %}
            Invitation from <strong>{{ invitation.sender }}</strong>
          {% else %}
            Invitation to <strong>{{ invitation.receiver }}</strong>
          {% endif %}
 
          to join <strong>{{ invitation.party.name }}</strong>
+
+         {% if invitation.response %}
+           {% ifequal invitation.response 'A' %}
+             <span class="pull-right label label-primary">Accepted</span>
+           {% endifequal %}
+           {% ifequal invitation.response 'D' %}
+             <span class="pull-right label label-danger">Declined</span>
+           {% endifequal %}
+         {% endif %}
          {% if not invitation.read %}
-           <span class="label label-success pull-right">Unread</span>
+           <span id="unread-invite" class="label label-primary pull-right">Unread</span>
          {% endif %}
       </a>
     </div>
-    <div id="{{ name }}Collapse{{ forloop.counter }}" class="accordion-body collapse">
-      <div class="accordion-inner">
+    <div id="{{ name }}Collapse{{ forloop.counter }}" class="panel-collapse">
+      <div class="panel-body collapse" id="panel-body-{{ name }}-{{ forloop.counter }}">
         <p>
           {{ invitation.message }}
         </p>
-        <a href="{{ invitation.get_absolute_url }}" class="btn btn-primary">View Invitation</a>
+        <div class="text-center">
+          <a href="{{ invitation.get_absolute_url }}" class="btn btn-primary">Open Invitation</a>
+        </div>
       </div>
     </div>
   </div>
@@ -34,5 +46,24 @@
   {% endif %}
 
 {% empty %}
-  <h3><i>No invitations</h3>
+  <h3 class="text-center"><i>No {{ name }} invitations.</i></h3>
 {% endfor %}
+
+{% block style %}
+  <style type="text/css">
+    span.fa {
+      vertical-align: middle;
+    }
+    #unread-invite {
+        vertical-align: -webkit-baseline-middle;
+    }
+    .panel-heading {
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+    }
+  </style>
+{% endblock %}

@@ -5,15 +5,14 @@
 {% endblock %}
 
 {% block content %}
-  
+  {% include "lists/_messages.html" %}
+
   {% if user.is_authenticated %}
     <h1 class="text-center">Welcome to FridgeFiller!</h1>
     <h4 class="text-center">Rest of home page NYI</h4>
-    
+
     <br><br>
   {% else %}
-    <h1 class="text-center">Welcome to FridgeFiller!</h1>
-    <br><br>
-    {% include "account/login_form.html" %}
+    {% include "home/unauthenticated.html" %}
   {% endif %}
 {% endblock %}

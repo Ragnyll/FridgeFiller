@@ -1,0 +1,53 @@
+{% load item_tags %}
+
+<!-- Get ItemDetail object for item -->
+{% get_item_detail user_pantry_items item.name as item_detail %}
+<div class="hidden" id="edit-item-in-pantry-form-{{item.id}}{% if list.id %}-{{list.id}}{% else %}{% endif %}">
+  <br>
+  <div class="text-center">
+    <h4>Edit Pantry Info for {{ item.name }}</h4>
+  </div>
+  <br>
+  <form class="form-inline" id="edit-item-in-pantry-form-{{ item.id }}" action="{% url 'edit-item-in-pantry' %}" method="POST">
+    {% csrf_token %}
+    <input type="hidden" name="from_url" value="{% if 'Personal' in party.name %}/pantry/{% else %}/pantry/{{ party.id }}/{% endif %}">
+    <input type="hidden" class="form-control" name="edit-item-in-pantry-desc" id="edit-item-in-pantry-desc" value="{{ item_detail.description }}">
+    <input type="hidden" class="form-control" name="list_id" value="{{ list.id }}">
+    <input type="hidden" name="party-id" value="{{ party.id }}">
+
+    <div class="form-field">
+      <label for="edit-item-in-pantry-name">Item Name</label>
+      <input type="text" class="form-control" name="edit-item-in-pantry-name" id="edit-item-in-pantry-name" placeholder="Item Name" value="{{ item_detail.name }}">
+    </div>
+    <div class="form-field">
+      <label for="edit-item-in-pantry-stock">Amount</label>
+      <input type="text" class="form-control" name="edit-item-in-pantry-stock" id="edit-item-in-pantry-stock" placeholder="Amount to add" value="{{ item_detail.get_amount }}">
+    </div>
+    <div class="form-field">
+      <label for="edit-item-in-pantry-unit">Unit</label>
+      <input type="text" class="form-control" name="edit-item-in-pantry-unit" id="edit-item-in-pantry-unit" placeholder="Units (ex: oz)" value="{{ item_detail.unit }}">
+    </div>
+    <div class="form-field">
+      <label for="edit-item-in-pantry-cost">Cost ($)</label>
+      <input type="text" class="form-control" name="edit-item-in-pantry-cost" id="edit-item-in-pantry-cost" placeholder="Item Cost ($)" value="{{ item_detail.get_cost }}">
+    </div>
+    <div class="form-field">
+      <label for="edit-item-in-pantry-last-purchased">Last Purchased</label>
+      <input type="text" class="form-control" name="edit-item-in-pantry-last-purchased" id="datepicker-last-purchased" placeholder="Date Purchased" value="{{ item_detail.get_pretty_last_purchased }}">
+    </div>
+    <div class="form-field">
+      <label for="edit-item-in-pantry-location-purchased">Location Purchased</label>
+      <input type="text" class="form-control" name="edit-item-in-pantry-location-purchased" id="edit-item-in-pantry-location-purchased" placeholder="Location Purchased" value="{{ item_detail.location_purchased }}">
+    </div>
+    <div class="form-field">
+      <label for="edit-item-in-pantry-expiration-date">Expiration Date</label>
+      <input type="text" class="form-control" name="edit-item-in-pantry-expiration-date" id="datepicker-exp-date" placeholder="Expiration Date" value="{{ item_detail.get_pretty_expiration_date }}">
+    </div>
+    <div class="row">
+      <br><br><br>
+      <div class="text-center">
+        <input type="submit" class="btn btn-sm btn-primary" value="Update Values">
+      </div>
+    </div>
+  </form>
+</div>

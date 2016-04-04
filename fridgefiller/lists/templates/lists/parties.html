@@ -4,6 +4,67 @@
   Your Groups
 {% endblock %}
 
+{% block content %}
+  <h1 class="text-center">Your Groups</h1>
+
+  {% include "lists/_messages.html" %}
+
+  <!-- Parties owned by user -->
+  {% if owned_parties %}
+    <h3>Groups you own:</h3>
+    {% for party in owned_parties %}
+      <div id="{{ party.id }}" class="party well">
+        <h2>
+          <a href="{% url 'party' party.id %}">
+            {{ party.name }}&nbsp;&nbsp;&nbsp;
+          </a>
+        </h2>
+      </div>
+    {% endfor %}
+  {% else %}
+    <h3 class="text-center">You don't own any groups.</h3>
+  {% endif %}
+
+  <!-- Parties that user belongs to -->
+  {% if user_parties %}
+    <h3>Groups you belong to:</h3>
+    {% for party in user_parties %}
+      <div id="{{ party.id }}" class="party well">
+        <h2>
+          <a href="{% url 'party' party.id %}">
+            {{ party }}
+          </a>
+        </h2>
+        <h4>Owner: {{ party.owner }}</h4>
+      </div>
+    {% endfor %}
+  {% else %}
+    <h3 class="text-center">You don't belong to anyone else's groups.</h3>
+  {% endif %}
+
+  <br>
+
+  <!-- New Party form -->
+  <div class="text-center well">
+    <h3>Create a new Group</h3>
+    <br>
+    <form method="POST" class="form-inline" id="create-party" action="{% url 'create-party' %}">
+      {% csrf_token %}
+      <input type="text" class="form-control" name="group-name" placeholder="Group Name">
+      <button type="submit" class="btn btn-lg btn-success">&nbsp;Create New Group</button>
+    </form>
+  </div>
+  <br>
+{% endblock %}
+
+{% block script %}
+  <script>
+    $(document).ready(function(){
+      $('[data-toggle="popover"]').popover({ trigger: "hover" });
+    });
+  </script>
+{% endblock %}
+
 {% block style %}
   <style>
     .popover-content {
@@ -14,64 +75,4 @@
         border-top-color: #34495E;
     }
   </style>
-{% endblock %}
-
-{% block content %}
-
-  <h1 class="text-center">Your Groups</h1>
-  <br>
-  <div class="text-center">
-    <button type="submit" data-toggle="popover" data-placement="top" data-content="Invite more People to Group" class="btn btn-lg btn-success">&nbsp;<a href="{% url 'invitation_list' %}">Manage Invitations</a></button>
-  </div>
-  <br>
-  <h3>Groups you own:</h3>
-  
-    {% if not user_parties %}
-      <div class="text-center">
-        <br>
-        <h3>Looks like you don't belong to any groups yet.</h3>
-      </div>
-    {% else %}
-      {% for party in party_own %}
-        <div id="{{ party.id }}" class="party well">
-          <h2>
-            <a href="/lists/party/{{ party.id }}/">
-              {{ party.name }}&nbsp;&nbsp;&nbsp;
-            </a>
-          </h2>
-        </div>
-      {% endfor %}
-      <h3>Groups you belong to:</h3>
-      {% for party in user_parties %}
-        {% if party not in party_own %}
-          <div id="{{ party.id }}" class="party well">
-            <h2>
-              <a href="/lists/party/{{party.id }}/">
-                {{ party }}
-              </a>
-            </h2>
-            <h4>Owner: {{ party.owner }}</h4>
-          </div>
-        {% endif %}
-      {% endfor %}
-    {% endif %}
-    
-    <br>
-    <div class="text-center">
-      <form method="POST" id="create-party" action="{% url 'create-party' %}">
-        {% csrf_token %}
-        <input type="text" name="group-name" value="Group Name"> 
-        <button type="submit" class="btn btn-lg btn-success">&nbsp;Create New Group</button>
-      </form>  
-    </div>
-    <br>
-
-{% endblock %}
-
-{% block script %}
-  <script>
-    $(document).ready(function(){
-      $('[data-toggle="popover"]').popover({ trigger: "hover" });
-    });
-  </script>
 {% endblock %}

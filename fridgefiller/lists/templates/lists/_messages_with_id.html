@@ -1,0 +1,16 @@
+{% if messages %}
+  {% for message in messages %}
+    <!-- Only show messages that pertain to the list the operation was completed on -->
+    {% ifequal message.extra_tags list.id %}
+      <span>{{ message|safe }}</span>
+    {% endifequal %}
+  {% endfor %}
+{% endif %}
+
+{% block style %}
+  <style type="text/css">
+    .alert {
+        display: flex;
+    }
+  </style>
+{% endblock %}

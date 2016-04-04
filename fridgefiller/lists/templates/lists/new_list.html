@@ -1,9 +1,48 @@
 {% extends "base.html" %}
 
+{% block style %}
+  <style>
+    #remove-item-form {
+        display: inline;
+    }
+    #new-item-save {
+        float: right;
+    }
+    #new-item-desc-wrapper {
+        overflow: hidden;
+        padding-right: .5em;
+    }
+    #new-item-desc {
+        width: 100%;
+    }
+    .message {
+        width: 100%;
+    }
+  </style>
+{% endblock %}
+
 {% block title %}
   New Shopping List
 {% endblock %}
 
+<div class="text-center">
+
+</div>
 {% block content %}
   <h1 class="text-center">Create a new Shopping List Below</h1>
+  <table>
+    <tr>
+      <form class="form-horizantal" id="new-shoppinglist-form" action="{% url 'new-list' %}" method="POST">
+
+       {% csrf_token %}
+        <td>
+          <input type="text" class="form-control" name="new-shoppinglist-name" id="new-shoppinglist-name" placeholder="Shopping List Name">
+        </td>
+        <td>
+          <input type="text" class="form-control" name="new-shoppinglist-desc" id="new-shoppinglist-desc" placeholder="Shopping List Description">
+        </td>
+      </tr>
+    </table>
+  </div>
+
 {% endblock %}
