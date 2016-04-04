@@ -91,12 +91,12 @@
     <div class="text-center">
       <br>
       <h3>
-        Looks like you don't have any lists created.
+        Looks like you don&apos;t have any lists created.
       </h3>
     </div>
   {% else %}
     {% for list in user_shopping_lists %}
-      {% include 'lists/_list_view.html' %}
+      {% include 'lists/_list_view.html' with from_url="/lists/" %}
     {% endfor %}
   {% endif %}
 

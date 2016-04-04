@@ -1,0 +1,147 @@
+{% block style %}
+  <style type="text/css">
+    #expired-well {
+      background-color: rgba(231, 76, 60, .3);
+    }
+    #expired-item-well {
+      background-color: rgba(231, 76, 60, .8);
+      padding-top: 5px;
+      padding-bottom: 0px;
+      color: #fff;
+    }
+
+    #warning-well {
+      background-color: rgba(241, 196, 15, .3);
+    }
+    #warning-item-well {
+      background-color: rgba(241, 196, 15, .8);
+      padding-top: 5px;
+      padding-bottom: 0px;
+      color: #fff;
+    }
+    .message {
+        width: 100%;
+    }
+    a.anchor {
+        display: block;
+        position: relative;
+        top: -77px;
+        visibility: hidden;
+    }
+  </style>
+{% endblock %}
+
+
+{% if not most_recent_list %}
+  <h1 class="text-center">Looks like you don&apos;t have any lists created.</h1>
+{% else %}
+  <h2 class="text-center">Most Recent Shopping List</h2>
+
+  {% include 'lists/_list_view.html' with list=most_recent_list from_url='/' %}
+
+{% endif %}
+
+<div class="row">
+  <div class="col-md-6">
+    <div class="well" id="expired-well">
+      <h3 class="text-center">Expired Items</h3>
+      <p class="text-center"> These Items in your personal pantry are expired! </p>
+
+      <div class="row">
+        <div class="col-md-6"><h6>Name</h6></div>
+        <div class="col-md-6"><h6>Expiration Date</h6></div>
+      </div>
+
+      {% for item in expired_items %}
+        <div class="row">
+          <div class="well" id="expired-item-well">
+            <div class="row">
+              <div class="col-md-6">
+                <p>{{ item.name }}</p>
+              </div>
+              <div class="col-md-6">
+                {{ item.expiration_date.date }}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="well" id="warning-well">
+      <h3 class="text-center">Warning Items</h3>
+      <p class="text-center"> These Items in your personal pantry will expire in less than a week! </p>
+      <div class="row">
+        <div class="col-md-6"><h6>Name</h6></div>
+        <div class="col-md-6"><h6>Expiration date</h6></div>
+      </div>
+      {% for item in warning_items %}
+        <div class="row">
+          <div class="well" id="warning-item-well">
+            <div class="row">
+              <div class="col-md-6">
+                <p>{{ item.name }}</p>
+              </div>
+              <div class="col-md-6">
+                {{ item.expiration_date.date }}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+
+    </div>
+  </div>
+
+  <div class="col-md-6">
+    <div class="well" id="expired-well">
+      <h3 class="text-center">Group Expired Items</h3>
+      <p class="text-center"> These Items in your group personal pantry are expired! </p>
+
+      <div class="row">
+        <div class="col-md-6"><h6>Name</h6></div>
+        <div class="col-md-6"><h6>Expiration Date</h6></div>
+      </div>
+
+      {% for item in group_expired_items %}
+        <div class="row">
+          <div class="well" id="expired-item-well">
+            <div class="row">
+              <div class="col-md-6">
+                <p>{{ item.name }}</p>
+              </div>
+              <div class="col-md-6">
+                {{ item.expiration_date.date }}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+    </div>
+
+    <div class="well" id="warning-well">
+      <h3 class="text-center">Group Warning Items</h3>
+      <p class="text-center"> These Items in your group pantry will expire in less than a week! </p>
+      <div class="row">
+        <div class="col-md-6"><h6>Name</h6></div>
+        <div class="col-md-6"><h6>Expiration date</h6></div>
+      </div>
+      {% for item in group_warning_items %}
+        <div class="row">
+          <div class="well" id="warning-item-well">
+            <div class="row">
+              <div class="col-md-6">
+                <p>{{ item.name }}</p>
+              </div>
+              <div class="col-md-6">
+                {{ item.expiration_date.date }}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+
+    </div>
+  </div>
+  </div>
+</div>

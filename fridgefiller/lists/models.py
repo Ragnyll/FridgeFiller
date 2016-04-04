@@ -84,7 +84,9 @@ class ShoppingList(models.Model):
     owners = models.ManyToManyField('UserProfile', related_name="owners")
     description = models.TextField(default="")
     items = models.ManyToManyField('Item')
-
+    created = models.DateTimeField(auto_now_add=True)
+    updated = models.DateTimeField(auto_now=True)
+    
     def __str__(self):
        return str(self.name)
 
