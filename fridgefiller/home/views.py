@@ -46,7 +46,8 @@ class HomePageView(TemplateView):
             expired_items = []
             # these are all the items that will expire in < 1 week
             warning_items = []
-            user_party = Party.objects.get(owner=user)
+
+            user_party = Party.objects.get(name=user.name+"'s Personal Party")
             user_pantry = Pantry.objects.get(party=user_party)
             user_pantry_items = user_pantry.items.all()
 
@@ -58,15 +59,47 @@ class HomePageView(TemplateView):
                 datetime_delta = datetime_expiration - datetime_current
 
                 # see if item_detail is expired
-                if datetime_delta.days <= 0:
+                if datetime_delta.days <= 1:
                     expired_items.append(item_detail)
                 # see if item_detail will expire in less than a week
-                elif datetime_delta.days <= 7 and datetime_delta.days > 0:
+                elif datetime_delta.days <= 7 and datetime_delta.days > 1:
                     warning_items.append(item_detail)
 
             # stick the two lists into the context dictionary
             context['expired_items'] = expired_items
             context['warning_items'] = warning_items
+        except:
+            pass
+
+        # get the group's expired items
+        try:
+            user = UserProfile.objects.get(user=self.request.user)
+            user_parties = Party.objects.filter(users__in=[user])
+            user_party = Party.objects.get(name=user.name+"'s Personal Party")
+            group_expired_items = []
+            group_warning_items = []
+            # add a line to remove he user personal party
+            for party_i in user_parties:
+                party_pantry = Pantry.objects.get(party=party_i)
+                party_pantry_items = party_pantry.items.all()
+
+                for item_detail in party_pantry_items:
+                    # a datetime object is constructed instead of using django datetime because django datetime is really strange and wont run timedeltas correctly
+                    datetime_expiration = datetime(item_detail.expiration_date.year, item_detail.expiration_date.month, item_detail.expiration_date.day, 0, 0)
+
+                    datetime_current = datetime.now()
+                    datetime_delta = datetime_expiration - datetime_current
+
+                    # see if item_detail is expired
+                    if datetime_delta.days <= 1:
+                        group_expired_items.append(item_detail)
+                    # see if item_detail will expire in less than a week
+                    elif datetime_delta.days <= 7 and datetime_delta.days > 1:
+                        group_warning_items.append(item_detail)
+
+            context['group_expired_items'] = group_expired_items
+            context['group_warning_items'] = group_warning_items
+
         except:
             pass
 

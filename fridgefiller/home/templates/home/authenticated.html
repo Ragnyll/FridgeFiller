@@ -7,6 +7,7 @@
       background-color: rgba(231, 76, 60, .8);
       padding-top: 5px;
       padding-bottom: 0px;
+      color: #fff;
     }
 
     #warning-well {
@@ -16,6 +17,7 @@
       background-color: rgba(241, 196, 15, .8);
       padding-top: 5px;
       padding-bottom: 0px;
+      color: #fff;
     }
     .message {
         width: 100%;
@@ -58,7 +60,7 @@
                 <p>{{ item.name }}</p>
               </div>
               <div class="col-md-6">
-                {{ item.expiration_date }}
+                {{ item.expiration_date.date }}
               </div>
             </div>
           </div>
@@ -70,9 +72,8 @@
       <h3 class="text-center">Warning Items</h3>
       <p class="text-center"> These Items in your personal pantry will expire in less than a week! </p>
       <div class="row">
-        <div class="col-md-4"><h6>Name</h6></div>
-        <div class="col-md-4"><h6>Expires in</h6></div>
-        <div class="col-md-4"><h6>Expiration date</h6></div>
+        <div class="col-md-6"><h6>Name</h6></div>
+        <div class="col-md-6"><h6>Expiration date</h6></div>
       </div>
       {% for item in warning_items %}
         <div class="row">
@@ -82,7 +83,7 @@
                 <p>{{ item.name }}</p>
               </div>
               <div class="col-md-6">
-                {{ item.expiration_date }}
+                {{ item.expiration_date.date }}
               </div>
             </div>
           </div>
@@ -95,22 +96,51 @@
   <div class="col-md-6">
     <div class="well" id="expired-well">
       <h3 class="text-center">Group Expired Items</h3>
-      <p class="text-center"> These Items in your group's pantry are expired! </p>
+      <p class="text-center"> These Items in your group personal pantry are expired! </p>
+
       <div class="row">
         <div class="col-md-6"><h6>Name</h6></div>
         <div class="col-md-6"><h6>Expiration Date</h6></div>
       </div>
+
+      {% for item in group_expired_items %}
+        <div class="row">
+          <div class="well" id="expired-item-well">
+            <div class="row">
+              <div class="col-md-6">
+                <p>{{ item.name }}</p>
+              </div>
+              <div class="col-md-6">
+                {{ item.expiration_date.date }}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
     </div>
 
     <div class="well" id="warning-well">
       <h3 class="text-center">Group Warning Items</h3>
-      <p class="text-center"> These Items in your group's pantry will expire in less than a week! </p>
-
+      <p class="text-center"> These Items in your group pantry will expire in less than a week! </p>
       <div class="row">
-        <div class="col-md-4"><h6>Name</h6></div>
-        <div class="col-md-4"><h6>Expires in</h6></div>
-        <div class="col-md-4"><h6>Expiration date</h6></div>
+        <div class="col-md-6"><h6>Name</h6></div>
+        <div class="col-md-6"><h6>Expiration date</h6></div>
       </div>
+      {% for item in group_warning_items %}
+        <div class="row">
+          <div class="well" id="warning-item-well">
+            <div class="row">
+              <div class="col-md-6">
+                <p>{{ item.name }}</p>
+              </div>
+              <div class="col-md-6">
+                {{ item.expiration_date.date }}
+              </div>
+            </div>
+          </div>
+        </div>
+      {% endfor %}
+
     </div>
   </div>
   </div>
