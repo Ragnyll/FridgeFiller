@@ -77,8 +77,6 @@ class HomePageView(TemplateView):
             user_parties = Party.objects.filter(users__in=[user])
             personal_user_party = Party.objects.get(name=user.name+"'s Personal Party")
             user_parties = user_parties.exclude(name=user.name+"'s Personal Party")
-            print "user personal party removed"
-            print user_parties
             group_expired_items = []
             group_warning_items = []
             # add a line to remove he user personal party
