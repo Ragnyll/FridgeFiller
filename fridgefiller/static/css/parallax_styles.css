@@ -21,7 +21,7 @@ h1{
 
 h2{
   font-family:"Lato";
-  color: #fff;
+  color: #000000;
   font-weight: bold;
   font-size: 32px;
   text-align: center;
@@ -34,10 +34,9 @@ h5{
 
 p{
   font-size:18px;
+  color: #000000;
 }
-.even-row{
-  color: #fff;
-}
+
 .odd-row-text{
   color: #2f4154;
 }
@@ -48,16 +47,21 @@ p{
   text-align: left;
   margin: 50px auto;
 }
+#info-well{
+  background-color: rgba(211,211,211, .4);
+  padding: 30px;
+  border: 0px;
+}
 #login-slide{
   background: url('../img/empty1.jpg');
-  height: 900px;
+  height: 850px;
   margin: 0;
   padding: 200px 0 260px 0;
   background-size: cover;
 }
 #basic-use{
   background-color: #2f4154;
-  height: 600px;
+  height: 500px;
   margin: 0 auto;
   overflow: hidden;
   padding: 75px 0;
@@ -67,18 +71,18 @@ p{
   background: url('../img/withapple.jpg');
   color: #fff;
   height: 600px;
-  padding: 170px 0 0 0;
+  padding: 150px 0 0 0;
   background-size: cover;
 }
 #GroupManagement{
   background-color: #2f4154;
   color: #333333;
-  height: 300px;
-  padding: 200px 0;
+  height: 600px;
+  padding: 100px 0;
 }
 #user-testimonials{
   background: url('../img/withbread.jpg');
-  height: 200px;
+  height: 600px;
   margin: 0 auto;
   padding: 160px 0;
   color: #fff;
