@@ -29,8 +29,9 @@
         {% if user_lists %}
           <ul class="dropdown-menu">
             <li class="dropdown-header">
-              <a href="{% url 'lists' %}">All My Lists</a>
+              <a href="{% url 'lists' %}" class="text-center">All My Lists</a>
             </li>
+            <li class="divider"></li>
             {% for list in user_lists %}
               <li>
                 <a href="{% url 'lists' %}#{{ list.id }}">{{ list }}</a>
@@ -39,6 +40,7 @@
           </ul>
         {% endif %}
       </li>
+      {% get_users_groups request.user.profile %}
       <li class="{% active_re '/party/|/parties/' %}">
         <a href="{% url 'parties' %}">
           My Groups <span class="fa fa-arrow-right"></span>
