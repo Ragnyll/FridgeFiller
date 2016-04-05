@@ -53,6 +53,8 @@ class PartyView(TemplateView):
         context['party_lists'] = partylists
         context['user_lists'] = ShoppingList.objects.filter(owners__in=[user]).exclude(id__in=partylists.values_list('id'))
         context['party_pantry'] = Pantry.objects.filter(party__in=[party])
+        context['user_pantry_items'] = Pantry.objects.filter(party__in=[party])[0].items.all()
+        context['user_pantry_item_names'] = [x.name for x in Pantry.objects.filter(party__in=[party])[0].items.all()]
         context['personal_party'] = Party.objects.filter(name__contains='Personal Party').get(owner = user)
         return context
 
