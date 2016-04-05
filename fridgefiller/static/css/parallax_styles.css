@@ -40,6 +40,12 @@ p{
 .odd-row-text{
   color: #2f4154;
 }
+.even-row{
+  color: #fff;
+}
+.odd-row-text{
+  color: #2f4154;
+}
 .quotes{
   font-family: "Lato";
   font-weight: normal;
@@ -47,6 +53,7 @@ p{
   text-align: left;
   margin: 50px auto;
 }
+
 #info-well{
   background-color: rgba(211,211,211, .4);
   padding: 30px;
