@@ -53,7 +53,10 @@ p{
   text-align: left;
   margin: 50px auto;
 }
-
+#carousel-img{
+  height: 50px;
+  width: auto;
+}
 #info-well{
   background-color: rgba(211,211,211, .4);
   padding: 30px;
