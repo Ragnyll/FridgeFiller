@@ -18,14 +18,29 @@
   <div class="navbar-collapse collapse">
     <ul class="nav pull-left navbar-nav">
       <!-- List Items for left navbar here -->
-      <li class="{% active_re '^/pantry' %}">
-        <a href="{% url 'pantry' %}">
-          My Pantry
-        </a>
+
+      <!-- Users Pantries -->
+      {% get_users_groups request.user.profile as user_groups %}
+      <li class="{% active_re '/pantry|/pantries' %} dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Pantries<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li class="dropdown-header">
+            <a href="{% url 'pantry' %}" class="text-center">My Pantry</a>
+          </li>
+          {% if user_groups %}
+            <li class="divider"></li>
+            {% for pantry in user_groups %}
+              <li>
+                <a href="{% url 'party-pantry' pantry.id %}">{{ pantry }}'s Pantry</a>
+              </li>
+            {% endfor %}
+          {% endif %}
+        </ul>
       </li>
+
       <!-- User's Lists -->
       {% get_users_lists request.user.profile as user_lists %}
-      <li class="{% active_re '/lists/$' %} dropdown" >
+      <li class="{% active_re '/lists/$' %} dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Lists<span class="caret"></span></a>
         <ul class="dropdown-menu">
           <li class="dropdown-header">
@@ -42,7 +57,6 @@
         </ul>
       </li>
       <!-- User's Groups -->
-      {% get_users_groups request.user.profile as user_groups %}
       <li class="{% active_re '/party/|/parties/' %} dropdown">
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Groups<span class="caret"></span></a>
         <ul class="dropdown-menu">
