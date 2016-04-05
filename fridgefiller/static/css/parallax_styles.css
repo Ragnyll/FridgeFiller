@@ -1,8 +1,12 @@
+#navbar-padding{
+  padding-top: 10px;
+}
+#brand{
+  color: #fff;
+}
+
 body{
   overflow-x: hidden;
-  margin: 0;
-  padding: 0;
-  width: 100%;
 }
 
 h1{
@@ -10,11 +14,11 @@ h1{
   font-weight: normal;
   font-size: 55px;
   text-align: center;
-  color: #fff;
+  color: #fff  ;
   margin: 0;
   padding: 0;
 }
-  
+
 h2{
   font-family:"Lato";
   color: #fff;
@@ -24,63 +28,73 @@ h2{
   padding-bottom: 32px;
   margin: 0;
 }
-h4{
-  color:#2f4154;
+
+h5{
+  color:#fff  ;
 }
-.center {margin: 0 auto;}
-.content{margin: 0 auto; width 100%;}
-.clear{clear:both;}
 
 p{
+  font-size:20px;
   color: #fff;
-  font-family:"Lato";
-  font-size:18px;
 }
-.quotes{
-  font-family: "Lato";
-  font-weight: normal;
-  font-size:30px;
-  text-align: left;
-  margin: 50px auto;
+
+.carousel-inner{
+  width: 100%;
+  height: 250px !important;
 }
-#login-slide, #basic-use{ width: 100%; overflow-x: hidden; }
+#even-info-well{
+  background-color: rgba(211,211,211, .3);
+  padding: 30px;
+  border: 0px;
+}
+#odd-info-well{
+  background-color: rgba(36,51,66, .5);
+  padding: 30px;
+  border: 0px;
+}
+
+
 #login-slide{
-  overflow-x: hidden;
   background: url('../img/empty1.jpg');
-  color:#fff;
-  height: 900px;
+  height: 825px;
   margin: 0;
   padding: 200px 0 260px 0;
   background-size: cover;
 }
 #basic-use{
   background-color: #2f4154;
-  height: 600px;
+  height: 500px;
   margin: 0 auto;
   overflow: hidden;
   padding: 75px 0;
   overflow-x: hidden;
 }
-#barcode-scanning{
+#pantrys{
   background: url('../img/withapple.jpg');
   color: #fff;
   height: 600px;
-  padding: 170px 0 0 0;
+  padding: 150px 0 0 0;
   background-size: cover;
 }
-#GroupManagement{
+#barcode-scanning{
   background-color: #2f4154;
   color: #333333;
-  height: 300px;
-  padding: 200px 0;
+  height: 600px;
+  padding: 100px 0;
 }
-#user-testimonials{
+#portable-lists{
   background: url('../img/withbread.jpg');
-  height: 200px;
+  height: 600px;
   margin: 0 auto;
   padding: 160px 0;
   color: #fff;
   background-size: cover;
+}
+#user-testimonials{
+  background-color: #2f4154;
+  color: #333333;
+  height: 600px;
+  padding: 100px 0;
 }
 #groupname{
   color: #2f4154;
