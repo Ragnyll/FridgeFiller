@@ -8,10 +8,7 @@
   {% include "lists/_messages.html" %}
 
   {% if user.is_authenticated %}
-    <h1 class="text-center">Welcome to FridgeFiller!</h1>
-    <h4 class="text-center">Rest of home page NYI</h4>
-
-    <br><br>
+    {% include "home/authenticated.html" %}
   {% else %}
     {% include "home/unauthenticated.html" %}
   {% endif %}

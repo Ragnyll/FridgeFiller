@@ -74,14 +74,15 @@ class NewItemView(View):
     def post(self, request, *args, **kwargs):
         item_name = request.POST.get('new-item-name', False).title()
         item_desc = request.POST.get('new-item-description', False).capitalize()
-
+        from_url = request.POST.get('from_url', False)
         list_id = request.POST.get('list-id', False)
         list_obj = ShoppingList.objects.get(id=list_id)
-
+        
+        print from_url
         # Don't make empty items!
         if item_name == "":
             messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;: You must provide a name for the item." + ALERT_CLOSE, extra_tags=int(list_id))
-            return redirect('/lists/#' + list_id)
+            return redirect(from_url + '#' + list_id)
 
         # Get or create item in database
         try:
@@ -92,12 +93,12 @@ class NewItemView(View):
             new_item = Item.objects.create(name=item_name, description=item_desc)
         except:
             messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;: Can't create or get that item.  Please let a developer know!" + ALER_CLOSE, extra_tags=int(list_id))
-            return redirect('/lists/#' + list_id)
+            return redirect(from_url + '#' + list_id)
 
         # Don't add duplicate items
         if new_item in list_obj.items.all():
             messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;:That item already exists in the list." + ALERT_CLOSE, extra_tags=int(list_id))
-            return redirect('/lists/#' + list_id)
+            return redirect(from_url + '#' + list_id)
 
         # Add item to list
         try:
@@ -107,7 +108,7 @@ class NewItemView(View):
         except:
             messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;:Unable to add <strong>&nbsp;" + item_name + "</strong>&nbsp;&nbsp;to list." + ALERT_CLOSE, extra_tags=int(list_id))
 
-        return redirect('/lists/#' + list_id)
+        return redirect(from_url + '#' + list_id)
 
 
 class NewListView(View):
