@@ -46,13 +46,13 @@
     <form class="form-horizontal" id="new-shoppinglist-form" action="{% url 'new-list' %}" method="POST">
       <div class="row">
         {% csrf_token %}
-        <div class="col-md-3 col-sm-3">
+        <div class="col-md-3">
           <input type="text" class="form-control" name="new-shoppinglist-name" id="new-shoppinglist-name" placeholder="Shopping List Name">
         </div>
-        <div class="col-md-6 col-sm-6">
+        <div class="col-md-6">
           <input type="text" class="form-control" name="new-shoppinglist-desc" id="new-shoppinglist-desc" placeholder="Shopping List Description">
         </div>
-        <div class="col-md-3 col-sm-3">
+        <div class="col-md-3">
           <input type="submit" class="btn btn-primary" value="Save" id="new-shoppinglist-save" />
         </div>
       </div>
@@ -68,12 +68,13 @@
     }
     @media (max-width: 992px) and (min-width: 769px) {
       #new-shoppinglist-save {
-        width: 75%;
+          margin-top: 20px;
+          width: 100%;
       }
     }
     @media (min-width: 992px) {
       #new-shoppinglist-save {
-        width: 90%;
+          width: 90%;
       }
     }
   </style>

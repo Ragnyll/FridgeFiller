@@ -52,14 +52,21 @@ p{
   padding: 30px;
   border: 0px;
 }
-
-
 #login-slide{
   background: url('../img/empty1.jpg');
-  height: 825px;
+  height: 800px;
   margin: 0;
   padding: 200px 0 260px 0;
   background-size: cover;
+}
+@media(max-width: 800px) {
+  #login-slide{
+    background: url('../img/empty1.jpg');
+    height: auto;
+    margin: 0;
+    padding: 200px 0 260px 0;
+    background-size: cover;
+  }
 }
 #basic-use{
   background-color: #2f4154;
@@ -69,6 +76,16 @@ p{
   padding: 75px 0;
   overflow-x: hidden;
 }
+@media(max-width: 800px) {
+  #basic-use{
+    background-color: #2f4154;
+    height: auto;
+    margin: 0 auto;
+    overflow: hidden;
+    padding: 75px 0;
+    overflow-x: hidden;
+  }
+}
 #pantrys{
   background: url('../img/withapple.jpg');
   color: #fff;
@@ -76,11 +93,28 @@ p{
   padding: 150px 0 0 0;
   background-size: cover;
 }
+@media(max-width: 800px) {
+  #pantrys{
+    background: url('../img/withapple.jpg');
+    color: #fff;
+    height: auto;
+    padding: 150px 0 0 0;
+    background-size: cover;
+  }
+}
 #barcode-scanning{
   background-color: #2f4154;
   color: #333333;
   height: 600px;
   padding: 100px 0;
+}
+@media(max-width: 800px) {
+  #barcode-scanning{
+    background-color: #2f4154;
+    color: #333333;
+    height: auto;
+    padding: 100px 0;
+  }
 }
 #portable-lists{
   background: url('../img/withbread.jpg');
@@ -90,11 +124,30 @@ p{
   color: #fff;
   background-size: cover;
 }
+@media(max-width: 800px){
+  #portable-lists{
+    background: url('../img/withbread.jpg');
+    height: auto;
+    margin: 0 auto;
+    padding: 160px 0;
+    color: #fff;
+    background-size: cover;
+  }
+}
+
 #user-testimonials{
   background-color: #2f4154;
   color: #333333;
   height: 600px;
   padding: 100px 0;
+}
+@media(max-width: 800px){
+  #user-testimonials{
+    background-color: #2f4154;
+    color: #333333;
+    height: auto;
+    padding: 100px 0;
+  }
 }
 #groupname{
   color: #2f4154;
@@ -103,4 +156,15 @@ p{
   font-size: 14px;
   margin-top: 50px;
   text-align: center;
+}
+@media(max-width: 800px){
+  #groupname{
+    height:auto;
+    color: #2f4154;
+    font-family: "Lato";
+    font-weight: bold;
+    font-size: 14px;
+    margin-top: 50px;
+    text-align: center;
+  }
 }

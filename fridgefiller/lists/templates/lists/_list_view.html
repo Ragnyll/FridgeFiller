@@ -2,7 +2,7 @@
   <div class="panel-heading" id="panel-heading-{{ list.id }}" data-listid="{{ list.id }}" data-toggle="collapse" data-target="l-{{ list.id }}">
     <a class="anchor" id="{{ list.id }}"></a>
     <div class="shopping-list">
-      <h2>
+      <h2 id="list-name">
         <span id="{{ list.id }}-collapse-indicator" class="fa fa-plus "></span>&nbsp;
         <a>
           {{ list }}&nbsp;&nbsp;&nbsp;
@@ -10,7 +10,7 @@
       </h2>
       <h4>
         {{ list.description }}
-        <div class="pull-right">
+        <div class="pull-right" style="display:block">
           <!-- print list form -->
           <form id="print-button" action="{% url 'print-list' %}" method="POST">
             {% csrf_token %}
@@ -172,6 +172,13 @@
     label, input {
         display: block;
     }
+    #list-name {
+        word-wrap: break-word;
+        -moz-hyphens:auto;
+        -webkit-hyphens:auto;
+        -o-hyphens:auto;
+        hyphens:auto;
+    }
     @media (max-width: 768px) {
         .fa-barcode {
             margin-top: 20px;
@@ -184,6 +191,12 @@
             margin-top: 20px;
             float: right;
             width: 70%;
+        }
+        .panel-heading {
+            overflow: hidden;
+        }
+        #item-count {
+            margin-right: 35px;
         }
     }
     @media (max-width: 992px) and (min-width: 767px) {
