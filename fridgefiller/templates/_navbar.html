@@ -23,29 +23,43 @@
           My Pantry
         </a>
       </li>
+      <!-- User's Lists -->
       {% get_users_lists request.user.profile as user_lists %}
       <li class="{% active_re '/lists/$' %} dropdown" >
         <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Lists<span class="caret"></span></a>
-        {% if user_lists %}
-          <ul class="dropdown-menu">
-            <li class="dropdown-header">
-              <a href="{% url 'lists' %}" class="text-center">All My Lists</a>
-            </li>
+        <ul class="dropdown-menu">
+          <li class="dropdown-header">
+            <a href="{% url 'lists' %}" class="text-center">All My Lists</a>
+          </li>
+          {% if user_lists %}
             <li class="divider"></li>
             {% for list in user_lists %}
               <li>
                 <a href="{% url 'lists' %}#{{ list.id }}">{{ list }}</a>
               </li>
             {% endfor %}
-          </ul>
-        {% endif %}
+          {% endif %}
+        </ul>
       </li>
-      {% get_users_groups request.user.profile %}
-      <li class="{% active_re '/party/|/parties/' %}">
-        <a href="{% url 'parties' %}">
-          My Groups <span class="fa fa-arrow-right"></span>
-        </a>
+      <!-- User's Groups -->
+      {% get_users_groups request.user.profile as user_groups %}
+      <li class="{% active_re '/party/|/parties/' %} dropdown">
+        <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">My Groups<span class="caret"></span></a>
+        <ul class="dropdown-menu">
+          <li class="dropdown-header">
+            <a href="{% url 'parties' %}" class="text-center">All My Groups</a>
+          </li>
+          {% if user_groups %}
+            <li class="divider"></li>
+            {% for group in user_groups %}
+              <li>
+                <a href="{% url 'party' group.id %}">{{ group }}</a>
+              </li>
+            {% endfor %}
+          {% endif %}
+        </ul>
       </li>
+
       <li class="{% active_re '/invitations' %}" id="invitation-tab">
         <a href="{% url 'invitation_list' %}">
           Group Invitations

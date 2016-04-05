@@ -17,5 +17,9 @@ def get_users_lists(user):
     except:
         return []
 
-#@register.simple_tag()
-#def get_users_groups(user):
+@register.simple_tag()
+def get_users_groups(user):
+    try:
+        return Party.objects.filter(owner__in=[user], users__in=[user]).exclude(name=user.name+"'s Personal Party")
+    except:
+        return []
