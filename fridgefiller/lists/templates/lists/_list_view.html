@@ -138,17 +138,18 @@
     #remove-item-form, #add-item-to-pantry-form {
         display: inline;
     }
-    #new-item-save {
-        float: right;
-    }
     #new-item-name {
-        width: 43%;
+        width: 40%;
     }
     #new-item-desc {
-        width: 43%;
+        width: 40%;
     }
     #new-item-save {
-        width: 10%;
+        width: 12%;
+        float: right;
+    }
+    .fa-barcode {
+        width: 6%;
     }
     .message {
         width: 100%;
@@ -170,6 +171,33 @@
     }
     label, input {
         display: block;
+    }
+    @media (max-width: 768px) {
+        .fa-barcode {
+            margin-top: 20px;
+            width: 20%
+        }
+        #new-item-name, #new-item-desc {
+            width: 100%;
+        }
+        #new-item-save {
+            margin-top: 20px;
+            float: right;
+            width: 70%;
+        }
+    }
+    @media (max-width: 992px) and (min-width: 767px) {
+        .fa-barcode {
+            margin-top: 20px;
+            width: 25%;
+        }
+        #new-item-name, #new-item-desc {
+            width: 49.59%;
+        }
+        #new-item-save {
+            margin-top: 20px;
+            width: 74%;
+        }
     }
   </style>
 {% endblock %}
