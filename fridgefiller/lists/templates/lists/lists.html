@@ -43,7 +43,7 @@
   <div id="new-list">
     <h1 class="text-center">Create a new Shopping List Below</h1>
     <br>
-    <form class="form-horizantal" id="new-shoppinglist-form" action="{% url 'new-list' %}" method="POST">
+    <form class="form-horizontal" id="new-shoppinglist-form" action="{% url 'new-list' %}" method="POST">
       <div class="row">
         {% csrf_token %}
         <div class="col-md-3">
@@ -52,10 +52,30 @@
         <div class="col-md-6">
           <input type="text" class="form-control" name="new-shoppinglist-desc" id="new-shoppinglist-desc" placeholder="Shopping List Description">
         </div>
-        <input type="submit" class="btn btn-primary" value="Save" id="new-item-save" />
+        <div class="col-md-3">
+          <input type="submit" class="btn btn-primary" value="Save" id="new-shoppinglist-save" />
+        </div>
       </div>
-      <br><br><br>
     </form>
   </div>
   <br>
+  <style type="text/css">
+    @media (max-width: 768px) {
+      #new-shoppinglist-save {
+        margin-top: 20px;
+        width: 100%;
+      }
+    }
+    @media (max-width: 992px) and (min-width: 769px) {
+      #new-shoppinglist-save {
+          margin-top: 20px;
+          width: 100%;
+      }
+    }
+    @media (min-width: 992px) {
+      #new-shoppinglist-save {
+          width: 90%;
+      }
+    }
+  </style>
 {% endblock %}
