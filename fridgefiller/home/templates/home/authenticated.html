@@ -1,3 +1,5 @@
+{% load staticfiles %}
+
 {% block style %}
   <style type="text/css">
     #expired-well {
@@ -30,7 +32,6 @@
     }
   </style>
 {% endblock %}
-
 
 {% if not most_recent_list %}
   <h1 class="text-center">Looks like you don&apos;t have any lists created.</h1>
@@ -145,3 +146,7 @@
   </div>
   </div>
 </div>
+
+{% block script %}
+  <script src="{% static 'js/lists.js' %}" type="text/javascript"></script>
+{% endblock %}
