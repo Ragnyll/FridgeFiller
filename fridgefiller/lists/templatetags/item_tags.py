@@ -1,5 +1,6 @@
 from django import template
 from django.template import Context, Template
+from django.db.models import Q
 
 from ..models import *
 
@@ -20,6 +21,6 @@ def get_users_lists(user):
 @register.simple_tag()
 def get_users_groups(user):
     try:
-        return Party.objects.filter(owner__in=[user], users__in=[user]).exclude(name=user.name+"'s Personal Party")
+        return Party.objects.filter(Q(owner__in=[user]) | Q(users__in=[user])).exclude(name=user.name+"'s Personal Party")
     except:
         return []
