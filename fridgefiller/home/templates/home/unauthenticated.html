@@ -27,10 +27,16 @@
            <div id="carousel-1" class="carousel slide" data interval="false">
              <div class="carousel-inner">
                <div class="item active">
-                 <div class="carousel-img"><img src="{% static 'img/listpic.png' %}" align="left" alt="Manage dynamic lists!" style="width: 100%; height: auto;"/></div>
+                 <img class="img-responsive" src="{% static 'img/listpic.png' %}" align="left" />
+               </div>
+               <div class="item"><!-- THIS ONE CAUSES AN AUTO RESIZE -->
+                 <img class="img-responsive" src="{% static 'img/group_1.png' %}" align="left" />
                </div>
                <div class="item">
-                 <div class="carousel-img"><img src="{% static 'img/group_1.png' %}" align="left" style="width: 100%; height: auto;"/></div>
+                 <img class="img-responsive" src="{% static 'img/group_2.png' %}" align="left" />
+               </div>
+               <div class="item">
+                 <img class="img-responsive" src="{% static 'img/group_4.png' %}" align="left" />
                </div>
              </div>
              <!-- Controls -->
@@ -62,7 +68,21 @@
              <p> Using FridgeFiller's awesome pantry system it's easy to keep stock of what you have and what you need. We'll even let you know when your food is going to expire so you dont run out of an ingredient when you need it most.</p>
            </div>
          </div>
-         <div class="col-md-6"><img src="{% static 'img/listpic.png' %}" align="left" alt="Manage dynamic lists!" style="width: 100%; height: auto;"/></div>
+         <div class="col-md-6">
+           <div id="carousel-2" class="carousel slide" data interval="false">
+             <div class="carousel-inner">
+               <div class="item active">
+                 <img class="img-responsive" src="{% static 'img/personal_pantry.png' %}" align="left" />
+               </div>
+               <div class="item">
+                 <img class="img-responsive" src="{% static 'img/group_4.png' %}" align="left" />
+               </div>
+             </div>
+             <!-- Controls -->
+            <a class="left carousel-control fui-arrow-left" href="#carousel-2" data-slide="prev"></a>
+            <a class="right carousel-control fui-arrow-right" href="#carousel-2" data-slide="next"></a>
+           </div>
+         </div>
        </div>
      </div>
    </div>
