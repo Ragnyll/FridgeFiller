@@ -6,11 +6,19 @@ $(function() {
     attachListeners: function() {
       var self = this;
 
-      $(".controls button").on("click", function(e) {
-        var input = document.querySelector(".controls input[type=file]");
-        if (input.files && input.files.length) {
-          App.decode(URL.createObjectURL(input.files[0]));
+      // Click file selection input field and clear any previous result classes
+      $(".fa-barcode").on("click", function(e) {
+        var input = $(this).find('input[type=file]')[0];
+        App.ids = $(input).attr('id').split(" ");
+        $("span[id*='message']").removeClass("alert alert-danger alert-success").html("");
+      });
+
+      // Call Quagga decode function using selected file.
+      $('.scan-barcode-input').change(function(e) {
+        if (e.target.files && e.target.files.length) {
+          App.decode(URL.createObjectURL(e.target.files[0]));
         }
+        $(this).val("");
       });
     },
     _accessByPath: function(obj, path, val) {
@@ -31,15 +39,16 @@ $(function() {
       });
     },
     detachListeners: function() {
-      $(".controls input[type=file]").off("change");
-      $(".controls .reader-config-group").off("change", "input, select");
-      $(".controls button").off("click");
+      $(".scan-barcode-input input[type=file]").off("change");
+      $(".fa-barcode button").off("click");
     },
     decode: function(src) {
       var self = this,
           config = $.extend({}, self.state, {src: src});
 
-      Quagga.decodeSingle(config, function(result) {});
+      Quagga.decodeSingle(config, function(result) { //misread
+        misread(App.ids, result);
+      });
     },
     setState: function(path, value) {
       var self = this;
@@ -50,8 +59,8 @@ $(function() {
 
       self._accessByPath(self.state, path, value);
 
-      console.log(JSON.stringify(self.state));
       App.detachListeners();
+      App.ids = {};
       App.init();
     },
     inputMapper: {},
@@ -66,23 +75,17 @@ $(function() {
       },
       numOfWorkers: 1,
       decoder: {
-        readers: ["ean_reader"]
+        readers: ["upc_reader"]
       },
       locate: true,
       src: null
-    }
+    },
+    ids: {}
   };
   
   App.init();
 
   Quagga.onDetected(function(result) {
-    var code = result.codeResult.code,
-        $node,
-        canvas = Quagga.canvas.dom.image;
-
-    $node = $('<li><div class="caption"><h4 class="code"></h4></div></li>');
-    $node.find("img").attr("src", canvas.toDataURL());
-    $node.find("h4.code").html(code);
-    $("#result_strip ul.codes").prepend($node);
+    query_api(App.ids, result.codeResult.code);
   });
 });

@@ -11,8 +11,6 @@
       <i class="fa fa-plus-square"></i>&nbsp;&nbsp;to Pantry
     </button>
   </form>
-  <!-- Scan Barcode button -->
-  <span id="scan-barcode-button-{{ item.id }}-{{ list.id }}" class="btn btn-warning btn-sm fa fa-barcode hidden">&nbsp;Scan Barcode</span>
   <!-- Edit Pantry amount button -->
 {% else %}
   <button data-itemid="{{ item.id }}" data-listid="{{ list.id }}" data-toggle="popover" data-placement="top" data-content="Edit amount of {{ item.name }} in your Pantry" class="btn btn-lg  btn-info edit-item-in-pantry-button" id="edit-item-in-pantry-button-{{ item.id }}-{{ list.id }}">
