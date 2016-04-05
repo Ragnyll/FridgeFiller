@@ -33,12 +33,13 @@
 
 
 {% if not most_recent_list %}
-  <h1 class="text-center">Looks like you don&apos;t have any lists created.</h1>
+  <h1 class="text-center">Welcome to FridgeFiller</h1>
 {% else %}
+  <h1 class="text-center">Welcome to FridgeFiller</h1>
   <h2 class="text-center">Most Recent Shopping List</h2>
-
+  <br>
   {% include 'lists/_list_view.html' with list=most_recent_list from_url='/' %}
-
+  <br>
 {% endif %}
 
 <div class="row">
