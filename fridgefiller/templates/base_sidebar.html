@@ -22,26 +22,7 @@
         {% block messages-nav %}{% endblock %}
         <div id="sidebar" class="col-md-2 col-xs-2 hidden-xs sidebar">
           <ul class="sidebar-nav">
-            <li class="{% active_re '^/pantry' %}">
-              <a href="{% url 'pantry' %}">
-                My Pantry
-              </a>
-            </li>
-            <li class="{% active_re '/lists/$' %}" >
-              <a href="{% url 'lists' %}">
-                My Lists <span class="fa fa-arrow-right"></span>
-              </a>
-            </li>
-            <li class="{% active_re '/party/|/parties/' %}">
-              <a href="{% url 'parties' %}">
-                My Groups <span class="fa fa-arrow-right"></span>
-              </a>
-            </li>
-            <li>
-              <a href="">
-                Suggested Lists
-              </a>
-            </li>
+
           </ul>
 
           {% block sidebar %}{% endblock %}
