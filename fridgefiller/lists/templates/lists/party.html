@@ -14,6 +14,7 @@
   <!-- Error / Success messages -->
   {% include "lists/_messages.html" %}
 
+
   <!-- Group Members -->
   <div id="group-members" class="well">
     <h2 class="text-center">Members:</h2>
@@ -90,7 +91,7 @@
     <br><br>
     <!-- Only let owner invite people to the group -->
     {% if user.profile == party.owner %}
-      <a class="btn btn-lg btn-success" href="{% url 'invitation_create' %}?group={{ party.id }}">Invite more people to {{ party }}</a>
+      <a class="btn btn-lg btn-success" href="{% url 'invitation_create' %}?group={{ party.id }}">Invite people to {{ party }}</a>
     {% endif %}
 
     <!-- If user is party owner, let them delete the group -->
