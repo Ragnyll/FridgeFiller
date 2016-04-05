@@ -62,6 +62,9 @@ class Party(models.Model):
     def get_absolute_url(self):
         return ('party', (), {'party_id': self.id})
 
+    def get_from_url(self):
+        return "/party/" + str(self.id) + "/"
+
 def create_party_pantry(sender, instance, created, **kwargs):
     """
     Creates a Pantry object when a Party is saved
@@ -86,7 +89,7 @@ class ShoppingList(models.Model):
     items = models.ManyToManyField('Item')
     created = models.DateTimeField(auto_now_add=True)
     updated = models.DateTimeField(auto_now=True)
-    
+
     def __str__(self):
        return str(self.name)
 
