@@ -30,6 +30,9 @@
 
 #content {
     margin-top: 53px;
+    margin-left: 40px !important;
+    margin-right: 40px !important;
+    padding: 0;
 }
 
 .content {
