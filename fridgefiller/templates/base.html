@@ -6,7 +6,7 @@
     {% block head %}
       {% include "_head.html" %}
     {% endblock %}
-    
+
     {% block meta %}{% endblock %}
     {% block style %}{% endblock %}
     {% block link %}{% endblock %}
@@ -16,21 +16,21 @@
 
     <div class="page-wrapper">
       <div class="row">
-        <div class="col-lg-12">
+        <div class="col-lg-12" id="content">
           {% block content %}
-            
+
           {% endblock %}
         </div>
       </div>
     </div>
 
     {% block modal %}{% endblock %}
-    
+
     <!-- Scripts -->
     {% include "_scripts.html" %}
-    
+
     <!-- Extra scripts -->
     {% block script %}{% endblock %}
-    
+
   </body>
 </html>
