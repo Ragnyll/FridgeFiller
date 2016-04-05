@@ -75,7 +75,7 @@ class NewItemView(View):
         from_url = request.POST.get('from_url', False)
         list_id = request.POST.get('list-id', False)
         list_obj = ShoppingList.objects.get(id=list_id)
-        
+
         print from_url
         # Don't make empty items!
         if item_name == "":
@@ -147,6 +147,7 @@ class RemoveItemFromListView(View):
         item_name = request.POST.get('remove-item-name', False)
         item_desc = request.POST.get('remove-item-description', False)
         list_id = request.POST.get('list-id', False)
+        from_url = request.POST.get('from_url', False)
 
         item_obj = Item.objects.filter(name=item_name, description=item_desc)[0]
         list_obj = ShoppingList.objects.get(id=list_id)
@@ -158,7 +159,7 @@ class RemoveItemFromListView(View):
         except:
             messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;: Unable to remove <strong>&nbsp;" + item_name + "</strong>&nbsp;&nbsp;from list.  Please let e developer know!" + ALERT_CLOSE, extra_tags=int(list_id))
 
-        return redirect("/lists")
+        return redirect(from_url + "#" + list_id)
 
 
 class PrintListMiniView(TemplateView):
