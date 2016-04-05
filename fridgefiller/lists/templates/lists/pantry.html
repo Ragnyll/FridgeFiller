@@ -33,25 +33,25 @@
     {% for item in pantry_items %}
       {% if forloop.first %}
         <div class="row">
-          <div class="col-md-2"></div>
-          <div class="col-md-3"></div>
-          <div class="col-md-1">
+          <div class="col-md-2 col-sm-2 hidden-xs"></div>
+          <div class="col-md-3 col-sm-3 hidden-xs"></div>
+          <div class="col-md-1 col-sm-1 hidden-xs">
             <h6>Cost</h6>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-2 col-sm-2 hidden-xs">
             <h6>Last Purchased</h6>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-2 col-sm-2 hidden-xs">
             <h6>Location Purchased</h6>
           </div>
-          <div class="col-md-2">
+          <div class="col-md-2 col-sm-2 hidden-xs">
             <h6>Expiration Date</h6>
           </div>
         </div>
       {% endif %}
       <div class="well pantry-item">
         <div class="row">
-          <div class="col-md-2">
+          <div class="col-md-2 col-sm-2">
             <button data-itemid="{{ item.id }}" id="edit-item-in-pantry-button" class="btn btn-info edit-item-in-pantry-button">
               <i class="fa fa-pencil-square"></i>&nbsp;&nbsp;Edit
             </button>
@@ -65,22 +65,27 @@
               </button>
             </form>
           </div>
-          <div class="col-md-3">
+          <br class="hidden-sm hidden-md hidden-lg">
+          <div class="col-md-3 col-sm-3">
             <h6>{% ifnotequal item.get_amount 0 %}{{ item.get_amount }}{% else %}---{% endifnotequal %}&nbsp;
               {% ifnotequal item.unit '0' %}{{ item.unit }}{% else %} units{% endifnotequal %}
               of <strong>{{ item.name }}</strong></h6>
           </div>
-          <div class="col-md-1">
-            <h6>${{ item.get_cost }}</h6>
+          <div class="col-md-1 col-sm-1">
+            <br class="hidden-sm hidden-md hidden-lg">
+            <h6><span class="hidden-sm hidden-md hidden-lg">Cost:&nbsp;&nbsp;</span>${{ item.get_cost }}</h6>
           </div>
-          <div class="col-md-2">
-            <h6>{{ item.get_pretty_last_purchased }}</h6>
+          <div class="col-md-2 col-sm-2">
+            <br class="hidden-sm hidden-md hidden-lg">
+            <h6><span class="hidden-sm hidden-md hidden-lg">Purchased:&nbsp;&nbsp;</span>{{ item.get_pretty_last_purchased }}</h6>
           </div>
-          <div class="col-md-2">
-            <h6>{{ item.get_location_purchased }}</h6>
+          <div class="col-md-2 col-sm-2">
+            <br class="hidden-sm hidden-md hidden-lg">
+            <h6><span class="hidden-sm hidden-md hidden-lg">Where:&nbsp;&nbsp;</span>{{ item.get_location_purchased }}</h6>
           </div>
-          <div class="col-md-2">
-            <h6>{{ item.get_pretty_expiration_date }}</h6>
+          <div class="col-md-2 col-sm-2">
+            <br class="hidden-sm hidden-md hidden-lg">
+            <h6><span class="hidden-sm hidden-md hidden-lg">Exp. Date:&nbsp;&nbsp;</span>{{ item.get_pretty_expiration_date }}</h6>
           </div>
         </div>
         <div class="row">
@@ -257,6 +262,27 @@
     }
     #add-item-to-pantry-button {
         width: 19%;
+    }
+    @media(max-width:767px) {
+        #add-item-to-pantry-name, #add-item-to-pantry-description, #add-item-to-pantry-button {
+            margin-top: 20px;
+            width: 100%;
+        }
+        #edit-item-in-pantry-button {
+            margin-left: 40px;
+        }
+        #remove-item-from-pantry-button {
+            text-align: center;
+        }
+    }
+    @media(max-width:992px) and (min-width:767px) {
+        #add-item-to-pantry-name, #add-item-to-pantry-description {
+            width: 49%;
+        }
+        #add-item-to-pantry-button {
+            margin-top: 20px;
+            width: 99%;
+        }
     }
     .alert {
         display: flex;
