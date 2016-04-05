@@ -31,7 +31,7 @@
             <li class="divider"></li>
             {% for pantry in user_groups %}
               <li>
-                <a href="{% url 'party-pantry' pantry.id %}">{{ pantry }}'s Pantry</a>
+                <a href="{% url 'party-pantry' pantry.id %}">{{ pantry }}&apos;s Pantry</a>
               </li>
             {% endfor %}
           {% endif %}
