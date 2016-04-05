@@ -1,4 +1,4 @@
-{% extends "base_sidebar.html" %}
+{% extends "base.html" %}
 
 {% load staticfiles %}
 
@@ -7,10 +7,10 @@
 {% endblock %}
 
 {% block content %}
-    <h1 class="text-center">
-      Group: {{ party }}
-      <a href="{% url 'party-pantry' party.id %}" id="go-to-pantry-button" class="btn btn-lg btn-primary">Go to {{ party.name }}&apos;s Pantry</a>
-    </h1>
+  <h1 class="text-center" id="party-header">
+    Group: {{ party }}
+    <a href="{% url 'party-pantry' party.id %}" id="go-to-pantry-button" class="btn btn-lg btn-primary">Go to {{ party.name }}&apos;s Pantry</a>
+  </h1>
   <!-- Error / Success messages -->
   {% include "lists/_messages.html" %}
 
@@ -33,14 +33,19 @@
   <!-- Lists for party -->
   {% if party_lists %}
     <h2 class="text-center">Shopping Lists:</h2>
+    <br><br>
     {% for list in party_lists %}
-      <form action="{% url 'remove-list-from-party' %}" method="POST">
-        {% csrf_token %}
-        <input type="hidden" name="remove-list-list-id" value="{{ list.id }}">
-        <input type="hidden" name="remove-list-party-id" value="{{ party.id }}">
-        <input type="submit" class="btn btn-danger" value="Remove List from Group">
-      </form>
-      {% include "lists/_list_view.html" with from_url=party.get_from_url %}
+      <div id="remove-list-button" class="col-md-2 text-center">
+        <form action="{% url 'remove-list-from-party' %}" method="POST">
+          {% csrf_token %}
+          <input type="hidden" name="remove-list-list-id" value="{{ list.id }}">
+          <input type="hidden" name="remove-list-party-id" value="{{ party.id }}">
+          <input type="submit" class="btn btn-danger" value="Delete List">
+        </form>
+      </div>
+      <div id="list-view" class="col-md-10">
+        {% include "lists/_list_view.html" with from_url=party.get_from_url %}
+      </div>
     {% endfor %}
   {% else %}
     <div class="text-center">
@@ -82,7 +87,7 @@
   <!-- Invite / Leave Group / Delete Group buttons -->
   <div class="text-center well">
     <h4>Group Options</h4>
-    <br>
+    <br><br>
     <!-- Only let owner invite people to the group -->
     {% if user.profile == party.owner %}
       <a class="btn btn-lg btn-success" href="{% url 'invitation_create' %}?group={{ party.id }}">Invite more people to {{ party }}</a>
@@ -187,7 +192,15 @@
         font-weight: bold;
     }
     #go-to-pantry-button {
-        vertical-align: middle;
+        margin-bottom: 12px;
+    }
+    #remove-list-button {
+        padding: 0;
+        margin-top: 20px;
+        height: 100px;
+    }
+    #list-view {
+        padding-left: 0;
     }
   </style>
 {% endblock %}

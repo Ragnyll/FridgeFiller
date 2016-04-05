@@ -135,6 +135,7 @@ class EditItemInPantryView(View):
         expiration_date_str = request.POST.get('edit-item-in-pantry-expiration-date', False)
 
 
+        # If coming from pantry, we don't need to un-collapse a list or show message in specific place
         if from_url == "/pantry/" or from_url == "/pantry/" + str(party_id) + "/":
             list_id = str(-1)
 
