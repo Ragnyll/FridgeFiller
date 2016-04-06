@@ -114,3 +114,18 @@ li.active {
     background-color: #34495E;
     border: 3px #169E83 ;
 }
+
+
+* {
+    margin: 0;
+}
+html, body {
+    height: 100%;
+}
+.page-wrapper {
+    min-height: 100%;
+    margin: 0 auto -110px; /* the bottom margin is the negative value of the footer's height */
+}
+footer, .push {
+    height: 110px; /* '.push' must be the same height as 'footer' */
+}
