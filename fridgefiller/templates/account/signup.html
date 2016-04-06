@@ -13,9 +13,9 @@ Sign Up
         <h1 class="text-center">{% trans "Sign Up" %}</h1>
 
         <p class="text-center">
-          
+
         </p>
-        
+
         <form class="form-horizontal well col-md-12" id="signup_form" method="post" action="{% url 'account_signup' %}">
           <h4 class="text-center">
             Already have an account? &nbsp;&nbsp;<a href="{% url 'account_login' %}">Sign In!</a>
@@ -29,21 +29,14 @@ Sign Up
               <input type="text" class="form-control" id="username" name="username" placeholder="Username">
             </div>
           </div>
-          
-          <div class="form-group">
-            <label for="email" class="col-lg-2 control-label">Email</label>
-            <div class="col-lg-10">
-              <input type="email" name="email" class="form-control" id="email" placeholder="Email Address (optional)">
-            </div>
-          </div>
-          
+
           <div class="form-group">
             <label for="password1" class="col-lg-2 control-label">Password</label>
             <div class="col-lg-10">
               <input type="password" name="password1" class="form-control" id="password1" placeholder="Password">
             </div>
           </div>
-          
+
           <div class="form-group {% if form.field.errors %} has-error {% endif %}">
             <label for="password2" class="col-lg-2 control-label">Repeat Password</label>
             <div class="col-lg-10">
@@ -66,13 +59,13 @@ Sign Up
               {% endif %}
             </div>
           </div>
-          
+
           <div class="form-group">
             <div class="col-lg-offset-2 col-lg-10">
               <button type="submit" class="btn btn-primary">Sign Up</button>
             </div>
           </div>
-          
+
           {% if redirect_field_value %}
           <input type="hidden" name="{{ redirect_field_name }}" value="{{ redirect_field_value }}" class="form-control">
           {% endif %}
