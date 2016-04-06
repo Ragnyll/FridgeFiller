@@ -1,7 +1,7 @@
 {% if item.name not in user_pantry_item_names %}
   <form method="POST" id="add-item-to-pantry-form" action="{% url 'add-item-to-pantry' %}">
     {% csrf_token %}
-    <input type="hidden" name="from_url" value="/lists/">
+    <input type="hidden" name="from_url" value="{{ request.get_full_path }}">
     <input type="hidden" name="list_id" value="{{ list.id }}">
     <input type="hidden" name="add-item-to-pantry-name" value="{{ item.name }}">
     <input type="hidden" name="add-item-to-pantry-desc" value="{{ item.description }}">
