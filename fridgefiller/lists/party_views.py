@@ -21,6 +21,7 @@ class PartyView(TemplateView):
     """
     template_name = "lists/party.html"
 
+    @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         user = self.request.user.profile
         party_id = kwargs['party_id']
@@ -144,6 +145,12 @@ class PartiesView(TemplateView):
     This view displays a list of partys a user belongs too
     """
     template_name = "lists/parties.html"
+
+
+    @method_decorator(login_required)
+    def dispatch(self, *args, **kwargs):
+        return super(PartiesView, self).dispatch(*args, **kwargs)
+
 
     def get_context_data(self, **kwargs):
         context = super(PartiesView, self).get_context_data(**kwargs)

@@ -14,11 +14,19 @@ from datetime import datetime
 import re
 from .models import *
 
+
 class PantryView(TemplateView):
     """
     This view displays the user's pantry
     """
     template_name = "lists/pantry.html"
+
+    @method_decorator(login_required)
+    def dispatch(self, request, *args, **kwargs):
+        """
+        Ensures that only authenticated users can access the view.
+        """
+        return super(PantryView, self).dispatch(request, *args, **kwargs)
 
     def get_context_data(self, **kwargs):
         context = super(PantryView, self).get_context_data(**kwargs)
@@ -40,6 +48,7 @@ class PartyPantryView(TemplateView):
 
     template_name = "lists/pantry.html"
 
+    @method_decorator(login_required)
     def dispatch(self, *args, **kwargs):
         user = self.request.user.profile
         party_id = kwargs['party_id']

@@ -199,7 +199,7 @@ class PrintListView(View):
         list_id = request.POST.get('list-id', False)
         return redirect("print-m-list", list_id=list_id)
 
-    
+
 class AddItemToPantryView(View):
     """
     This view adds an item from a shopping list to a user's Pantry
@@ -224,12 +224,12 @@ class AddItemToPantryView(View):
             user_userprofile = UserProfile.objects.get(name=request.user.username)
             user_party = Party.objects.get(owner=user_userprofile)
             pantry_obj = Pantry.objects.get(party=user_party)
-            
+
             # don't add duplicate items
             if item_name in [x.name for x in pantry_obj.items.all()]:
                 messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;:  That item already exists in your pantry!" + ALERT_CLOSE, extra_tags=int(list_id))
                 return redirect(from_url + "#" + list_id)
-            
+
             item_detail_obj, c = ItemDetail.objects.get_or_create(name=item_name,
                                                                   description=item_description)
             if from_url == "/pantry/":
