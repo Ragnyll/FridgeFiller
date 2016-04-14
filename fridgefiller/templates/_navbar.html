@@ -82,6 +82,13 @@
           </a>
         </li>
       {% endif %}
+
+
+      <li id="tour-tab">
+        <a href="javascript:void(0);" onclick="javascript:introJs().start();">
+          Help!
+        </a>
+      </li>
     </ul>
     <ul class="nav pull-right navbar-nav">
       {% if user.is_authenticated %}
