@@ -46,7 +46,7 @@
 {% endif %}
 
 <div class="row">
-  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" id="warning-items-yours">
     <div class="well" id="expired-well">
       <h3 class="text-center">Expired Items</h3>
       <p class="text-center"> These Items in your personal pantry are expired! </p>
@@ -97,7 +97,7 @@
     </div>
   </div>
 
-  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12">
+  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" id="warning-items-group">
     <div class="well" id="expired-well">
       <h3 class="text-center">Group Expired Items</h3>
       <p class="text-center"> These Items in your group personal pantry are expired! </p>
@@ -152,4 +152,27 @@
 
 {% block script %}
   <script src="{% static 'js/lists.js' %}" type="text/javascript"></script>
+  <script type="text/javascript">
+      function startIntro(){
+        var intro = introJs();
+          intro.setOptions({
+            steps: [
+              {
+                intro: "Welcome to your FridgeFiller personal home page. Let's look at some of the stuff you can do."
+              },
+              {
+                intro: "Here are some of the items you need to worry about. If it\'s in Yellow, it will expire in less than 1 week. If it\'s in Red, its already expired.",
+                element: document.querySelector('#warning-items-yours'),
+                position: "right"
+              },
+              {
+                intro: "You have the same info for your groups (you can find out more of those by going to your groups tab), but the same color information applies here too.",
+                element: document.querySelector('#warning-items-group'),
+                position: "left"
+              }
+            ]
+          });
+          intro.start();
+      }
+  </script>
 {% endblock %}
