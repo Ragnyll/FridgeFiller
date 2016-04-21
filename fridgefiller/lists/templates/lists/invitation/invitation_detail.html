@@ -67,3 +67,32 @@
     }
   </style>
 {% endblock %}
+
+{% block script %}
+<script type="text/javascript">
+      function startIntro(){
+        var intro = introJs();
+          intro.setOptions({
+            steps: [
+              { 
+                intro: "This is a group invitation. If this invitation was sent to you, here you can accept or decline the invitation."
+              },
+              { 
+                intro: "This side of the page lists invitations you have recieved.",
+                element: document.querySelector('#step2')
+              },
+              {
+                element: document.querySelector('#step3'),
+                intro: "This side of the page lists invitations you have sent to other users."
+              },
+              {
+                element: document.querySelector('#step4'),
+                intro: "Click this button to send new invitations!"
+              }
+              
+            ]
+          });
+          intro.start();
+      }
+  </script>
+{% endblock %}

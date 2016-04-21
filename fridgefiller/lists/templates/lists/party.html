@@ -7,16 +7,16 @@
 {% endblock %}
 
 {% block content %}
-  <h1 class="text-center" id="party-header">
+  <h1 class="text-center" id="party-header" data-intro="This is a Group Page. Here, you can access the group's pantry, see the members of the group, manage the group's lists, and send invitatations for people to join your group." data-step="1">
     Group: {{ party }}
-    <a href="{% url 'party-pantry' party.id %}" id="go-to-pantry-button" class="btn btn-lg btn-primary">Go to {{ party.name }}&apos;s Pantry</a>
+    <a href="{% url 'party-pantry' party.id %}" id="go-to-pantry-button" class="btn btn-lg btn-primary" data-step="2" data-intro = "Click this button to go to your group's pantry">Go to {{ party.name }}&apos;s Pantry</a>
   </h1>
   <!-- Error / Success messages -->
   {% include "lists/_messages.html" %}
 
 
   <!-- Group Members -->
-  <div id="group-members" class="well">
+  <div id="group-members" class="well" data-step="3" data-intro="This is a list of all the members in this group">
     <h2 class="text-center">Members:</h2>
     {% for user in party_users %}
       {% if forloop.first %}
@@ -31,6 +31,7 @@
     {% endfor %}
   </div>
 
+  <div data-intro="Here, you can manage the group's shopping lists. Please view the help on the 'My Lists' page for more information" data-step="4">
   <!-- Lists for party -->
   {% if party_lists %}
     <h2 class="text-center">Shopping Lists:</h2>
@@ -54,7 +55,7 @@
     </div>
   {% endif %}
 
-  <div class="well text-center" id="step4">
+  <div class="well text-center">
     <!-- Add existing shopping list to group -->
     {% if user_lists %}
       <h3>Add One of Your Personal Lists</h3>
@@ -84,14 +85,14 @@
       <input type="submit" class="btn btn-primary" value="Create New List">
     </form>
   </div>
-
+</div>
   <!-- Invite / Leave Group / Delete Group buttons -->
   <div class="text-center well">
     <h4>Group Options</h4>
     <br><br>
     <!-- Only let owner invite people to the group -->
     {% if user.profile == party.owner %}
-      <a class="btn btn-lg btn-success" id="step5" href="{% url 'invitation_create' %}?group={{ party.id }}">Invite people to {{ party }}</a>
+      <a class="btn btn-lg btn-success" data-intro="Click this button to manage invitations to your group" data-step="5" href="{% url 'invitation_create' %}?group={{ party.id }}">Invite people to {{ party }}</a>
     {% endif %}
 
     <!-- If user is party owner, let them delete the group -->
