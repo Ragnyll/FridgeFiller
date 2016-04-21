@@ -34,19 +34,18 @@
 {% endblock %}
 
 
-
+<h1 class="text-center" data-step="1" data-intro="Welcome to your FridgeFiller personal home page. Let's look at some of the stuff you can do.">Welcome to FridgeFiller</h1>
 {% if not most_recent_list %}
-  <h1 class="text-center">Welcome to FridgeFiller</h1>
+  <!-- no html -->
 {% else %}
-  <h1 class="text-center">Welcome to FridgeFiller</h1>
-  <h2 class="text-center">Most Recent Shopping List</h2>
+  <h2 class="text-center" data-step="2" data-intro="Looks like you've already made some lists. This is your most recent one.">Most Recent Shopping List</h2>
   <br>
   {% include 'lists/_list_view.html' with list=most_recent_list from_url='/' %}
   <br>
 {% endif %}
 
 <div class="row">
-  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" id="warning-items-yours">
+  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" id="warning-items-yours" data-step="3" data-position="right" data-intro="Here are some of the items you need to worry about. If it's in Yellow, it will expire in less than 1 week. If it's in Red, its already expired.">
     <div class="well" id="expired-well">
       <h3 class="text-center">Expired Items</h3>
       <p class="text-center"> These Items in your personal pantry are expired! </p>
@@ -97,7 +96,7 @@
     </div>
   </div>
 
-  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" id="warning-items-group">
+  <div class="col-lg-6 col-md-6 col-sm-6 col-xs-12" id="warning-items-group" data-step="4" data-position="left" data-intro="You have the same info for your groups (you can find out more of those by going to your groups tab), but the same color information applies here too.">
     <div class="well" id="expired-well">
       <h3 class="text-center">Group Expired Items</h3>
       <p class="text-center"> These Items in your group personal pantry are expired! </p>
@@ -149,30 +148,3 @@
   </div>
   </div>
 </div>
-
-{% block script %}
-  <script src="{% static 'js/lists.js' %}" type="text/javascript"></script>
-  <script type="text/javascript">
-      function startIntro(){
-        var intro = introJs();
-          intro.setOptions({
-            steps: [
-              {
-                intro: "Welcome to your FridgeFiller personal home page. Let's look at some of the stuff you can do."
-              },
-              {
-                intro: "Here are some of the items you need to worry about. If it\'s in Yellow, it will expire in less than 1 week. If it\'s in Red, its already expired.",
-                element: document.querySelector('#warning-items-yours'),
-                position: "right"
-              },
-              {
-                intro: "You have the same info for your groups (you can find out more of those by going to your groups tab), but the same color information applies here too.",
-                element: document.querySelector('#warning-items-group'),
-                position: "left"
-              }
-            ]
-          });
-          intro.start();
-      }
-  </script>
-{% endblock %}
