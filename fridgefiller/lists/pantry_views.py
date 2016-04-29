@@ -154,13 +154,16 @@ class EditItemInPantryView(View):
         elif re.match('^[0-9]+\.?[0-9]*$', amount):
             amount = float(amount)
         else:
-            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;: A non numeric value has been supplied for an amount when editing&nbsp;<strong>&nbsp;" + item_name + "</strong>&nbsp;&nbsp;in your pantry.  Please supply a numeric value!" + ALERT_CLOSE, extra_tags=int(list_id))
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;: A non numeric value has been supplied for an AMOUNT when editing&nbsp;<strong>&nbsp;" + item_name + "</strong>&nbsp;&nbsp;in your pantry.  Please supply a numeric value!" + ALERT_CLOSE, extra_tags=int(list_id))
             return redirect(from_url + "#" + list_id)
 
         if cost == "" or cost == "---":
             cost = float(0)
+        elif re.match('^[0-9]+\.?[0-9]*$', amount):
+            amount = float(cost)
         else:
-            cost = float(cost)
+            messages.add_message(request, messages.ERROR, ALERT_ERROR_OPEN + "<strong>ERROR</strong>&nbsp;: A non numeric value has been supplied for COST when editing&nbsp;<strong>&nbsp;" + item_name + "</strong>&nbsp;&nbsp;in your pantry.  Please supply a numeric value!" + ALERT_CLOSE, extra_tags=int(list_id))
+            return redirect(from_url + "#" + list_id)
 
 
         # Don't let user supply zero amount
