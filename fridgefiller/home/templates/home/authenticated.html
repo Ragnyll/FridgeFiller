@@ -39,7 +39,7 @@
   <h1 class="text-center">Welcome to FridgeFiller</h1>
   <h2 class="text-center">Most Recent Shopping List</h2>
   <br>
-  {% include 'lists/_list_view.html' with list=most_recent_list from_url='/' %}
+  {% include 'lists/_list_view.html' with list=most_recent_list party=list_party from_url='/' %}
   <br>
 {% endif %}
 

@@ -9,7 +9,8 @@ register = template.Library()
 
 @register.simple_tag()
 def get_item_detail(pantry_items, item_name):
-    return filter(lambda x: x.name == item_name, pantry_items)[0]
+    result = filter(lambda x: x.name == item_name, pantry_items)
+    return result[0] if len(result) > 0 else "No Details Available"
 
 @register.simple_tag()
 def get_users_lists(user):

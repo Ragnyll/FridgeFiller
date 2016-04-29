@@ -23,20 +23,20 @@ class HomePageView(TemplateView):
         try:
             user = UserProfile.objects.get(user=self.request.user)
             owned_lists = ShoppingList.objects.filter(owners__in=[user])
-            most_recent_list = owned_lists.order_by('-updated')
-            most_recent_list = most_recent_list[0]
-            user_party = Party.objects.get(owner=user)
-            user_pantry = Pantry.objects.get(party=user_party)
-
+            most_recent_list = owned_lists.order_by('-updated').first()
+            most_recent_list_party = Party.objects.filter(shoppinglists__in=[most_recent_list]).first()
+            
+            user_party = Party.objects.filter(owner=user).first()
+            user_pantry = Pantry.objects.filter(party=user_party).first()
             user_pantry_items = user_pantry.items.all()
-
             user_pantry_item_names = [x.name for x in user_pantry_items]
 
-            context['user_pantry_items'] = user_pantry_items
+            # context['user_pantry_items'] = user_pantry_items
             context['user_pantry_item_names'] = user_pantry_item_names
-            context['user_pantry'] = user_pantry
-            context['user_shopping_lists'] = ShoppingList.objects.filter(owners__in=[user])
+            # context['user_pantry'] = user_pantry
+            # context['user_shopping_lists'] = ShoppingList.objects.filter(owners__in=[user])
             context['most_recent_list'] = most_recent_list
+            context['list_party'] = most_recent_list_party
         except:
             pass
 
