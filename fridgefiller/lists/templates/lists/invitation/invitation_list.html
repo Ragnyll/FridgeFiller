@@ -11,8 +11,8 @@
 {% endblock %}
 
 {% block content %}
-  <div class="row">
-    <div class="col-sm-6 col-md-6" id="step2">
+  <div class="row" data-intro="This is your group invitations page! Here you can send and respond to invitations to groups!" data-step="1">
+    <div class="col-sm-6 col-md-6" data-intro="This side of the page lists invitations you have recieved." data-step="2">
       <h2 class="text-center">Received Invitations</h2>
       {% include "lists/invitation/_invitation_list.html" with invitations=received name="received" %}
 
@@ -42,7 +42,7 @@
         </div>
       </div>
     </div>
-    <div class="col-sm-6 col-md-6" id="step3">
+    <div class="col-sm-6 col-md-6" data-intro="This side of the page lists invitations you have sent to other users." data-step="3">
       <h2 class="text-center">Sent Invitations</h2>
       {% include "lists/invitation/_invitation_list.html" with invitations=sent name="sent" %}
 
@@ -74,7 +74,7 @@
   </div>
   <br>
   <div class="text-center">
-    <a type="submit" id="step4" data-toggle="popover" data-placement="top" data-content="Create Invitations" class="btn btn-lg btn-primary" href="{% url 'invitation_create' %}">Invite User(s) to your Groups</a>
+    <a type="submit" data-intro="Click this button to send new invitations!" data-step="4" data-toggle="popover" data-placement="top" data-content="Create Invitations" class="btn btn-lg btn-primary" href="{% url 'invitation_create' %}">Invite User(s) to your Groups</a>
 
   </div>
 {% endblock %}
@@ -97,32 +97,5 @@
         }
         $('#panel-body-' + name + '-' + counter).toggleClass('collapse in')
     });
-  </script>
-
-  <script type="text/javascript">
-      function startIntro(){
-        var intro = introJs();
-          intro.setOptions({
-            steps: [
-              { 
-                intro: "This is your group invitations page! Here you can send and respond to invitations to groups!"
-              },
-              { 
-                intro: "This side of the page lists invitations you have recieved.",
-                element: document.querySelector('#step2')
-              },
-              {
-                element: document.querySelector('#step3'),
-                intro: "This side of the page lists invitations you have sent to other users."
-              },
-              {
-                element: document.querySelector('#step4'),
-                intro: "Click this button to send new invitations!"
-              }
-              
-            ]
-          });
-          intro.start();
-      }
   </script>
 {% endblock %}
