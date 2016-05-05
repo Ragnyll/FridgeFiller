@@ -116,6 +116,11 @@ class AddItemToPantryView(View):
 
             pantry_obj.items.add(item_detail_obj)
 
+            print "Adding item detail cost to pantries budget"
+            pantry_obj.budget -= item_detail_obj.cost
+
+
+
             # successful, return to lists page with success message
             messages.add_message(request, messages.SUCCESS, ALERT_SUCCESS_OPEN + "<strong>SUCCESS:&nbsp;" + str(item_name) + "</strong>&nbsp;&nbsp;has been added to your pantry!" + ALERT_CLOSE, extra_tags=int(list_id))
             return redirect(from_url + "#" + list_id)

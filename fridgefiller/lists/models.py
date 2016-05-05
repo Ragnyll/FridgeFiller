@@ -97,6 +97,7 @@ class Pantry(models.Model):
     items = models.ManyToManyField('ItemDetail', related_name='items')
     description = models.CharField(max_length=64, default="")
     party = models.ForeignKey('Party', related_name='party')
+    budget = models.DecimalField(max_digits=5, decimal_places=2, default=0)
 
     def __str__(self):
         return str(self.party.name + "'s Pantry")
