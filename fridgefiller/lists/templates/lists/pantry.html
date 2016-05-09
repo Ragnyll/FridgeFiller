@@ -6,7 +6,7 @@
 {% endblock %}
 
 {% block content %}
-  <h1 class="text-center">
+  <h1 class="text-center" data-intro="This is your pantry page! Here you can manage and view the items in your virtual pantry." data-step="1">
     {% if "Personal" in party.name %}My {% else %}{{ party.name }}&apos;s{% endif %} Pantry
     {% ifequal pantry_items.count 1 %}
       <span class="label label-info">{{ pantry_items.count }} item</span>
@@ -30,6 +30,7 @@
   </span>
 
   {% if pantry_items.all %}
+  <div data-intro="This is a list of all your items. Here you can edit when the when, where, who, what, why of each item." data-step="2" data-position="top">
     {% for item in pantry_items %}
       {% if forloop.first %}
         <div class="row">
@@ -93,11 +94,14 @@
         </div>
       </div>
     {% endfor %}
+    </div>
   {% else %}
     <h3 class="text-center">Looks like you don&apos;t have any items in your pantry.  Consider adding some below!</h3>
   {% endif %}
   <!-- Add item to pantry form -->
+  <div data-intro="This form lets you add items to the pantry, simply input the item name and description!" data-step="3" data-position="top">
   {% include 'lists/_add_item_to_pantry_form.html' %}
+  </div>
 
   <hr>
 
