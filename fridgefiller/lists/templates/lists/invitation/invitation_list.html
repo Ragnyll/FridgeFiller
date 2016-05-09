@@ -11,8 +11,8 @@
 {% endblock %}
 
 {% block content %}
-  <div class="row">
-    <div class="col-sm-6 col-md-6">
+  <div class="row" data-intro="This is your group invitations page! Here you can send and respond to invitations to groups!" data-step="1">
+    <div class="col-sm-6 col-md-6" data-intro="This side of the page lists invitations you have recieved." data-step="2">
       <h2 class="text-center">Received Invitations</h2>
       {% include "lists/invitation/_invitation_list.html" with invitations=received name="received" %}
 
@@ -42,7 +42,7 @@
         </div>
       </div>
     </div>
-    <div class="col-sm-6 col-md-6">
+    <div class="col-sm-6 col-md-6" data-intro="This side of the page lists invitations you have sent to other users." data-step="3">
       <h2 class="text-center">Sent Invitations</h2>
       {% include "lists/invitation/_invitation_list.html" with invitations=sent name="sent" %}
 
@@ -74,7 +74,7 @@
   </div>
   <br>
   <div class="text-center">
-    <a type="submit" data-toggle="popover" data-placement="top" data-content="Create Invitations" class="btn btn-lg btn-primary" href="{% url 'invitation_create' %}">Invite User(s) to your Groups</a>
+    <a type="submit" data-intro="Click this button to send new invitations!" data-step="4" data-toggle="popover" data-placement="top" data-content="Create Invitations" class="btn btn-lg btn-primary" href="{% url 'invitation_create' %}">Invite User(s) to your Groups</a>
 
   </div>
 {% endblock %}

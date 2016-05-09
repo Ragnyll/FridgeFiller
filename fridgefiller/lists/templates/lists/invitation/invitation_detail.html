@@ -7,8 +7,9 @@
 {% endblock %}
 
 {% block content %}
-  <h2 class="text-center">Invitation to <a href="{{ invitation.party.get_absolute_url }}"><i>{{ invitation.party.name }}</i></a></h2>
+  <h2 class="text-center" data-intro="This is a group invitation. If this invitation was sent to you, here you can accept or decline the invitation." data-step="1">Invitation to <a href="{{ invitation.party.get_absolute_url }}"><i>{{ invitation.party.name }}</i></a></h2>
   <div class="well">
+    <div data-intro="Here you can see who sent the invitation and who the invitation was sent to, in addition to when it was sent" data-step="2">
     <p>
       <h3>
         <span>
@@ -24,6 +25,7 @@
       <br><br>
       <span><strong>Sent:</strong> {{ invitation.sent }}</span><br>
     </p>
+  </div>
     <hr>
     <h4>
       {{ invitation.message }}
@@ -43,7 +45,7 @@
     {% endif %}
 
     {% if not invitation.response and invitation.receiver == user.profile %}
-      <div class="text-center">
+      <div class="text-center" data-intro="You can use these buttons to respond to invitations you have received" data-step="3" data-position="top">
         <h5>Respond to this Invitation:</h5>
         <a data-toggle="modal" data-target="#acceptInviteModal" class="btn btn-success" href="#">
           Accept Invitation

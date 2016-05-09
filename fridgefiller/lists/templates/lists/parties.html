@@ -5,12 +5,14 @@
 {% endblock %}
 
 {% block content %}
-  <h1 class="text-center">Your Groups</h1>
+  <h1 class="text-center" data-step="1" data-intro="This is your groups page! Here you can see the groups you are a part of, and create new groups!">Your Groups</h1>
 
   {% include "lists/_messages.html" %}
 
+
   <!-- Parties owned by user -->
   {% if owned_parties %}
+    <div data-step="2" data-intro="This is a list of all the groups you own.">
     <h3>Groups you own:</h3>
     {% for party in owned_parties %}
       <div id="{{ party.id }}" class="party well">
@@ -21,12 +23,15 @@
         </h2>
       </div>
     {% endfor %}
+  </div>
   {% else %}
-    <h3 class="text-center">You don't own any groups.</h3>
+    <h3 class="text-center" data-step="2" data-intro="Groups you own will be listed here">You don't own any groups.</h3>
   {% endif %}
+  </div>
 
   <!-- Parties that user belongs to -->
   {% if user_parties %}
+    <div data-intro="This is a list of all the groups you belong to." data-step="3"
     <h3>Groups you belong to:</h3>
     {% for party in user_parties %}
       <div id="{{ party.id }}" class="party well">
@@ -37,15 +42,19 @@
         </h2>
         <h4>Owner: {{ party.owner }}</h4>
       </div>
+    </div>
     {% endfor %}
   {% else %}
-    <h3 class="text-center">You don't belong to anyone else's groups.</h3>
+    <div data-step="3" data-intro="Other groups you belong to will be listed here">
+      <h3 class="text-center">You don't belong to anyone else's groups.</h3>
+    </div>
   {% endif %}
+  
 
   <br>
 
   <!-- New Party form -->
-  <div class="text-center well">
+  <div class="text-center well" data-intro="Here, you can create your very own group! Simply fill in the group's name, and click 'Create New Group'" data-step="4">
     <h3>Create a new Group</h3>
     <br>
     <form method="POST" class="form-inline" id="create-party" action="{% url 'create-party' %}">
@@ -55,6 +64,8 @@
     </form>
   </div>
   <br>
+
+
 {% endblock %}
 
 {% block script %}
@@ -63,6 +74,7 @@
       $('[data-toggle="popover"]').popover({ trigger: "hover" });
     });
   </script>
+
 {% endblock %}
 
 {% block style %}
