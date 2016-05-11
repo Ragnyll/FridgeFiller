@@ -1,14 +1,15 @@
-<form class="form-inline" id="new-item-form" action="{% url 'new-item' %}" method="POST">
+<form class="form-inline" id="new-item-form" action="{% url 'new-item' %}" method="POST" data-step="7" data-intro="Now that you've made a list you can add some items to it.">
   {% csrf_token %}
   <row>
     <input type="hidden" name="from_url" value="{{ from_url }}">
     <input type="hidden" value="{{list.id}}" name="list-id">
-    <input type="text" class="form-control" name="new-item-name" id="new-item-name" placeholder="Item Name">
-    <input type="text" class="form-control" name="new-item-description" id="new-item-desc" placeholder="Item Description" />
-    <!-- Scan Barcode button -->
-    <span id="scan-barcode-button-new-item-{{ list.id }}" class="btn btn-warning fa fa-barcode">
+    <input type="text" class="form-control" name="new-item-name" id="new-item-name" placeholder="Item Name" data-step="8" data-intro="Give the item a name. ">
+    <input type="text" class="form-control" name="new-item-description" id="new-item-desc" placeholder="Item Description" data-step="9" data-intro="...and give it a description (once again, optional)"/>
+      <!-- Scan Barcode button -->
+    <span id="scan-barcode-button-new-item-{{ list.id }}" class="btn btn-warning btn-xs fa fa-barcode" data-step="10" data-intro="Or if you aleady have the item on hand, you can use your camera to scan the barcode.">
       <input id="{{ list.id }}" class="scan-barcode-input" style="display:none;" type="file" accept="image/*" capture/>
     </span>
-    <input type="submit" class="btn btn-primary" value="Add Item" id="new-item-save" />
+    <input type="submit" class="btn btn-primary" value="Add Item" id="new-item-save" data-step="11" data-intro="And put it in the list!" />
+    <input type="hidden" value="{{list.id}}" name="list-id">
   </row>
 </form>

@@ -14,19 +14,21 @@
 {% endblock %}
 
 {% block content %}
-  <h1 class="text-center">Your Shopping Lists</h1>
+  <h1 class="text-center" data-step="1" data-intro="On this page you can keeep track of all your shopping lists">Your Shopping Lists</h1>
 
   {% if not user_shopping_lists %}
     <div class="text-center">
       <br>
-      <h3>
+      <h3 data-step="2" data-intro="If you dont have any lists we'll let you know here.">
         Looks like you don&apos;t have any lists created.
       </h3>
     </div>
   {% else %}
+  <div data-step="2" data-intro="Here's all your lists">
     {% for list in user_shopping_lists %}
       {% include 'lists/_list_view.html' with from_url="/lists/" %}
     {% endfor %}
+  </div>
   {% endif %}
 
   <div id="new-list-error">
@@ -40,20 +42,21 @@
     {% endif %}
   </div>
 
-  <div id="new-list">
+  <div id="new-list" data-step="3" data-intro="Here's where you can create your own shopping lists. Lets looks at how to do that">
     <h1 class="text-center">Create a new Shopping List Below</h1>
     <br>
     <form class="form-horizontal" id="new-shoppinglist-form" action="{% url 'new-list' %}" method="POST">
       <div class="row">
         {% csrf_token %}
-        <div class="col-md-3">
+        <div class="col-md-3" data-step="4" data-intro="Give your list a name.">
           <input type="text" class="form-control" name="new-shoppinglist-name" id="new-shoppinglist-name" placeholder="Shopping List Name">
         </div>
-        <div class="col-md-6">
+        <div class="col-md-6" data-step="5" data-intro="Give it some kinda description. You dont have to, but it's a good idea.">
           <input type="text" class="form-control" name="new-shoppinglist-desc" id="new-shoppinglist-desc" placeholder="Shopping List Description">
         </div>
+
         <div class="col-md-3">
-          <input type="submit" class="btn btn-primary" value="Save" id="new-shoppinglist-save" />
+          <input type="submit" class="btn btn-primary" value="Save" id="new-shoppinglist-save"  data-step="6" data-intro="And save it!"/>
         </div>
       </div>
     </form>
