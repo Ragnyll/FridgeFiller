@@ -18,7 +18,11 @@
       {% endifequal %}
     {% endifequal %}
   </h1>
+
+  <br>
   
+  {% include 'lists/_pantry_budget.html' with remaining_funds=pantry_items.count %}
+
   <br>
   
   <span id="message">

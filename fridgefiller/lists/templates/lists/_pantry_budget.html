@@ -1,0 +1,16 @@
+<h3 class="text-center">
+  Remaining Funds:
+  {% if remaining_funds > 0.0 %}
+  <span class="label label-warning">$&nbsp;{{ remaining_funds }}</span>
+  {% elif remaining_funds == 0.0 %}
+  <span class="label label-success">$&nbsp;{{ remaining_funds }}</span>
+  {% else %}
+  <span class="label label-danger">$&nbsp;{{ remaining_funds }}</span>
+  {% endif %}
+  <span class="btn btn-primary">
+    Update Budget
+    <input type="submit" style="display:none;"/>
+  </span>
+</div>
+
+
