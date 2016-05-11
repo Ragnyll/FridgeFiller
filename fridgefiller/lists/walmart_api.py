@@ -1,7 +1,13 @@
 from HTMLParser import HTMLParser
 import requests
-import secret
 
+try:
+    import secret
+except ImportError:
+    print "No secret file found creating one"
+    secret_writer = open("secret.py", "w")
+    secret_writer.write("""walmart_api_key = None""")
+    secret_writer.close()
 
 name_mapping = {
     'cost': 'salePrice',
@@ -33,15 +39,17 @@ def item_search(item):
     https://developer.walmartlabs.com/docs
     """
 
-    query = {
-        'apiKey': secret.walmart_api_key,
-        'lsPublisherId': 'FrideFiller',
-        'query': item
-    }
-    response = requests.get('https://api.walmartlabs.com/v1/search', params=query)
-    json = response.json()
-    return json.get('items', {})
-
+    if secret.walmart_api_key:
+        query = {
+            'apiKey': secret.walmart_api_key,
+            'lsPublisherId': 'FrideFiller',
+            'query': item
+        }
+        response = requests.get('https://api.walmartlabs.com/v1/search', params=query)
+        json = response.json()
+        return json.get('items', {})
+    else:
+        return {}
 
 def upc_search(upc):
 
@@ -51,15 +59,18 @@ def upc_search(upc):
 
     https://developer.walmartlabs.com/docs
     """
-    
-    query = {
-        'apiKey': secret.walmart_api_key,
-        'lsPublisherId': 'FrideFiller',
-        'upc': upc
-    }
-    response = requests.get('https://api.walmartlabs.com/v1/items', params=query)
-    json = response.json()
-    return json.get('items', {})
+
+    if secret.walmart_api_key:
+        query = {
+            'apiKey': secret.walmart_api_key,
+            'lsPublisherId': 'FrideFiller',
+            'upc': upc
+        }
+        response = requests.get('https://api.walmartlabs.com/v1/items', params=query)
+        json = response.json()
+        return json.get('items', {})
+    else:
+        return {}
 
 
 def relevant_attributes(json, attrs):

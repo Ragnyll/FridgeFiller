@@ -40,7 +40,7 @@
 {% else %}
   <h2 class="text-center" data-step="2" data-intro="Looks like you've already made some lists. This is your most recent one.">Most Recent Shopping List</h2>
   <br>
-  {% include 'lists/_list_view.html' with list=most_recent_list from_url='/' %}
+  {% include 'lists/_list_view.html' with list=most_recent_list party=list_party from_url='/' %}
   <br>
 {% endif %}
 
